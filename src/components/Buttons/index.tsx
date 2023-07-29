@@ -3,7 +3,8 @@
 
 import React from "react";
 import { signOut, signIn } from "next-auth/react";
-import { Button, IconButton } from "@chakra-ui/react";
+import { Button, Flex, IconButton, Text } from "@chakra-ui/react";
+import Image from "../Image";
 
 export function DefaultButton ( props: any ) {
     const { children, ...rest } = props;
@@ -16,6 +17,8 @@ export function DefaultButton ( props: any ) {
         _hover={{
             bg: 'monotone.200',
         }}
+
+        h={12}
 
         _active={{
             bg: 'monotone.300',
@@ -59,20 +62,54 @@ export function PrimaryButton ( props: any ) {
     const { children, ...rest } = props;
 
     return (
-        <DefaultButton
-        bg={'monotone.800'}
-        color={'white'}
-        _hover={{
-            bg: 'monotone.900',
-        }}
+        <Button
+        fontWeight={'semibold'}
+        rounded={'lg'}
+        fontSize={'sm'}
 
-        _active={{
-            bg: 'monotone.900',
-        }}
+        h={12}
+
         {...rest}
         >
             {children}
-        </DefaultButton>
+        </Button>
+    )
+}
+
+export function GoogleSocialButton ( props: any ) {
+    return (
+        <PrimaryButton
+        display={'flex'}
+        bg={'white'}
+        border={'1px solid'}
+        borderColor={'monotone.300'}
+        color={'black'}
+        _hover={{
+            bg: 'monotone.200',
+        }}
+
+        _active={{
+            bg: 'monotone.200',
+        }}
+
+        gap={2}
+        cursor={'pointer'}
+        {...props}
+        >
+            <Image
+            src={'/icons/google.svg'}
+            alt={'social icon'}
+
+            width={6}
+            height={6}
+            />
+            <Text
+            fontWeight={'500'}
+            color={'monotone.800'}
+            >
+                Sign in with Google
+            </Text>
+        </PrimaryButton>
     )
 }
 

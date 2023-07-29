@@ -19,12 +19,15 @@ import { MenuItem, MenuList } from "@/components/Menu";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { Session } from "next-auth";
 import { signOut, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type AccountNavProps = {
     isAuthenticated: boolean;
 }
 
 export default function AccountNav( { isAuthenticated }: AccountNavProps) {
+    const router = useRouter();
+
     return (
         <Menu
         >
@@ -76,7 +79,7 @@ export default function AccountNav( { isAuthenticated }: AccountNavProps) {
                     zIndex={1}
                     >
                         <MenuItem
-                        onClick={() => signIn()}
+                        onClick={() => router.push('/account/login')}
                         >Login</MenuItem>
                     </MenuList>
                 )

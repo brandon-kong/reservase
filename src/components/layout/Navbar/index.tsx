@@ -1,6 +1,7 @@
 'use client';
 
 import Image from '@/components/Image';
+import { getSession } from 'next-auth/react';
 import { useState, useEffect } from "react";
 
 import { 
@@ -20,7 +21,6 @@ type NavbarProps = {
 
 export default function Navbar ( { isAuthenticated }: NavbarProps = { isAuthenticated: false})
  {
-
     return (
         <>
             <Flex

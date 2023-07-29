@@ -1,13 +1,11 @@
 import StyleProvider from '@/components/Providers/StyleProvider'
-import './globals.css'
 import type { Metadata } from 'next'
-import { Inter, Montserrat } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import NextAuthProvider from '@/components/Providers/NextAuthProvider'
 import { getCurrentUser } from '@/lib/session';
 import Navbar from '@/components/layout/Navbar'
 import Padding from '@/components/layout/Padding'
 
-const inter = Inter({ subsets: ['latin'] })
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {

@@ -53,6 +53,13 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: BACKEND_REFRESH_TOKEN_LIFETIME,
   },
+
+  pages: {
+    error: '/account/login',
+    signIn: "/account/login",
+    
+  },
+
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -73,13 +80,11 @@ export const authOptions: NextAuthOptions = {
             if (response.status === 200) {
                 const user = data.user;
 
-                const formatted = {
-                    user,
-                    accessToken: data.access,
-                    refreshToken: data.refresh,
-                }
+                user.accessToken = data.access;
+                user.refreshToken = data.refresh;
 
-                return formatted;
+
+                return user;
             }
             
             return null;
@@ -98,17 +103,45 @@ export const authOptions: NextAuthOptions = {
             access_type: "offline",
             response_type: "code"
           }
-        }
+        },
       }),
   ],
   callbacks: {
     async signIn({user, account, profile, email, credentials}: any) {
-        return true;
+        if (credentials) {
+            return true;
+        }
+
+        if (account) {
+          const { access_token, id_token, provider } = account;
+          try {
+            const response = await axios({
+                url: process.env.NEXTAUTH_BACKEND_URL + "oauth/google",
+                method: "post",
+                data: {
+                    access_token: id_token,
+                },
+            });
+
+            if (response.status === 200) {
+
+                account.user = response.data.user;
+                return true;
+            }
+            
+            return false;
+        } catch (error: any) {
+            return false
+        }
+        }
+
+        return false;
     },
 
     async jwt({user, token, account}: any) {
         if (user && account) {
-            return user;
+          token.user = user;
+            return token;
         }
 
         if (Date.now() < token.exp * 1000) {
@@ -119,12 +152,11 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token, user }: any) {
-        
         session.user = token.user;
         session.accessToken = token.accessToken;
         return session;
     },
-  }
+  },
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
