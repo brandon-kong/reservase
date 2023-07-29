@@ -4,21 +4,70 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { GoogleSocialButton, PrimaryButton } from '@/components/Buttons';
 import Input from '@/components/Input';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
     Container,
     Text,
     Flex,
     Heading,
     Divider,
+    useToast,
 } from '@chakra-ui/react';
+
 import Image from "@/components/Image";
 
 export default function LoginContent () {
+    const toast = useToast();
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    if (searchParams?.has('error')) {
+        const error = searchParams.get('error');
+
+        switch (error) {
+            case 'CredentialsSignin':
+                if (toast.isActive('credentials-signin')) break;
+                toast({
+                    id: 'credentials-signin',
+                    title: 'Invalid credentials',
+                    variant: 'left-accent',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                    position: 'bottom-right'
+                })
+                break;
+            case 'OAuthSignin':
+                if (toast.isActive('oauth-signin')) break;
+                toast({
+                    id: 'oauth-signin',
+                    title: 'Problem while authenticating with Provider',
+                    variant: 'left-accent',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                    position: 'bottom-right'
+                })
+                break;
+            case 'AccessDenied':
+                if (toast.isActive('access-denied')) break;
+                toast({
+                    id: 'access-denied',
+                    title: 'User exists with different credentials',
+                    variant: 'left-accent',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                    position: 'bottom-right'
+                })
+                break;
+            default:
+                break;
+        }
+    }
 
     const attemptLogin = () => {
         signIn('credentials', {
@@ -28,13 +77,27 @@ export default function LoginContent () {
             callbackUrl: `${window.location.origin}/`,
         }).then((res: any) => {
             if (!res.ok) {
-                alert('Invalid credentials')
+                toast({
+                    title: 'Invalid credentials',
+                    variant: 'left-accent',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                    position: 'bottom-right'
+                })
             }
             else {
                 router.push('/')
             }
         }).catch((err) => {
-            alert(err)
+            toast({
+                title: 'Invalid credentials',
+                variant: 'left-accent',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+                position: 'bottom-right'
+            })
         })
     }
 
@@ -42,21 +105,6 @@ export default function LoginContent () {
         signIn('google', {
             redirect: false,
             callbackUrl: `${window.location.origin}/`,
-        })
-        .then((res: any) => {
-            if (!res) {
-                return false;
-                //alert('Invalid credentials')
-            }
-            if (res.error) {
-                //alert(res.error)
-            }
-            else {
-                router.push('/')
-            }
-        })
-        .catch((err) => {
-            alert(err)
         })
     }
 
@@ -94,7 +142,7 @@ export default function LoginContent () {
                     size={'md'}
                     textAlign={'left'}  
                     >
-                        Welcome back
+                        Welcome back!
                     </Heading>
                     <Text
                     fontSize={'md'}
