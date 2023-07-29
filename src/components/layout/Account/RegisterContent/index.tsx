@@ -17,11 +17,13 @@ import {
 import Image from "@/components/Image";
 import { Link } from "@chakra-ui/next-js";
 
-export default function LoginContent () {
+export default function RegisterContent () {
     const toast = useToast();
     const router = useRouter();
     const searchParams = useSearchParams();
 
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -143,13 +145,13 @@ export default function LoginContent () {
                     size={'md'}
                     textAlign={'left'}  
                     >
-                        Welcome back!
+                        So you're new here?
                     </Heading>
                     <Text
                     fontSize={'md'}
                     color={'monotone.600'}
                     >
-                        Sign in to your account to continue
+                        Create an account to get started
                     </Text>
                 </Flex>
                 
@@ -159,6 +161,25 @@ export default function LoginContent () {
                 direction={'column'}
                 gap={4}
                 >
+                    <Flex
+                    gap={4}
+                    >
+                        <Input
+                        w={'full'}
+                        placeholder={'First name'}
+                        name={'first_name'}
+                        value={firstName}
+                        onChange={(e: any) => setFirstName(e.target.value)}
+                        />
+                        <Input
+                        w={'full'}
+                        placeholder={'Last name'}
+                        name={'last_name'}
+                        value={lastName}
+                        onChange={(e: any) => setFirstName(e.target.value)}
+                        />
+                    </Flex>
+
                     <Input
                     w={'full'}
                     placeholder={'Email'}
@@ -182,7 +203,7 @@ export default function LoginContent () {
 
                     onClick={attemptLogin}
                     >
-                        Sign in
+                        Sign up
                     </PrimaryButton>
 
                     <Flex
@@ -208,11 +229,11 @@ export default function LoginContent () {
                     color={'monotone.600'}
                     fontSize={'sm'}
                     >
-                        Don't have an account? {' '}
+                        Already have an account? {' '}
                         <Link
-                        href={'/account/register'}
+                        href={'/account/login'}
                         >
-                            Sign up
+                            Sign in
                         </Link>
                     </Text>
 
