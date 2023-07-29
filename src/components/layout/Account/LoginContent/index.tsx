@@ -10,13 +10,11 @@ import { Container, Text, Flex, Heading, Divider, useToast } from '@chakra-ui/re
 import Image from '@/components/Image';
 import { Link } from '@chakra-ui/next-js';
 
-export default function RegisterContent() {
+export default function LoginContent() {
     const toast = useToast();
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [firstName, setFirstName] = useState<string>('');
-    const [lastName, setLastName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
@@ -121,31 +119,14 @@ export default function RegisterContent() {
             <Flex w={'full'} direction={'column'} align={'flex-start'} gap={8}>
                 <Flex direction={'column'} gap={1}>
                     <Heading size={'md'} textAlign={'left'}>
-                        So you're new here?
+                        Welcome back!
                     </Heading>
                     <Text fontSize={'md'} color={'monotone.600'}>
-                        Create an account to get started
+                        Sign in to your account to continue
                     </Text>
                 </Flex>
 
                 <Flex w={'full'} direction={'column'} gap={4}>
-                    <Flex gap={4}>
-                        <Input
-                            w={'full'}
-                            placeholder={'First name'}
-                            name={'first_name'}
-                            value={firstName}
-                            onChange={(e: any) => setFirstName(e.target.value)}
-                        />
-                        <Input
-                            w={'full'}
-                            placeholder={'Last name'}
-                            name={'last_name'}
-                            value={lastName}
-                            onChange={(e: any) => setFirstName(e.target.value)}
-                        />
-                    </Flex>
-
                     <Input
                         w={'full'}
                         placeholder={'Email'}
@@ -164,7 +145,7 @@ export default function RegisterContent() {
                     />
 
                     <PrimaryButton w={'full'} colorScheme={'green'} onClick={attemptLogin}>
-                        Sign up
+                        Sign in
                     </PrimaryButton>
 
                     <Flex align={'center'} justify={'center'} gap={4}>
@@ -176,7 +157,7 @@ export default function RegisterContent() {
                     <GoogleSocialButton onClick={attemptLoginWithGoogle} />
 
                     <Text textAlign={'center'} color={'monotone.600'} fontSize={'sm'}>
-                        Already have an account? <Link href={'/account/login'}>Sign in</Link>
+                        Don't have an account? <Link href={'/account/register'}>Sign up</Link>
                     </Text>
                 </Flex>
             </Flex>
