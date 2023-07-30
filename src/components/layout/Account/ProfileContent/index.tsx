@@ -17,14 +17,19 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
     const [editing, setEditing] = useState<boolean>(false);
 
     return (
-        <Flex px={'6rem'} py={'4rem'} fontSize={'sm'} minH={'calc(100vh - 65px)'} align={'flex-start'}
-        direction={{
-            base: 'column-reverse',
-            md: 'row',
-        }}
-        gap={10}>
+        <Flex
+            px={'6rem'}
+            py={'4rem'}
+            fontSize={'sm'}
+            minH={'calc(100vh - 65px)'}
+            align={'flex-start'}
+            direction={{
+                base: 'column-reverse',
+                md: 'row',
+            }}
+            gap={10}
+        >
             <Flex
-
                 w={{
                     base: 'full',
                     md: '300px',
@@ -79,24 +84,14 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                         <Heading size={'lg'}>Welcome back, {profileData.name}!</Heading>
                         <Text color={'monotone.600'}>Joined in {profileData.joinDate}</Text>
                     </Flex>
-                    
                 </Flex>
 
-                <Flex
-                direction={'column'}
-                gap={8}
-
-                display={editing ? 'none' : 'flex'}
-                >
-
-                    {
-                        user && user.pk === profileData.pk ? (
-                            <PrimaryOutlineButton 
-                            onClick={() => setEditing(true)}
-                            w={'40'}>Edit profile</PrimaryOutlineButton>
-                        )
-                        : null
-                        }
+                <Flex direction={'column'} gap={8} display={editing ? 'none' : 'flex'}>
+                    {user && user.pk === profileData.pk ? (
+                        <PrimaryOutlineButton onClick={() => setEditing(true)} w={'40'}>
+                            Edit profile
+                        </PrimaryOutlineButton>
+                    ) : null}
 
                     <Flex align={'center'} gap={2}>
                         <Icon fontSize={'lg'} as={StarIcon} />
@@ -109,13 +104,7 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                     <Divider />
                 </Flex>
 
-                { !editing ? null : (
-                    <EditProfileView
-                    setEditing={setEditing}
-                    user={user}
-                    />
-                )}
-                
+                {!editing ? null : <EditProfileView setEditing={setEditing} user={user} />}
             </Flex>
         </Flex>
     );

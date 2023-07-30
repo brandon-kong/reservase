@@ -1,6 +1,4 @@
-import { Input as ChakraInput,
-Textarea as ChakraTextarea,
- } from '@chakra-ui/react';
+import { Input as ChakraInput, Textarea as ChakraTextarea } from '@chakra-ui/react';
 
 export default function Input(props: any) {
     const { children, ...rest } = props;
@@ -33,5 +31,5 @@ export function Textarea(props: any) {
             focusBorderColor="primary.400"
             {...props}
         />
-    )
+    );
 }
