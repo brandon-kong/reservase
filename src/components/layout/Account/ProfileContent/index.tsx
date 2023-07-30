@@ -2,25 +2,39 @@
 
 type ProfileContentProps = {
     profileData: ProfileData;
+    user?: any;
 };
 
+import { useState } from 'react';
 import { Avatar, Flex, Text, Heading, List, ListItem, ListIcon, Icon, Divider } from '@chakra-ui/react';
 
 import { CheckIcon, StarIcon } from '@chakra-ui/icons';
 import { PrimaryOutlineButton } from '@/components/Buttons';
 import { ProfileData } from '@/types/types';
+import EditProfileView from '@/components/EditProfileView';
 
-export default function ProfileContent({ profileData }: ProfileContentProps) {
+export default function ProfileContent({ user, profileData }: ProfileContentProps) {
+    const [editing, setEditing] = useState<boolean>(false);
+
     return (
-        <Flex px={'6rem'} py={'4rem'} fontSize={'sm'} h={'calc(100vh - 65px)'} align={'center'} gap={10}>
+        <Flex px={'6rem'} py={'4rem'} fontSize={'sm'} minH={'calc(100vh - 65px)'} align={'flex-start'}
+        direction={{
+            base: 'column-reverse',
+            md: 'row',
+        }}
+        gap={10}>
             <Flex
+
+                w={{
+                    base: 'full',
+                    md: '300px',
+                }}
                 h={'full'}
                 direction={'column'}
                 rounded={'lg'}
                 bg={'monotone.200'}
                 px={6}
                 py={12}
-                w={'300px'}
                 gap={8}
                 justify={'center'}
             >
@@ -65,19 +79,43 @@ export default function ProfileContent({ profileData }: ProfileContentProps) {
                         <Heading size={'lg'}>Welcome back, {profileData.name}!</Heading>
                         <Text color={'monotone.600'}>Joined in {profileData.joinDate}</Text>
                     </Flex>
-
-                    <PrimaryOutlineButton w={'40'}>Edit profile</PrimaryOutlineButton>
+                    
                 </Flex>
 
-                <Flex align={'center'} gap={2}>
-                    <Icon fontSize={'lg'} as={StarIcon} />
+                <Flex
+                direction={'column'}
+                gap={8}
 
-                    <Text fontSize={'md'} fontWeight={'semibold'}>
-                        {profileData.reviewCount} review{profileData.reviewCount !== 1 ? 's' : ''}
-                    </Text>
+                display={editing ? 'none' : 'flex'}
+                >
+
+                    {
+                        user && user.pk === profileData.pk ? (
+                            <PrimaryOutlineButton 
+                            onClick={() => setEditing(true)}
+                            w={'40'}>Edit profile</PrimaryOutlineButton>
+                        )
+                        : null
+                        }
+
+                    <Flex align={'center'} gap={2}>
+                        <Icon fontSize={'lg'} as={StarIcon} />
+
+                        <Text fontSize={'md'} fontWeight={'semibold'}>
+                            {profileData.reviewCount} review{profileData.reviewCount !== 1 ? 's' : ''}
+                        </Text>
+                    </Flex>
+
+                    <Divider />
                 </Flex>
 
-                <Divider />
+                { !editing ? null : (
+                    <EditProfileView
+                    setEditing={setEditing}
+                    user={user}
+                    />
+                )}
+                
             </Flex>
         </Flex>
     );

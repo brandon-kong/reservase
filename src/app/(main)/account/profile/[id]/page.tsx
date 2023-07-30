@@ -13,11 +13,14 @@ type ProfileViewProps = {
 
 export default async function ProfileView({ params }: ProfileViewProps) {
     const { id } = params;
+
+    const user = await getCurrentUser();
+
     const userProfile: ProfileData = await getProfileData(id);
 
     if (!userProfile) {
         notFound();
     }
 
-    return <ProfileContent profileData={userProfile} />;
+    return <ProfileContent user={user} profileData={userProfile} />;
 }
