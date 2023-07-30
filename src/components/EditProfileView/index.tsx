@@ -33,7 +33,6 @@ export default function EditProfileView({ user, setEditing, profileData }: EditP
         });
 
         if (!response) {
-            alert('error');
             // TODO: show toast
         } else {
             setEditing(false);

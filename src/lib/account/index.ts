@@ -40,7 +40,6 @@ export async function updateProfileData({ first_name, last_name, about_me, locat
         }
     }
     catch (error) {
-        alert(JSON.stringify(error))
         return null
     }
 }
