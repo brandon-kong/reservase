@@ -103,7 +103,7 @@ export function LoginButton() {
 }
 
 export function PrimaryOutlineButton(props: any) {
-    const { children, ...rest } = props
+    const { children, ...rest } = props;
 
     return (
         <PrimaryButton
@@ -123,7 +123,7 @@ export function PrimaryOutlineButton(props: any) {
             cursor={'pointer'}
             {...rest}
         >
-            { children }
+            {children}
         </PrimaryButton>
     );
 }

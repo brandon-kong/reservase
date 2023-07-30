@@ -23,7 +23,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
     const toProfile = () => {
         if (isAuthenticated) router.push(`/account/profile`);
         else router.push('/account/login');
-    }
+    };
 
     return (
         <Menu>
@@ -52,9 +52,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
 
             {isAuthenticated ? (
                 <MenuList zIndex={1}>
-                    <MenuItem
-                    onClick={toProfile}
-                    >Profile</MenuItem>
+                    <MenuItem onClick={toProfile}>Profile</MenuItem>
                     <MenuItem>Settings</MenuItem>
                     <MenuDivider />
                     <MenuItem
@@ -70,7 +68,9 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                 </MenuList>
             ) : (
                 <MenuList zIndex={1}>
-                    <MenuItem fontWeight={'semibold'} onClick={() => router.push('/account/register')}>Sign up</MenuItem>
+                    <MenuItem fontWeight={'semibold'} onClick={() => router.push('/account/register')}>
+                        Sign up
+                    </MenuItem>
                     <MenuItem onClick={() => router.push('/account/login')}>Login</MenuItem>
                     <MenuDivider />
                     <MenuItem>Help center</MenuItem>

@@ -1,3 +1,3 @@
-export default {
-    
-}
+const shadows = {}
+
+export default shadows

@@ -5,9 +5,7 @@ import { useState } from 'react';
 import { GoogleSocialButton, PrimaryButton } from '@/components/Buttons';
 import Input from '@/components/Input';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Container, Text, Flex, Heading, Divider, useToast,
-    Spinner,
-} from '@chakra-ui/react';
+import { Container, Text, Flex, Heading, Divider, useToast, Spinner } from '@chakra-ui/react';
 
 import Image from '@/components/Image';
 import { Link } from '@chakra-ui/next-js';
@@ -120,17 +118,16 @@ export default function LoginContent() {
             h={'100vh'}
             maxW={'400px'}
             gap={4}
-
             opacity={loading ? 0.5 : 1}
             pointerEvents={loading ? 'none' : 'auto'}
         >
-            <Spinner 
-            zIndex={2}
-            position={'absolute'}
-            top={'50%'}
-            left={'50%'}
-            transform={'translate(-50%, -50%)'}
-            display={loading ? 'block' : 'none'}
+            <Spinner
+                zIndex={2}
+                position={'absolute'}
+                top={'50%'}
+                left={'50%'}
+                transform={'translate(-50%, -50%)'}
+                display={loading ? 'block' : 'none'}
             />
             <Flex pb={4}>
                 <Image src={'/reservine.png'} alt="Reservine Logo" height={50} width={50} />
@@ -176,7 +173,7 @@ export default function LoginContent() {
                     <GoogleSocialButton onClick={attemptLoginWithGoogle} />
 
                     <Text textAlign={'center'} color={'monotone.600'} fontSize={'sm'}>
-                        Don't have an account? <Link href={'/account/register'}>Sign up</Link>
+                        Don&apos;t have an account&lsquo; <Link href={'/account/register'}>Sign up</Link>
                     </Text>
                 </Flex>
             </Flex>

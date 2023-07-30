@@ -1,4 +1,4 @@
-export default {
+const colors = {
     monotone: {
         100: '#FFFFFF',
         200: '#F7F7F7',
@@ -24,3 +24,5 @@ export default {
         900: '#036666',
     }
 }
+
+export default colors
