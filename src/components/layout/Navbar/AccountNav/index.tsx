@@ -49,7 +49,15 @@ export default function AccountNav({ isAuthenticated }: AccountNavProps) {
                     <MenuItem>Profile</MenuItem>
                     <MenuItem>Settings</MenuItem>
                     <MenuDivider />
-                    <MenuItem onClick={() => signOut()}>Logout</MenuItem>
+                    <MenuItem
+                        onClick={() =>
+                            signOut({
+                                callbackUrl: 'http://localhost:3000/account/login',
+                            })
+                        }
+                    >
+                        Logout
+                    </MenuItem>
                 </MenuList>
             ) : (
                 <MenuList zIndex={1}>

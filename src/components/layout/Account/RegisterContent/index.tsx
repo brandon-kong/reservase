@@ -10,6 +10,8 @@ import { Container, Text, Flex, Heading, Divider, useToast } from '@chakra-ui/re
 import Image from '@/components/Image';
 import { Link } from '@chakra-ui/next-js';
 
+import { signUp } from '@/lib/session';
+
 export default function RegisterContent() {
     const toast = useToast();
     const router = useRouter();
@@ -65,36 +67,38 @@ export default function RegisterContent() {
         }
     }
 
-    const attemptLogin = () => {
-        signIn('credentials', {
-            redirect: false,
-            email,
-            password,
-            callbackUrl: `${window.location.origin}/`,
-        })
-            .then((res: any) => {
-                if (!res.ok) {
+    const attemptSignUp = () => {
+        signUp({ email, password, first_name: firstName, last_name: lastName })
+            .then(res => {
+                alert(res);
+            })
+            .catch((err: any) => {
+                const errors = err.response.data.error;
+                if (!errors) {
                     toast({
-                        title: 'Invalid credentials',
+                        id: 'unknown-error',
+                        size: 'sm',
+                        title: 'An unknown error occurred',
                         variant: 'left-accent',
                         status: 'error',
                         duration: 3000,
                         isClosable: true,
                         position: 'bottom-right',
                     });
-                } else {
-                    router.push('/');
+                    return;
                 }
-            })
-            .catch(err => {
-                toast({
-                    title: 'Invalid credentials',
-                    variant: 'left-accent',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: true,
-                    position: 'bottom-right',
-                });
+                if (errors.email) {
+                    toast({
+                        id: 'email-taken',
+                        size: 'sm',
+                        title: errors.email,
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'bottom-right',
+                    });
+                }
             });
     };
 
@@ -115,7 +119,7 @@ export default function RegisterContent() {
             maxW={'400px'}
             gap={4}
         >
-            <Flex>
+            <Flex pb={4}>
                 <Image src={'/reservine.png'} alt="Reservine Logo" height={50} width={50} />
             </Flex>
             <Flex w={'full'} direction={'column'} align={'flex-start'} gap={8}>
@@ -142,7 +146,7 @@ export default function RegisterContent() {
                             placeholder={'Last name'}
                             name={'last_name'}
                             value={lastName}
-                            onChange={(e: any) => setFirstName(e.target.value)}
+                            onChange={(e: any) => setLastName(e.target.value)}
                         />
                     </Flex>
 
@@ -163,7 +167,7 @@ export default function RegisterContent() {
                         onChange={(e: any) => setPassword(e.target.value)}
                     />
 
-                    <PrimaryButton w={'full'} colorScheme={'green'} onClick={attemptLogin}>
+                    <PrimaryButton w={'full'} onClick={attemptSignUp}>
                         Sign up
                     </PrimaryButton>
 

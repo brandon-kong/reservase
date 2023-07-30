@@ -11,6 +11,7 @@ export default function Input(props: any) {
             rounded={'lg'}
             px={6}
             colorScheme="monotone"
+            focusBorderColor="primary.400"
             {...rest}
         >
             {children}

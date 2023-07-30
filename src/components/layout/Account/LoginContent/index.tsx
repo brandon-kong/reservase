@@ -113,7 +113,7 @@ export default function LoginContent() {
             maxW={'400px'}
             gap={4}
         >
-            <Flex>
+            <Flex pb={4}>
                 <Image src={'/reservine.png'} alt="Reservine Logo" height={50} width={50} />
             </Flex>
             <Flex w={'full'} direction={'column'} align={'flex-start'} gap={8}>
@@ -144,7 +144,7 @@ export default function LoginContent() {
                         onChange={(e: any) => setPassword(e.target.value)}
                     />
 
-                    <PrimaryButton w={'full'} colorScheme={'green'} onClick={attemptLogin}>
+                    <PrimaryButton w={'full'} onClick={attemptLogin}>
                         Sign in
                     </PrimaryButton>
 

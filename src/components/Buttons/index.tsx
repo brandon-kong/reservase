@@ -51,7 +51,7 @@ export function PrimaryButton(props: any) {
     const { children, ...rest } = props;
 
     return (
-        <Button fontWeight={'semibold'} rounded={'lg'} fontSize={'sm'} h={12} {...rest}>
+        <Button colorScheme="primary" fontWeight={'semibold'} rounded={'lg'} fontSize={'sm'} h={12} {...rest}>
             {children}
         </Button>
     );
@@ -69,7 +69,8 @@ export function GoogleSocialButton(props: any) {
                 bg: 'monotone.200',
             }}
             _active={{
-                bg: 'monotone.200',
+                bg: 'monotone.300',
+                borderColor: 'monotone.600',
             }}
             gap={2}
             cursor={'pointer'}
