@@ -9,7 +9,7 @@ export const getSession = async () => {
 
 export const getCurrentUser = async () => {
     const session = await getSession();
-    return session?.user;
+    return session?.user as any;
 }
 
 type SignUpParams = {

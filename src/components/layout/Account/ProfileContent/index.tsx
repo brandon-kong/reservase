@@ -2,6 +2,7 @@
 
 type ProfileContentProps = {
     user: any;
+    profileData: ProfileData
 }
 
 import {
@@ -18,8 +19,9 @@ import {
 
 import { CheckIcon, StarIcon } from '@chakra-ui/icons';
 import { PrimaryOutlineButton } from '@/components/Buttons';
+import { ProfileData } from '@/types/types';
 
-export default function ProfileContent ( { user }: any) {
+export default function ProfileContent ( { user, profileData }: ProfileContentProps) {
     return (
         <Flex
         px={'6rem'}
@@ -92,7 +94,7 @@ export default function ProfileContent ( { user }: any) {
                     w={'full'}
                     size={'md'}
                     >
-                        { user.name }
+                        { profileData.name }
                     </Heading>
                     <List
                     spacing={1}
@@ -138,7 +140,7 @@ export default function ProfileContent ( { user }: any) {
                         <Text
                         color={'monotone.600'}
                         >
-                            Joined in 2021
+                            Joined in { profileData.joinDate }
                         </Text>
                     </Flex>
                     
@@ -162,7 +164,7 @@ export default function ProfileContent ( { user }: any) {
                     fontSize={'md'}
                     fontWeight={'semibold'}
                     >
-                        0 reviews
+                        { profileData.reviewCount } review{ profileData.reviewCount !== 1 ? 's' : ''}
                     </Text>
                 </Flex>
 

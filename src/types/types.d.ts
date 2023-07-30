@@ -10,3 +10,9 @@ export type UserSession =
 export type ProtectedPageProps = {
     children: React.ReactNode;
 };
+
+export type ProfileData = {
+    name: string,
+    joinDate: string,
+    reviewCount: number,
+}
