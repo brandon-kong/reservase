@@ -20,4 +20,5 @@ export type ProfileData = {
     location: string;
     first_name: string;
     last_name: string;
+    occupation: string;
 };

@@ -155,7 +155,9 @@ export const authOptions: NextAuthOptions = {
             return token;
         }
 
-        return await refreshAccessToken(token) || null;
+        const a = await refreshAccessToken(token);
+        console.log(a)
+        return await a || null;
     },
 
     async session({ session, token, user }: any) {
