@@ -1,21 +1,45 @@
 type EditProfileViewProps = {
     user: any;
+    profileData: any;
     setEditing: (editing: boolean) => void;
 };
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { updateProfileData } from '@/lib/account';
 
+import { getSession } from 'next-auth/react';
 import { Flex, InputGroup, Text } from '@chakra-ui/react';
 
 import Input, { Textarea } from '../Input';
 import { PrimaryButton, PrimaryOutlineButton, TransparentButton } from '../Buttons';
 
-export default function EditProfileView({ user, setEditing }: EditProfileViewProps) {
-    const [firstName, setFirstName] = useState<string>(user.first_name);
-    const [lastName, setLastName] = useState<string>(user.last_name);
+export default function EditProfileView({ user, setEditing, profileData }: EditProfileViewProps) {
+    const router = useRouter();
+    const [firstName, setFirstName] = useState<string>(profileData.first_name);
+    const [lastName, setLastName] = useState<string>(profileData.last_name);
 
-    const [aboutMe, setAboutMe] = useState<string>('');
-    const [occupation, setOccupation] = useState<string>('');
+    const [aboutMe, setAboutMe] = useState<string>(profileData.about_me);
+    const [occupation, setOccupation] = useState<string>(profileData.occupation);
+
+    const tryUpdateProfileData = async () => {
+        const session = await getSession();
+        const response = await updateProfileData({
+            first_name: firstName,
+            last_name: lastName,
+            about_me: aboutMe,
+            occupation: occupation,
+            access: (session?.user as any)?.accessToken as string,
+        });
+
+        if (!response) {
+            alert('error');
+            // TODO: show toast
+        } else {
+            setEditing(false);
+            router.refresh();
+        }
+    };
 
     return (
         <Flex direction={'column'} gap={8}>
@@ -66,7 +90,7 @@ export default function EditProfileView({ user, setEditing }: EditProfileViewPro
                     Cancel
                 </PrimaryOutlineButton>
 
-                <PrimaryButton fontWeight={'semibold'} w={'28'} onClick={() => setEditing(false)}>
+                <PrimaryButton onClick={tryUpdateProfileData} fontWeight={'semibold'} w={'28'}>
                     Save
                 </PrimaryButton>
             </Flex>

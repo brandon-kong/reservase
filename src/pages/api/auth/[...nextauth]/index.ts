@@ -129,9 +129,9 @@ export const authOptions: NextAuthOptions = {
 
                 account.user = response.data.user;
                 user.pk = response.data.user.pk;
-                console.log(response.data.user)
                 user.first_name = response.data.user.first_name;
                 user.last_name = response.data.user.last_name;
+                user.accessToken = response.data.access;
 
                 return true;
             }

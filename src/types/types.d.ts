@@ -14,6 +14,10 @@ export type ProtectedPageProps = {
 export type ProfileData = {
     pk: string;
     name: string;
-    joinDate: string;
-    reviewCount: number;
+    join_date: string;
+    review_count: number;
+    about_me: string;
+    location: string;
+    first_name: string;
+    last_name: string;
 };

@@ -81,8 +81,8 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
             <Flex flex={1} h={'full'} direction={'column'} gap={8}>
                 <Flex direction={'column'} gap={4}>
                     <Flex direction={'column'} gap={2}>
-                        <Heading size={'lg'}>Welcome back, {profileData.name}!</Heading>
-                        <Text color={'monotone.600'}>Joined in {profileData.joinDate}</Text>
+                        <Heading size={'lg'}>Welcome back, {profileData.first_name}!</Heading>
+                        <Text color={'monotone.600'}>Joined on {profileData.join_date}</Text>
                     </Flex>
                 </Flex>
 
@@ -97,14 +97,14 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                         <Icon fontSize={'lg'} as={StarIcon} />
 
                         <Text fontSize={'md'} fontWeight={'semibold'}>
-                            {profileData.reviewCount} review{profileData.reviewCount !== 1 ? 's' : ''}
+                            {profileData.review_count} review{profileData.review_count !== 1 ? 's' : ''}
                         </Text>
                     </Flex>
 
                     <Divider />
                 </Flex>
 
-                {!editing ? null : <EditProfileView setEditing={setEditing} user={user} />}
+                {!editing ? null : <EditProfileView profileData={profileData} setEditing={setEditing} user={user} />}
             </Flex>
         </Flex>
     );
