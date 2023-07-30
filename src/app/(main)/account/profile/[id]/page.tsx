@@ -1,13 +1,22 @@
-type UserAccountPageProps = {
-    params: {
-        id: string;
-    };
-};
+import { getCurrentUser } from '@/lib/session';
+import { notFound } from 'next/navigation';
+import { getProfileData } from '@/lib/account';
 
-export default function UserAccountPage({ params }: UserAccountPageProps) {
-    return (
-        <div>
-            <h1>{params.id}</h1>
-        </div>
-    );
+import ProfileContent from '@/components/layout/Account/ProfileContent';
+import { ProfileData } from '@/types/types';
+
+type ProfileViewProps = {
+    params: {
+        id: number;
+    }
+}
+export default async function ProfileView( { params }: ProfileViewProps) {
+    const { id } = params;
+    const userProfile: ProfileData = await getProfileData(id);
+
+    if (!userProfile) {
+        notFound();
+    }
+
+    return <ProfileContent profileData={userProfile} />;
 }

@@ -1,7 +1,6 @@
 'use client';
 
 type ProfileContentProps = {
-    user: any;
     profileData: ProfileData;
 };
 
@@ -11,7 +10,7 @@ import { CheckIcon, StarIcon } from '@chakra-ui/icons';
 import { PrimaryOutlineButton } from '@/components/Buttons';
 import { ProfileData } from '@/types/types';
 
-export default function ProfileContent({ user, profileData }: ProfileContentProps) {
+export default function ProfileContent({ profileData }: ProfileContentProps) {
     return (
         <Flex px={'6rem'} py={'4rem'} fontSize={'sm'} h={'calc(100vh - 65px)'} align={'center'} gap={10}>
             <Flex
@@ -63,7 +62,7 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
             <Flex flex={1} h={'full'} direction={'column'} gap={8}>
                 <Flex direction={'column'} gap={4}>
                     <Flex direction={'column'} gap={2}>
-                        <Heading size={'lg'}>Welcome back, {user.name}!</Heading>
+                        <Heading size={'lg'}>Welcome back, {profileData.name}!</Heading>
                         <Text color={'monotone.600'}>Joined in {profileData.joinDate}</Text>
                     </Flex>
 
