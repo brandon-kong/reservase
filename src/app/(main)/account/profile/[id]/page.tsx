@@ -8,9 +8,10 @@ import { ProfileData } from '@/types/types';
 type ProfileViewProps = {
     params: {
         id: number;
-    }
-}
-export default async function ProfileView( { params }: ProfileViewProps) {
+    };
+};
+
+export default async function ProfileView({ params }: ProfileViewProps) {
     const { id } = params;
     const userProfile: ProfileData = await getProfileData(id);
 
