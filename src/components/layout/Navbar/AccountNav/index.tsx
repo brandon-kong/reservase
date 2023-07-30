@@ -14,10 +14,16 @@ import { useRouter } from 'next/navigation';
 
 type AccountNavProps = {
     isAuthenticated: boolean;
+    user: any;
 };
 
-export default function AccountNav({ isAuthenticated }: AccountNavProps) {
+export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
     const router = useRouter();
+
+    const toProfile = () => {
+        if (isAuthenticated) router.push(`/account/profile`);
+        else router.push('/account/login');
+    }
 
     return (
         <Menu>
@@ -46,13 +52,16 @@ export default function AccountNav({ isAuthenticated }: AccountNavProps) {
 
             {isAuthenticated ? (
                 <MenuList zIndex={1}>
-                    <MenuItem>Profile</MenuItem>
+                    <MenuItem
+                    onClick={toProfile}
+                    >Profile</MenuItem>
                     <MenuItem>Settings</MenuItem>
                     <MenuDivider />
                     <MenuItem
+                        fontWeight={'semibold'}
                         onClick={() =>
                             signOut({
-                                callbackUrl: 'http://localhost:3000/account/login',
+                                callbackUrl: 'http://127.0.0.1:3000/account/login',
                             })
                         }
                     >
@@ -61,7 +70,10 @@ export default function AccountNav({ isAuthenticated }: AccountNavProps) {
                 </MenuList>
             ) : (
                 <MenuList zIndex={1}>
+                    <MenuItem fontWeight={'semibold'} onClick={() => router.push('/account/register')}>Sign up</MenuItem>
                     <MenuItem onClick={() => router.push('/account/login')}>Login</MenuItem>
+                    <MenuDivider />
+                    <MenuItem>Help center</MenuItem>
                 </MenuList>
             )}
         </Menu>

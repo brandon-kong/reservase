@@ -83,13 +83,14 @@ export const authOptions: NextAuthOptions = {
                 user.accessToken = data.access;
                 user.refreshToken = data.refresh;
 
+                user.name = user.first_name + " " + user.last_name;
+
 
                 return user;
             }
             
             return null;
         } catch (error: any) {
-            //console.error(error.response.data);
             return null
         }
       },
@@ -126,6 +127,8 @@ export const authOptions: NextAuthOptions = {
             if (response.status === 200) {
 
                 account.user = response.data.user;
+                user.pk = response.data.user.pk;
+
                 return true;
             }
             

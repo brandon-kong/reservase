@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <body className={montserrat.className}>
                 <NextAuthProvider>
                     <StyleProvider>
-                        <Navbar isAuthenticated={!!user} />
+                        <Navbar isAuthenticated={!!user} user={user} />
                         <Padding>{children}</Padding>
                     </StyleProvider>
                 </NextAuthProvider>

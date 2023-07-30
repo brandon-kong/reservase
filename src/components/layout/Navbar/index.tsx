@@ -9,16 +9,19 @@ import AccountNav from './AccountNav';
 
 import { FiGlobe } from '@react-icons/all-files/fi/FiGlobe';
 
+import { Session, User } from 'next-auth';
+
 type NavbarProps = {
     isAuthenticated: boolean;
+    user: any;
 };
 
-export default function Navbar({ isAuthenticated }: NavbarProps = { isAuthenticated: false }) {
+export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuthenticated: false, user: null }) {
     return (
         <>
             <Flex
                 top={0}
-                position={'fixed'}
+                //position={'fixed'}
                 bg={'white'}
                 zIndex={1}
                 direction={'column'}
@@ -72,7 +75,7 @@ export default function Navbar({ isAuthenticated }: NavbarProps = { isAuthentica
                             <TransparentIconButton icon={<FiGlobe />} w={12} h={12} />
                         </Flex>
 
-                        <AccountNav isAuthenticated={isAuthenticated} />
+                        <AccountNav isAuthenticated={isAuthenticated} user={user} />
                     </Flex>
                 </Flex>
             </Flex>

@@ -18,9 +18,20 @@ export async function POST ( req: NextRequest) {
         });
 
         if (!(status === 201)) {
-            console.log(data);
+            return NextResponse.json({
+                error: data,
+            }, {
+                status: status,
+            })
         }
-        return NextResponse.redirect("/login");
+        else {
+            return NextResponse.json({
+            message: "User created successfully",
+            }, {
+                status: 200,
+            });
+        }
+        
     }
 
     catch (error: any) {

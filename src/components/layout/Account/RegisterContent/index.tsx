@@ -5,7 +5,9 @@ import { useState } from 'react';
 import { GoogleSocialButton, PrimaryButton } from '@/components/Buttons';
 import Input from '@/components/Input';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Container, Text, Flex, Heading, Divider, useToast } from '@chakra-ui/react';
+import { Container, Text, Flex, Heading, Divider, useToast,
+    Spinner,
+} from '@chakra-ui/react';
 
 import Image from '@/components/Image';
 import { Link } from '@chakra-ui/next-js';
@@ -21,6 +23,7 @@ export default function RegisterContent() {
     const [lastName, setLastName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
     if (searchParams?.has('error')) {
         const error = searchParams.get('error');
@@ -68,12 +71,41 @@ export default function RegisterContent() {
     }
 
     const attemptSignUp = () => {
+        setLoading(true);
         signUp({ email, password, first_name: firstName, last_name: lastName })
             .then(res => {
-                alert(res);
+                if (res.status !== 200) {
+                    toast({
+                        id: 'access-denied',
+                        title: 'Could not create account',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'bottom-right',
+                    });
+                }
+
+                // TODO: Handle success, login user
+                signIn('credentials', {
+                    email,
+                    password,
+                    callbackUrl: `${window.location.origin}/`,
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
             })
             .catch((err: any) => {
-                const errors = err.response.data.error;
+                const response = err.response;
+
+                setLoading(false);
+                if (!response) {
+                    
+                    return false;
+                }
+
+                const errors = response.data.error;
                 if (!errors) {
                     toast({
                         id: 'unknown-error',
@@ -91,7 +123,7 @@ export default function RegisterContent() {
                     toast({
                         id: 'email-taken',
                         size: 'sm',
-                        title: errors.email,
+                        title: "email: " + errors.email,
                         variant: 'left-accent',
                         status: 'error',
                         duration: 3000,
@@ -103,6 +135,7 @@ export default function RegisterContent() {
     };
 
     const attemptLoginWithGoogle = () => {
+        setLoading(true);
         signIn('google', {
             redirect: false,
             callbackUrl: `${window.location.origin}/`,
@@ -111,6 +144,7 @@ export default function RegisterContent() {
 
     return (
         <Container
+            position={'relative'}
             as={Flex}
             direction={'column'}
             align={'center'}
@@ -118,7 +152,19 @@ export default function RegisterContent() {
             h={'100vh'}
             maxW={'400px'}
             gap={4}
+
+            transition={'all 0.2s ease-in-out'}
+            opacity={loading ? 0.5 : 1}
+            pointerEvents={loading ? 'none' : 'auto'}
         >
+            <Spinner 
+            zIndex={2}
+            position={'absolute'}
+            top={'50%'}
+            left={'50%'}
+            transform={'translate(-50%, -50%)'}
+            display={loading ? 'block' : 'none'}
+            />
             <Flex pb={4}>
                 <Image src={'/reservine.png'} alt="Reservine Logo" height={50} width={50} />
             </Flex>
@@ -135,6 +181,7 @@ export default function RegisterContent() {
                 <Flex w={'full'} direction={'column'} gap={4}>
                     <Flex gap={4}>
                         <Input
+                            isDisabled={loading}
                             w={'full'}
                             placeholder={'First name'}
                             name={'first_name'}
@@ -142,6 +189,7 @@ export default function RegisterContent() {
                             onChange={(e: any) => setFirstName(e.target.value)}
                         />
                         <Input
+                            isDisabled={loading}
                             w={'full'}
                             placeholder={'Last name'}
                             name={'last_name'}
@@ -151,6 +199,7 @@ export default function RegisterContent() {
                     </Flex>
 
                     <Input
+                        isDisabled={loading}
                         w={'full'}
                         placeholder={'Email'}
                         name={'email'}
@@ -159,6 +208,7 @@ export default function RegisterContent() {
                     />
 
                     <Input
+                        isDisabled={loading}
                         w={'full'}
                         type={'password'}
                         placeholder={'Password'}
@@ -167,7 +217,9 @@ export default function RegisterContent() {
                         onChange={(e: any) => setPassword(e.target.value)}
                     />
 
-                    <PrimaryButton w={'full'} onClick={attemptSignUp}>
+                    <PrimaryButton 
+                    isLoading={loading}
+                    w={'full'} onClick={attemptSignUp}>
                         Sign up
                     </PrimaryButton>
 

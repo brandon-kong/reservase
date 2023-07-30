@@ -101,3 +101,29 @@ export function LogoutButton() {
 export function LoginButton() {
     return <button onClick={() => signIn()}>Login</button>;
 }
+
+export function PrimaryOutlineButton(props: any) {
+    const { children, ...rest } = props
+
+    return (
+        <PrimaryButton
+            display={'flex'}
+            bg={'white'}
+            border={'1px solid'}
+            borderColor={'monotone.500'}
+            color={'black'}
+            _hover={{
+                bg: 'monotone.200',
+            }}
+            _active={{
+                bg: 'monotone.300',
+                borderColor: 'monotone.600',
+            }}
+            gap={2}
+            cursor={'pointer'}
+            {...rest}
+        >
+            { children }
+        </PrimaryButton>
+    );
+}
