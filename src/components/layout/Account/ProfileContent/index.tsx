@@ -20,7 +20,10 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
 
     return (
         <Flex
-            px={'6rem'}
+            px={{
+                base: 8,
+                md: 20,
+            }}
             py={'4rem'}
             fontSize={'sm'}
             minH={'calc(100vh - 65px)'}

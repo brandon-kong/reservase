@@ -119,7 +119,7 @@ export default function BecomeHostContent() {
                 px={4}
                 >
                     <Image
-                    filter={'brightness(0.7) grayscale(0.5)'}
+                    filter={'brightness(0.7) grayscale(0.5) saturate(1.2) contrast(0.8) hue-rotate(10deg)'}
                     src={'/images/host-hero.jpg'}
                     
                     rounded={'lg'}
