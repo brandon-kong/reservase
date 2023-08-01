@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import NextAuthProvider from '@/components/Providers/NextAuthProvider';
 import { getCurrentUser } from '@/lib/session';
+import { userIsHost } from '@/lib/account';
 import Navbar from '@/components/layout/Navbar';
 import Padding from '@/components/layout/Padding';
 
@@ -15,12 +16,13 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const user = await getCurrentUser();
+    const isHost = await userIsHost();
     return (
         <html lang="en">
             <body className={montserrat.className}>
                 <NextAuthProvider>
                     <StyleProvider>
-                        <Navbar isAuthenticated={!!user} user={user} />
+                        <Navbar isAuthenticated={!!user} user={user} isHost={isHost} />
                         <Padding>{children}</Padding>
                     </StyleProvider>
                 </NextAuthProvider>

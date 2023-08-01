@@ -53,8 +53,10 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
             {isAuthenticated ? (
                 <MenuList zIndex={1}>
                     <MenuItem onClick={toProfile}>Profile</MenuItem>
-                    <MenuItem>Settings</MenuItem>
+                    <MenuItem>My reservations</MenuItem>
+                    <MenuItem>Wishlist</MenuItem>
                     <MenuDivider />
+                    <MenuItem>Settings</MenuItem>
                     <MenuItem
                         fontWeight={'semibold'}
                         onClick={() =>

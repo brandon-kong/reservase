@@ -174,7 +174,6 @@ export const authOptions: NextAuthOptions = {
 
       //console.log(token)
         session.user = token.user;
-        session.accessToken = token.accessToken;
         return session;
     },
   },

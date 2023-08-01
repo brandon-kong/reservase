@@ -1,4 +1,7 @@
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import instance from "../axios";
+import { getServerSession } from "next-auth";
+import { signOut } from "next-auth/react";
 
 export async function getProfileData(pk: number) {
     try {
@@ -37,6 +40,46 @@ export async function updateProfileData({ first_name, last_name, about_me, locat
         }
         else {
             return true
+        }
+    }
+    catch (error) {
+        return null
+    }
+}
+
+export async function getAccessToken() {
+    const session = await getServerSession(authOptions)
+
+    if (!session) {
+        signOut()
+        return null
+    }
+
+    const { accessToken } = session.user as any
+
+    if (!accessToken) {
+        signOut()
+        return null
+    }
+
+    return accessToken
+}
+
+export async function userIsHost() {
+    const accessToken = await getAccessToken()
+
+    try {
+        const { data, status } = await instance.get(`is/host`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+
+        if (status !== 200) {
+            return null
+        }
+        else {
+            return data.is_host
         }
     }
     catch (error) {
