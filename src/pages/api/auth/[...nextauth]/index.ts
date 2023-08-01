@@ -11,24 +11,26 @@ const BACKEND_ACCESS_TOKEN_LIFETIME = 45 * 60;            // 45 minutes
 const BACKEND_REFRESH_TOKEN_LIFETIME = 6 * 24 * 60 * 60;  // 6 days
 
 async function refreshAccessToken(token: any): Promise<any | null> {
+
     try {
-      const res = await fetch(
-        `${process.env.NEXTAUTH_BACKEND_URL}token/refresh/`,
+      const { status, data } = await axios.post(
+        `${process.env.NEXTAUTH_BACKEND_URL}token/refresh`,
         {
-          method: "POST",
-          body: JSON.stringify({ refresh: token.refresh }),
-          headers: { "Content-Type": "application/json" },
+           refresh: token,
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+            }
         }
       );
-      const refreshedToken = await res.json();
   
-      if (res.status !== 200) throw refreshedToken;
+      if (status !== 200) throw data;
   
-      const { exp }: any = jwtDecode(refreshedToken.access);
+      const { exp }: any = jwtDecode(data.access);
   
       return {
         ...token,
-        ...refreshedToken,
+        ...data,
         exp,
       };
     } catch (error) {
@@ -132,7 +134,7 @@ export const authOptions: NextAuthOptions = {
                 user.first_name = response.data.user.first_name;
                 user.last_name = response.data.user.last_name;
                 user.accessToken = response.data.access;
-
+                user.refreshToken = response.data.refresh;
                 return true;
             }
             
@@ -146,21 +148,31 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({user, token, account}: any) {
+
+      //token.accessToken = b.access;
+      //token.refreshToken = b.refresh;
+
         if (user && account) {
           token.user = user;
+
+          
             return token;
         }
 
         if (Date.now() < token.exp * 1000) {
+          const b = await refreshAccessToken(token.user.refreshToken);
+          
+            token.user.accessToken = b.access;
             return token;
         }
 
         const a = await refreshAccessToken(token);
-        console.log(a)
         return await a || null;
     },
 
     async session({ session, token, user }: any) {
+
+      //console.log(token)
         session.user = token.user;
         session.accessToken = token.accessToken;
         return session;

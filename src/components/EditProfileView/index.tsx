@@ -16,6 +16,7 @@ import { PrimaryButton, PrimaryOutlineButton, TransparentButton } from '../Butto
 
 export default function EditProfileView({ user, setEditing, profileData }: EditProfileViewProps) {
     const router = useRouter();
+
     const [firstName, setFirstName] = useState<string>(profileData.first_name);
     const [lastName, setLastName] = useState<string>(profileData.last_name);
 

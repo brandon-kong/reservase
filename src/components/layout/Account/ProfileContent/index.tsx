@@ -59,7 +59,7 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
 
                 <Flex w={'full'} direction={'column'} gap={2}>
                     <Heading w={'full'} size={'md'}>
-                        {profileData.name}
+                        {profileData.first_name + ' ' + profileData.last_name}
                     </Heading>
                     <List spacing={1} color={'monotone.700'}>
                         <ListItem>
