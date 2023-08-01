@@ -70,7 +70,7 @@ export default function LoginContent() {
             redirect: false,
             email,
             password,
-            callbackUrl: `${window.location.origin}/`,
+            callbackUrl: `http://localhost:3000/profile/account`,
         })
             .then((res: any) => {
                 if (!res.ok) {

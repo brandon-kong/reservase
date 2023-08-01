@@ -10,6 +10,26 @@ import jwtDecode from "jwt-decode";
 const BACKEND_ACCESS_TOKEN_LIFETIME = 45 * 60;            // 45 minutes
 const BACKEND_REFRESH_TOKEN_LIFETIME = 6 * 24 * 60 * 60;  // 6 days
 
+async function verifyToken(token: any) {
+  try {
+    const { status, data } = await axios.post(
+      `${process.env.NEXTAUTH_BACKEND_URL}token/verify`,
+      {
+         token: token,
+      }, {
+          headers: {
+              "Content-Type": "application/json",
+          }
+      }
+    );
+
+    if (status !== 200) throw false;
+
+    return true;
+  } catch (error: any) {
+    return false;
+  }
+}
 async function refreshAccessToken(token: any): Promise<any | null> {
 
     try {
@@ -33,7 +53,7 @@ async function refreshAccessToken(token: any): Promise<any | null> {
         ...data,
         exp,
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         ...token,
         error: "RefreshAccessTokenError",
@@ -154,16 +174,42 @@ export const authOptions: NextAuthOptions = {
 
         if (user && account) {
           token.user = user;
-
-          
             return token;
         }
 
         if (Date.now() < token.exp * 1000) {
-          const b = await refreshAccessToken(token.user.refreshToken);
-          
-            token.user.accessToken = b.access;
+
+
+          if (!token.user) {
             return token;
+          }
+          const shouldRefresh = await verifyToken(token.user.accessToken);
+          const refreshIsValid = await verifyToken(token.user.refreshToken);
+
+          console.log(refreshIsValid)
+          
+          if (!refreshIsValid) {
+            //signOut()
+          }
+
+          if (shouldRefresh) {
+            console.log('refreshed token')
+            const b = await refreshAccessToken(token.user.refreshToken);
+            if (b.access) {
+              token.user.accessToken = b.access
+            }
+
+            if (b.refresh) {
+              token.user.refreshToken = b.refresh;
+            }
+            
+
+            return token;
+          }
+          
+          
+          token.user = user;
+          return token;
         }
 
         const a = await refreshAccessToken(token);

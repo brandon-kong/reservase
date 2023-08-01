@@ -88,7 +88,7 @@ export default function RegisterContent() {
                 signIn('credentials', {
                     email,
                     password,
-                    callbackUrl: `${window.location.origin}/`,
+                    callbackUrl: `http://localhost:3000/account/profile`,
                 }).catch(err => {
                     setLoading(false);
                 });

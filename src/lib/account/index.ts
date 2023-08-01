@@ -51,18 +51,18 @@ export async function getAccessToken() {
     const session = await getServerSession(authOptions)
 
     if (!session) {
-        signOut()
+        //signOut()
         return null
     }
 
-    const { accessToken } = session.user as any
+    const user = session.user as any
 
-    if (!accessToken) {
-        signOut()
+    if (!user) {
+        //signOut()
         return null
     }
 
-    return accessToken
+    return user.accessToken
 }
 
 export async function userIsHost() {
