@@ -16,7 +16,9 @@ type NavbarProps = {
     isHost?: boolean | null | undefined;
 };
 
-export default function Navbar({ isAuthenticated, user, isHost }: NavbarProps = { isAuthenticated: false, user: null }) {
+export default function Navbar(
+    { isAuthenticated, user, isHost }: NavbarProps = { isAuthenticated: false, user: null },
+) {
     return (
         <>
             <Flex
@@ -70,22 +72,15 @@ export default function Navbar({ isAuthenticated, user, isHost }: NavbarProps = 
                                 <TransparentButton>Explore</TransparentButton>
                                 <TransparentButton>Blog</TransparentButton>
 
-                                {
-                                    isHost ? (
-                                        <TransparentButton
-                                            as={Link}
-                                            href={'/properties'}
-                                        >
-                                            Properties
-                                        </TransparentButton>
-                                    ) : (
-                                         <TransparentButton
-                                        as={Link}
-                                        href={'/host'}
-                                        >Become a host</TransparentButton>
-                                    )
-                                }
-                               
+                                {isHost ? (
+                                    <TransparentButton as={Link} href={'/properties'}>
+                                        Properties
+                                    </TransparentButton>
+                                ) : (
+                                    <TransparentButton as={Link} href={'/host'}>
+                                        Become a host
+                                    </TransparentButton>
+                                )}
                             </Flex>
 
                             <TransparentIconButton icon={<FiGlobe />} w={12} h={12} />

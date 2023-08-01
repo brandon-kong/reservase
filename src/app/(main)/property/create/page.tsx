@@ -1,7 +1,3 @@
 export default function PropertyCreate() {
-    return (
-        <div>
-            Create
-        </div>
-    )
+    return <div>Create</div>;
 }

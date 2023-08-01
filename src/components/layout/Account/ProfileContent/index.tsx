@@ -83,15 +83,13 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                 </Flex>
             </Flex>
 
-            <Flex 
-            w={'full'}
-            flex={1} h={'full'} direction={'column'} gap={8}>
+            <Flex w={'full'} flex={1} h={'full'} direction={'column'} gap={8}>
                 <Flex direction={'column'} gap={4}>
                     <Flex direction={'column'} gap={2}>
                         <Heading size={'lg'}>
-                            {
-                                userIsOnOwnProfile ? 'Welcome back, ' + profileData.first_name : profileData.first_name + ' ' + profileData.last_name
-                            }
+                            {userIsOnOwnProfile
+                                ? 'Welcome back, ' + profileData.first_name
+                                : profileData.first_name + ' ' + profileData.last_name}
                         </Heading>
                         <Text color={'monotone.600'}>Joined on {profileData.join_date}</Text>
                     </Flex>

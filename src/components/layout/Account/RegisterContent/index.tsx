@@ -89,7 +89,7 @@ export default function RegisterContent() {
                     email,
                     password,
                     callbackUrl: `${window.location.origin}/`,
-                }).finally(() => {
+                }).catch(err => {
                     setLoading(false);
                 });
             })

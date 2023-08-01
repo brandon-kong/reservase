@@ -43,11 +43,12 @@ export default function EditProfileView({ user, setEditing, profileData }: EditP
 
     return (
         <Flex direction={'column'} gap={8}>
-            <Flex gap={8}
-            direction={{
-                base: 'column',
-                lg: 'row'
-            }}
+            <Flex
+                gap={8}
+                direction={{
+                    base: 'column',
+                    lg: 'row',
+                }}
             >
                 <InputGroup as={Flex} direction={'column'} gap={2}>
                     <Text>First Name</Text>
