@@ -155,6 +155,7 @@ export const authOptions: NextAuthOptions = {
                 user.last_name = response.data.user.last_name;
                 user.accessToken = response.data.access;
                 user.refreshToken = response.data.refresh;
+                
                 return true;
             }
             
@@ -178,37 +179,21 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (Date.now() < token.exp * 1000) {
-
-
           if (!token.user) {
             return token;
           }
           const shouldRefresh = await verifyToken(token.user.accessToken);
-          const refreshIsValid = await verifyToken(token.user.refreshToken);
-
-          console.log(refreshIsValid)
-          
-          if (!refreshIsValid) {
-            //signOut()
-          }
-
           if (shouldRefresh) {
-            console.log('refreshed token')
-            const b = await refreshAccessToken(token.user.refreshToken);
-            if (b.access) {
-              token.user.accessToken = b.access
-            }
-
-            if (b.refresh) {
-              token.user.refreshToken = b.refresh;
-            }
-            
+            const a = await refreshAccessToken(token.user.refreshToken);
+            if (a) {
+              token.user.accessToken = a.access;
+              token.user.refreshToken = a.refresh;
+              token.user.exp = a.exp;
+          }
 
             return token;
           }
           
-          
-          token.user = user;
           return token;
         }
 
