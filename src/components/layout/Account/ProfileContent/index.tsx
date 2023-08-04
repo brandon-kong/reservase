@@ -9,12 +9,13 @@ import { useState } from 'react';
 import { Avatar, Flex, Text, Heading, List, ListItem, ListIcon, Icon, Divider } from '@chakra-ui/react';
 
 import { CheckIcon, StarIcon } from '@chakra-ui/icons';
-import { PrimaryOutlineButton } from '@/components/Buttons';
+import { PrimaryButton, PrimaryOutlineButton, TransparentButton } from '@/components/Buttons';
 import { ProfileData } from '@/types/types';
 import EditProfileView from '@/components/EditProfileView';
 
 export default function ProfileContent({ user, profileData }: ProfileContentProps) {
     const [editing, setEditing] = useState<boolean>(false);
+    const [imageChanged, setImageChanged] = useState<boolean>(false);
 
     const userIsOnOwnProfile = user && user.pk === profileData.pk;
 
@@ -49,8 +50,21 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                 justify={'center'}
             >
                 <Flex w={'full'} align={'center'} direction={'column'} gap={4}>
-                    <Avatar bg={'monotone_dark.500'} size={'2xl'} />
-                    <Text fontWeight={'semibold'}>Edit profile picture</Text>
+                    <Avatar bg={'monotone_dark.300'} size={'2xl'} />
+                    {userIsOnOwnProfile ? (
+                        <PrimaryOutlineButton w={'full'} onClick={() => setImageChanged(true)}>
+                            Edit profile picture
+                        </PrimaryOutlineButton>
+                    ) : null}
+
+                    {imageChanged ? (
+                        <Flex w={'full'} direction={'row'} gap={4}>
+                            <PrimaryOutlineButton w={'full'} onClick={() => setImageChanged(false)}>
+                                Cancel
+                            </PrimaryOutlineButton>
+                            <PrimaryButton w={'full'}>Save</PrimaryButton>
+                        </Flex>
+                    ) : null}
                 </Flex>
 
                 <Flex w={'full'} direction={'column'} gap={2}>
@@ -102,12 +116,27 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                         </PrimaryOutlineButton>
                     ) : null}
 
-                    <Flex align={'center'} gap={2}>
+                    <Flex align={'center'} gap={2} color={'primary.600'}>
                         <Icon fontSize={'lg'} as={StarIcon} />
 
                         <Text fontSize={'md'} fontWeight={'semibold'}>
                             {profileData.review_count} review{profileData.review_count !== 1 ? 's' : ''}
                         </Text>
+                    </Flex>
+
+                    <Flex direction={'column'} gap={8}>
+                        <Flex direction={'column'} gap={2}>
+                            <Text fontWeight={'bold'} fontSize={'md'}>
+                                About me
+                            </Text>
+                            <Text color={'monotone.600'}>{profileData.about_me}</Text>
+                        </Flex>
+                        <Flex direction={'column'} gap={2}>
+                            <Text fontWeight={'bold'} fontSize={'md'}>
+                                Occupation
+                            </Text>
+                            <Text color={'monotone.600'}>{profileData.occupation}</Text>
+                        </Flex>
                     </Flex>
 
                     <Divider />

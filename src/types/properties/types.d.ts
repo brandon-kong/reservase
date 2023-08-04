@@ -1,0 +1,41 @@
+export type Property = {
+    name: string;
+    description: string;
+    price: number;
+    type: string;
+    beds: number;
+    baths: number;
+    size: number;
+    address: string;
+    city: string;
+    state: string;
+    zip_code: string;
+    country: string;
+    amenities: string[];
+    rules: string[];
+    images: string[];
+    owner: number;
+    is_published: boolean;
+    is_archived: boolean;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+    id: number;
+};
+
+export type CreatePropertyParams = {
+    name: string;
+    description: string;
+    price: number;
+    type: string;
+    address: string;
+    city: string;
+    state: string;
+    zip_code: string;
+    country: string;
+    status: string;
+    area: string;
+    bedrooms: number;
+    bathrooms: number;
+    garages: string;
+};

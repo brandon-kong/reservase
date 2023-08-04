@@ -1,7 +1,6 @@
-import { authOptions } from '@/lib/auth/api/auth/[...nextauth]';
+import authOptions from '../auth/authOptions';
 import { api, clientApi } from '@/lib/axios';
 import { getServerSession } from 'next-auth';
-import { signOut } from 'next-auth/react';
 
 export async function getProfileData(pk: number) {
     try {
@@ -63,7 +62,7 @@ export async function getAccessToken() {
         return null;
     }
 
-    return user.accessToken;
+    return user.access;
 }
 
 export async function userIsHost() {

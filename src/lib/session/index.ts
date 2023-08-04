@@ -1,4 +1,4 @@
-import { authOptions } from '@/lib/auth/api/auth/[...nextauth]';
+import authOptions from '../auth/authOptions';
 import { getServerSession } from 'next-auth';
 import axios from 'axios';
 
