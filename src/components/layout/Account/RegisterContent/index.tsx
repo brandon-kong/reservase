@@ -103,29 +103,76 @@ export default function RegisterContent() {
 
                 const errors = response.data.error;
                 if (!errors) {
-                    toast({
-                        id: 'unknown-error',
-                        size: 'sm',
-                        title: 'An unknown error occurred',
-                        variant: 'left-accent',
-                        status: 'error',
-                        duration: 3000,
-                        isClosable: true,
-                        position: 'bottom-right',
-                    });
+                    if (!toast.isActive('unknown-error')) {
+                        toast({
+                            id: 'unknown-error',
+                            size: 'sm',
+                            title: 'An unknown error occurred',
+                            variant: 'left-accent',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                            position: 'bottom-right',
+                        });
+                    }
                     return;
                 }
                 if (errors.email) {
-                    toast({
-                        id: 'email-taken',
-                        size: 'sm',
-                        title: 'email: ' + errors.email,
-                        variant: 'left-accent',
-                        status: 'error',
-                        duration: 3000,
-                        isClosable: true,
-                        position: 'bottom-right',
-                    });
+                    if (!toast.isActive('email-taken')) {
+                        toast({
+                            id: 'email-taken',
+                            size: 'sm',
+                            title: 'email: ' + errors.email,
+                            variant: 'left-accent',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                            position: 'bottom-right',
+                        });
+                    }
+                }
+                if (errors.password1) {
+                    if (!toast.isActive('password1')) {
+                        toast({
+                            id: 'password1',
+                            size: 'sm',
+                            title: 'password: ' + errors.password1,
+                            variant: 'left-accent',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                            position: 'bottom-right',
+                        });
+                    }
+                }
+
+                if (errors.first_name) {
+                    if (!toast.isActive('first_name')) {
+                        toast({
+                            id: 'first_name',
+                            size: 'sm',
+                            title: 'first_name: ' + errors.first_name,
+                            variant: 'left-accent',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                            position: 'bottom-right',
+                        });
+                    }
+                }
+                if (errors.last_name) {
+                    if (!toast.isActive('last_name')) {
+                        toast({
+                            id: 'last_name',
+                            size: 'sm',
+                            title: 'last_name: ' + errors.last_name,
+                            variant: 'left-accent',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                            position: 'bottom-right',
+                        });
+                    }
                 }
             });
     };

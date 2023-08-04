@@ -10,15 +10,16 @@ export function DefaultButton(props: any) {
 
     return (
         <Button
+            color={'text.primary'}
             fontWeight={'normal'}
             rounded={'full'}
             fontSize={'sm'}
             _hover={{
-                bg: 'monotone.200',
+                bg: 'monotone_light.200',
             }}
             h={12}
             _active={{
-                bg: 'monotone.300',
+                bg: 'monotone_light.300',
             }}
             {...rest}
         >
@@ -63,21 +64,22 @@ export function GoogleSocialButton(props: any) {
             display={'flex'}
             bg={'white'}
             border={'1px solid'}
-            borderColor={'monotone.300'}
+            borderColor={'monotone_light.300'}
             color={'black'}
             _hover={{
-                bg: 'monotone.200',
+                bg: 'monotone_light.200',
+                borderColor: 'monotone_light.500',
             }}
             _active={{
-                bg: 'monotone.300',
-                borderColor: 'monotone.600',
+                bg: 'monotone_light.300',
+                borderColor: 'monotone_light.800',
             }}
             gap={2}
             cursor={'pointer'}
             {...props}
         >
             <Image src={'/icons/google.svg'} alt={'social icon'} width={6} height={6} />
-            <Text fontWeight={'500'} color={'monotone.800'}>
+            <Text fontWeight={'500'} color={'monotone_dark.800'}>
                 Sign in with Google
             </Text>
         </PrimaryButton>
@@ -110,14 +112,14 @@ export function PrimaryOutlineButton(props: any) {
             display={'flex'}
             bg={'white'}
             border={'1px solid'}
-            borderColor={'monotone.500'}
+            borderColor={'monotone_light.500'}
             color={'black'}
             _hover={{
-                bg: 'monotone.200',
+                bg: 'monotone_light.200',
             }}
             _active={{
-                bg: 'monotone.300',
-                borderColor: 'monotone.600',
+                bg: 'monotone_light.300',
+                borderColor: 'monotone_light.600',
             }}
             gap={2}
             cursor={'pointer'}

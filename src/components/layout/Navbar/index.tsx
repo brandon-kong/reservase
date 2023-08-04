@@ -30,7 +30,7 @@ export default function Navbar(
                 w={'full'}
                 h={'65px'}
                 border={'1px solid'}
-                borderColor={'monotone.300'}
+                borderColor={'monotone_light.500'}
                 align={'center'}
                 justify={{
                     base: 'flex-start',

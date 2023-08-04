@@ -49,7 +49,7 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                 justify={'center'}
             >
                 <Flex w={'full'} align={'center'} direction={'column'} gap={4}>
-                    <Avatar bg={'monotone.500'} size={'2xl'} />
+                    <Avatar bg={'monotone_dark.500'} size={'2xl'} />
                     <Text fontWeight={'semibold'}>Edit profile picture</Text>
                 </Flex>
 

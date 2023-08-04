@@ -35,7 +35,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                     py={2}
                     rounded={'full'}
                     border={'1px solid'}
-                    borderColor={'monotone.300'}
+                    borderColor={'monotone_dark.300'}
                     pointerEvents={'auto'}
                     transition={'all 0.2s ease-in-out'}
                     _hover={{
@@ -46,7 +46,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                     justify={'center'}
                 >
                     <HamburgerIcon />
-                    <Avatar bg={'monotone.400'} h={6} w={6} />
+                    <Avatar bg={'monotone_dark.500'} h={6} w={6} />
                 </Flex>
             </MenuButton>
 

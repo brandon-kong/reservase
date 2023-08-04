@@ -73,9 +73,9 @@ export default function LoginContent() {
             callbackUrl: `http://localhost:3000/profile/account`,
         })
             .then((res: any) => {
-                if (!res.ok) {
+                if (res.error) {
                     toast({
-                        title: 'Invalid credentials',
+                        title: res.error,
                         variant: 'left-accent',
                         status: 'error',
                         duration: 3000,
@@ -84,7 +84,8 @@ export default function LoginContent() {
                     });
                     setLoading(false);
                 } else {
-                    router.push('/');
+                    //setLoading(false);
+                    router.push('/account/profile');
                 }
             })
             .catch(err => {
@@ -173,7 +174,7 @@ export default function LoginContent() {
                     <GoogleSocialButton onClick={attemptLoginWithGoogle} />
 
                     <Text textAlign={'center'} color={'monotone.600'} fontSize={'sm'}>
-                        Don&apos;t have an account&lsquo; <Link href={'/account/register'}>Sign up</Link>
+                        Don&apos;t have an account&#63; <Link href={'/account/register'}>Sign up</Link>
                     </Text>
                 </Flex>
             </Flex>

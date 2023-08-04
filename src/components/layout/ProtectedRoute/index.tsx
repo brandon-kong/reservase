@@ -2,7 +2,7 @@ import { getCurrentUser } from '@/lib/session';
 import { getServerSession } from 'next-auth';
 import type { ProtectedPageProps } from '@/types/types';
 import { LoginButton, LogoutButton } from '@/components/Buttons';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { authOptions } from '@/lib/auth/api/auth/[...nextauth]';
 
 const ProtectedRoute = async ({ children }: ProtectedPageProps) => {
     const user = await getCurrentUser();

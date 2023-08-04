@@ -1,88 +1,87 @@
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import instance from "../axios";
-import { getServerSession } from "next-auth";
-import { signOut } from "next-auth/react";
+import { authOptions } from '@/lib/auth/api/auth/[...nextauth]';
+import { api, clientApi } from '@/lib/axios';
+import { getServerSession } from 'next-auth';
+import { signOut } from 'next-auth/react';
 
 export async function getProfileData(pk: number) {
     try {
-        const { data, status } = await instance.get(`profile/${pk}`)
+        const { data, status } = await api.get(`/users/profile/${pk}`);
 
         if (status !== 200) {
-            return null
+            return null;
+        } else {
+            return data;
         }
-        else {
-            return data
-        }
-    }
-    catch (error) {
-        return null
+    } catch (error) {
+        return null;
     }
 }
 
 export async function updateProfileData({ first_name, last_name, about_me, location, occupation, access }: any) {
+    console.log(access);
     try {
-        const { data, status } = await instance.post('http://127.0.0.1:8000/users/update/profile', {
-            first_name,
-            last_name,
-            about_me,
-            location,
-            occupation
-        }, {
-            headers: {
-                Authorization: `Bearer ${access}`
-            }
-        })
+        const { data, status } = await clientApi.post(
+            '/users/update/profile/',
+            {
+                first_name,
+                last_name,
+                about_me,
+                location,
+                occupation,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${access}`,
+                },
+            },
+        );
 
         //alert(status)
 
         if (status !== 200) {
-            return null
+            return null;
+        } else {
+            return true;
         }
-        else {
-            return true
-        }
-    }
-    catch (error) {
-        return null
+    } catch (error) {
+        return null;
     }
 }
 
 export async function getAccessToken() {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
 
     if (!session) {
         //signOut()
-        return null
+        return null;
     }
 
-    const user = session.user as any
+    const user = session.user as any;
 
     if (!user) {
         //signOut()
-        return null
+        return null;
     }
 
-    return user.accessToken
+    return user.accessToken;
 }
 
 export async function userIsHost() {
-    const accessToken = await getAccessToken()
+    const accessToken = await getAccessToken();
 
     try {
-        const { data, status } = await instance.get(`is/host`, {
+        const { data, status } = await api.get(`/users/is/host/`, {
             headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
 
         if (status !== 200) {
-            return null
+            return null;
+        } else {
+            return data.is_host;
         }
-        else {
-            return data.is_host
-        }
-    }
-    catch (error) {
-        return null
+    } catch (error) {
+        return null;
     }
 }

@@ -1,11 +1,11 @@
-import StyleProvider from '@/components/Providers/StyleProvider';
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
-import NextAuthProvider from '@/components/Providers/NextAuthProvider';
 import { getCurrentUser } from '@/lib/session';
 import { userIsHost } from '@/lib/account';
 import Navbar from '@/components/layout/Navbar';
 import Padding from '@/components/layout/Padding';
+import { ThemeProvider } from '@/lib/providers/theme';
+import AuthProvider from '@/lib/auth/providers';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -20,12 +20,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     return (
         <html lang="en">
             <body className={montserrat.className}>
-                <NextAuthProvider>
-                    <StyleProvider>
+                <AuthProvider>
+                    <ThemeProvider>
                         <Navbar isAuthenticated={!!user} user={user} isHost={isHost} />
                         <Padding>{children}</Padding>
-                    </StyleProvider>
-                </NextAuthProvider>
+                    </ThemeProvider>
+                </AuthProvider>
             </body>
         </html>
     );

@@ -6,10 +6,10 @@ export const MenuItem = (props: any) => {
     return (
         <ChakraMenuItem
             _hover={{
-                bg: 'monotone.200',
+                bg: 'monotone_light.200',
             }}
             _focus={{
-                bg: 'monotone.200',
+                bg: 'monotone_light.200',
             }}
             {...props}
         />
@@ -17,5 +17,5 @@ export const MenuItem = (props: any) => {
 };
 
 export const MenuList = (props: any) => {
-    return <ChakraMenuList borderColor={'monotone.300'} fontSize={'sm'} shadow={'md'} {...props} />;
+    return <ChakraMenuList borderColor={'monotone_light.300'} fontSize={'sm'} shadow={'md'} {...props} />;
 };
