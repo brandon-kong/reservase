@@ -32,7 +32,6 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
         <>
             <Flex
                 top={0}
-                //position={'fixed'}
                 bg={'white'}
                 zIndex={1}
                 direction={'column'}
