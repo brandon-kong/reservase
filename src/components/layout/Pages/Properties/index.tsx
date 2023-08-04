@@ -44,7 +44,7 @@ export default function UserPropertyList({ user, id }: UserPropertyListProps) {
 
     const handleWishlistProperty = async (propertyId: number) => {
         if (!user) {
-            return redirect('/account/login');
+            return router.push('/account/login');
         }
 
         const successfullyWishlisted = await wishlistProperty(propertyId);

@@ -54,7 +54,7 @@ export default function UserPropertyList({ user, id }: PropertyViewListProps) {
 
     const handleWishlistProperty = async (propertyId: number) => {
         if (!user) {
-            return redirect('/account/login');
+            return router.push('/account/login');
         }
 
         const successfullyWishlisted = await wishlistProperty(propertyId);
@@ -69,7 +69,7 @@ export default function UserPropertyList({ user, id }: PropertyViewListProps) {
         e.preventDefault();
 
         if (!user) {
-            return redirect('/account/login');
+            return router.push('/account/login');
         }
 
         const formData = new FormData(e.target);
@@ -175,6 +175,7 @@ export default function UserPropertyList({ user, id }: PropertyViewListProps) {
                 <Text>Bathrooms: {propertyData.bathrooms}</Text>
                 <Text>Description: {propertyData.description}</Text>
                 <Text>Created: {propertyData.created_at}</Text>
+                <Text>Type: {propertyData.property_type}</Text>
                 {!userIsOnOwnPropertyListing ? (
                     <PrimaryOutlineButton
                         onClick={() => {

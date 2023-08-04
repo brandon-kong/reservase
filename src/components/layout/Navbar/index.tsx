@@ -10,18 +10,24 @@ import AccountNav from './AccountNav';
 import { FiGlobe } from '@react-icons/all-files/fi/FiGlobe';
 import Link from 'next/link';
 
+import useSWR from 'swr';
+
 import { useRouter } from 'next/navigation';
 
 type NavbarProps = {
     isAuthenticated: boolean;
     user: any;
-    isHost?: boolean | null | undefined;
 };
 
-export default function Navbar(
-    { isAuthenticated, user, isHost }: NavbarProps = { isAuthenticated: false, user: null },
-) {
+import { fetcherGet } from '@/lib/axios';
+
+export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuthenticated: false, user: null }) {
     const router = useRouter();
+
+    const { data: hostData, error: hostError } = useSWR(['/users/is/host/', user?.access], fetcherGet);
+
+    const { is_host } = hostData || { is_host: false };
+
     return (
         <>
             <Flex
@@ -75,7 +81,7 @@ export default function Navbar(
                                 <TransparentButton>Explore</TransparentButton>
                                 <TransparentButton>Blog</TransparentButton>
 
-                                {isHost ? (
+                                {is_host ? (
                                     <TransparentButton as={Link} href={'/properties'}>
                                         Properties
                                     </TransparentButton>

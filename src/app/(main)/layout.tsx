@@ -16,13 +16,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const user = await getCurrentUser();
-    const isHost = await userIsHost();
     return (
         <html lang="en">
             <body className={montserrat.className}>
                 <AuthProvider>
                     <ThemeProvider>
-                        <Navbar isAuthenticated={!!user} user={user} isHost={isHost} />
+                        <Navbar isAuthenticated={!!user} user={user} />
                         <Padding>{children}</Padding>
                     </ThemeProvider>
                 </AuthProvider>
