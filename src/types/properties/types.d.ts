@@ -2,10 +2,9 @@ export type Property = {
     name: string;
     description: string;
     price: number;
-    type: string;
-    beds: number;
-    baths: number;
-    size: number;
+    property_type: string;
+    bedrooms: number;
+    bathrooms: number;
     address: string;
     city: string;
     state: string;
@@ -20,14 +19,14 @@ export type Property = {
     is_active: boolean;
     created_at: string;
     updated_at: string;
-    id: number;
+    pk: number;
 };
 
 export type CreatePropertyParams = {
     name: string;
     description: string;
     price: number;
-    type: string;
+    property_type: string;
     address: string;
     city: string;
     state: string;
@@ -38,4 +37,13 @@ export type CreatePropertyParams = {
     bedrooms: number;
     bathrooms: number;
     garages: string;
+};
+
+export type GetUserPropertiesReturn = {
+    properties: Property[];
+    user: {
+        pk: number;
+        first_name: string;
+        last_name: string;
+    };
 };

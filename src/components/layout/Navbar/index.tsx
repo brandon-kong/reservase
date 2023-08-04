@@ -10,6 +10,8 @@ import AccountNav from './AccountNav';
 import { FiGlobe } from '@react-icons/all-files/fi/FiGlobe';
 import Link from 'next/link';
 
+import { useRouter } from 'next/navigation';
+
 type NavbarProps = {
     isAuthenticated: boolean;
     user: any;
@@ -19,6 +21,7 @@ type NavbarProps = {
 export default function Navbar(
     { isAuthenticated, user, isHost }: NavbarProps = { isAuthenticated: false, user: null },
 ) {
+    const router = useRouter();
     return (
         <>
             <Flex
@@ -73,7 +76,11 @@ export default function Navbar(
                                 <TransparentButton>Blog</TransparentButton>
 
                                 {isHost ? (
-                                    <TransparentButton as={Link} href={'/properties'}>
+                                    <TransparentButton
+                                        as={Link}
+                                        onClick={() => router.push('/properties')}
+                                        href={'/properties'}
+                                    >
                                         Properties
                                     </TransparentButton>
                                 ) : (

@@ -22,7 +22,7 @@ export default function PropertyCreate() {
             zip_code: data.get('zip_code') as string,
             country: data.get('country') as string,
             price: data.get('price') as unknown as number,
-            type: data.get('type') as string,
+            property_type: data.get('type') as string,
             status: data.get('status') as string,
             area: data.get('area') as string,
             bedrooms: data.get('bedrooms') as unknown as number,
