@@ -1,5 +1,5 @@
 import { api, clientApi } from '@/lib/axios';
-import { CreatePropertyParams, GetUserPropertiesReturn } from '@/types/properties/types';
+import { CreatePropertyParams, GetUserPropertiesReturn, ReviewCreate } from '@/types/properties/types';
 import { getSession } from 'next-auth/react';
 
 export async function createProperty(property: CreatePropertyParams) {
@@ -14,7 +14,7 @@ export async function createProperty(property: CreatePropertyParams) {
     try {
         const { data, status } = await clientApi.post('/properties/create/', property, {
             headers: {
-                Authorization: `${user.access}`,
+                Authorization: `Bearer ${user.access}`,
             },
         });
 
@@ -24,7 +24,6 @@ export async function createProperty(property: CreatePropertyParams) {
             return data;
         }
     } catch (error) {
-        console.log(error);
         return null;
     }
 }
@@ -32,6 +31,20 @@ export async function createProperty(property: CreatePropertyParams) {
 export async function getUserProperties(pk: number): Promise<GetUserPropertiesReturn | null> {
     try {
         const { data, status } = await api.get(`/properties/user/${pk}/`);
+
+        if (status !== 200) {
+            return null;
+        } else {
+            return data;
+        }
+    } catch (error) {
+        return null;
+    }
+}
+
+export async function getProperty(pk: number): Promise<GetUserPropertiesReturn | null> {
+    try {
+        const { data, status } = await api.get(`/properties/${pk}/`);
 
         if (status !== 200) {
             return null;
@@ -98,5 +111,57 @@ export async function wishlistProperty(pk: number) {
         }
     } catch (error) {
         return false;
+    }
+}
+
+export async function addReviewToProperty(pk: number, review: ReviewCreate) {
+    const session = await getSession();
+
+    const user = session?.user as any;
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    try {
+        const { status } = await clientApi.post(`/properties/${pk}/review/create/`, review, {
+            headers: {
+                Authorization: `Bearer ${user.access}`,
+            },
+        });
+
+        if (status !== 201) {
+            return false;
+        } else {
+            return true;
+        }
+    } catch (error) {
+        return false;
+    }
+}
+
+export async function editProperty(pk: number, property: CreatePropertyParams) {
+    const session = await getSession();
+
+    const user = session?.user as any;
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    try {
+        const { data, status } = await clientApi.post(`/properties/${pk}/edit/`, property, {
+            headers: {
+                Authorization: `Bearer ${user.access}`,
+            },
+        });
+
+        if (status !== 200) {
+            return null;
+        } else {
+            return true;
+        }
+    } catch (error) {
+        return null;
     }
 }

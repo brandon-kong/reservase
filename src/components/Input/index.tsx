@@ -18,7 +18,7 @@ export default function Input(props: any) {
             h={12}
             rounded={'lg'}
             px={6}
-            colorScheme="monotone"
+            colorScheme="monotone_light"
             focusBorderColor="primary.400"
             {...rest}
         >
@@ -30,6 +30,7 @@ export default function Input(props: any) {
 export function Textarea(props: any) {
     return (
         <ChakraTextarea
+            borderColor={'monotone_light.500'}
             fontWeight={'normal'}
             fontSize={'sm'}
             h={12}

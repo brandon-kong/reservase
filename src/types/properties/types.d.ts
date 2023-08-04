@@ -33,8 +33,6 @@ export type CreatePropertyParams = {
     state: string;
     zip_code: string;
     country: string;
-    status: string;
-    area: string;
     bedrooms: number;
     bathrooms: number;
     garages: string;
@@ -42,6 +40,26 @@ export type CreatePropertyParams = {
 
 export type GetUserPropertiesReturn = {
     properties: Property[];
+    user: {
+        pk: number;
+        first_name: string;
+        last_name: string;
+    };
+};
+
+export type ReviewCreate = {
+    property: number;
+    comment: string;
+    rating: number;
+};
+
+export type Review = {
+    pk: number;
+    property: number;
+    comment: string;
+    rating: number;
+    created_at: string;
+    updated_at: string;
     user: {
         pk: number;
         first_name: string;
