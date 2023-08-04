@@ -19,6 +19,7 @@ export type Property = {
     is_active: boolean;
     created_at: string;
     updated_at: string;
+    wishlisted: boolean;
     pk: number;
 };
 

@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 
 export async function getProfileData(pk: number) {
     try {
-        const { data, status } = await api.get(`/users/profile/${pk}`);
+        const { data, status } = await api.get(`/users/profile/${pk}/`);
 
         if (status !== 200) {
             return null;

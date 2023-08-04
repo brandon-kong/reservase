@@ -76,11 +76,7 @@ export default function Navbar(
                                 <TransparentButton>Blog</TransparentButton>
 
                                 {isHost ? (
-                                    <TransparentButton
-                                        as={Link}
-                                        onClick={() => router.push('/properties')}
-                                        href={'/properties'}
-                                    >
+                                    <TransparentButton as={Link} href={'/properties'}>
                                         Properties
                                     </TransparentButton>
                                 ) : (

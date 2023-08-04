@@ -17,11 +17,5 @@ export default async function UserPropertiesView({ params }: UserPropertiesViewP
 
     const propertyData = await getUserProperties(id);
 
-    if (!propertyData) {
-        return notFound();
-    }
-
-    const { properties, user: propertyHost } = propertyData;
-
-    return <UserPropertyList user={user} propertyHost={propertyHost} properties={properties} />;
+    return <UserPropertyList user={user} id={id} />;
 }
