@@ -23,8 +23,6 @@ export default function PropertyCreate() {
             country: data.get('country') as string,
             price: data.get('price') as unknown as number,
             property_type: data.get('type') as string,
-            status: data.get('status') as string,
-            area: data.get('area') as string,
             bedrooms: data.get('bedrooms') as unknown as number,
             bathrooms: data.get('bathrooms') as unknown as number,
             garages: data.get('garages') as string,
