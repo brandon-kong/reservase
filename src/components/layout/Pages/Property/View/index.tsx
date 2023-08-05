@@ -189,6 +189,15 @@ export default function UserPropertyList({ id }: PropertyViewListProps) {
                         {propertyData.wishlisted ? 'Unwishlist Property' : 'Wishlist Property'}
                     </PrimaryOutlineButton>
                 ) : null}
+
+                {!userIsOnOwnPropertyListing ? (
+                    <PrimaryButton
+                        colorScheme={'blue'}
+                    >
+                        Make a Reservation
+                    </PrimaryButton>
+                ) : null}
+
                 {userIsOnOwnPropertyListing ? (
                     <PrimaryButton
                         colorScheme={'red'}

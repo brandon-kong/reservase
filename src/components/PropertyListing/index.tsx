@@ -47,6 +47,13 @@ export default function PropertyListing({
                 </PrimaryOutlineButton>
             ) : null}
 
+            {!userIsOnOwnPropertyListing ? (
+                <PrimaryOutlineButton
+                >
+                    Make reservation
+                </PrimaryOutlineButton>
+            ) : null}
+
             <PrimaryButton
                 onClick={() => {
                     router.push('/property/' + property.pk);
