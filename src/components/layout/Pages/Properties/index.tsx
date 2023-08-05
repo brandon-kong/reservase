@@ -1,7 +1,13 @@
 'use client';
 
 import { PrimaryButton, PrimaryOutlineButton } from '@/components/Buttons';
-import { deleteProperty, getUserProperties, wishlistProperty } from '@/lib/property';
+import {
+    deleteProperty,
+    getUserProperties,
+    wishlistProperty,
+    handleDeleteProperty,
+    handleWishlistProperty,
+} from '@/lib/property';
 import { Property } from '@/types/properties/types';
 import { useRouter, redirect, notFound } from 'next/navigation';
 
@@ -9,14 +15,19 @@ import { Flex, Text } from '@chakra-ui/react';
 import { SessionUser } from '@/types/types';
 import useSWR from 'swr';
 import { fetcherGet } from '@/lib/axios';
+import PropertyListing from '@/components/PropertyListing';
+import { useSession } from 'next-auth/react';
 
 type UserPropertyListProps = {
     id: number;
-    user?: SessionUser;
+    user: SessionUser;
 };
 
-export default function UserPropertyList({ user, id }: UserPropertyListProps) {
+export default function UserPropertyList({ id }: UserPropertyListProps) {
     const router = useRouter();
+    const { data: session, update } = useSession();
+
+    const { user } = session || { user: null };
 
     const {
         data: propertiesData,
@@ -29,30 +40,36 @@ export default function UserPropertyList({ user, id }: UserPropertyListProps) {
     if (!propertiesData && error) return notFound();
     if (!propertiesData && isLoading) return <div>loading...</div>;
 
+    update();
+
     const userIsOnOwnPropertyListing = user?.pk === propertyHost.pk;
 
-    const handleDeleteProperty = async (propertyId: number) => {
-        const deleted = await deleteProperty(propertyId);
-        if (deleted) {
-            mutate();
+    const handleDeletePropertyCallback = async (propertyId: number) => {
+        if (!user) {
+            return router.push('/account/login');
         }
+
+        handleDeleteProperty({
+            propertyId,
+            mutate,
+            user,
+        });
 
         // TODO: Add error handling
 
         return;
     };
 
-    const handleWishlistProperty = async (propertyId: number) => {
+    const handleWishlistPropertyCallback = async (propertyId: number) => {
         if (!user) {
             return router.push('/account/login');
         }
 
-        const successfullyWishlisted = await wishlistProperty(propertyId);
-        if (successfullyWishlisted) {
-            mutate();
-        }
-
-        // TODO: Add error handling
+        handleWishlistProperty({
+            propertyId,
+            mutate,
+            user,
+        });
     };
 
     return (
@@ -81,48 +98,13 @@ export default function UserPropertyList({ user, id }: UserPropertyListProps) {
             ) : (
                 properties.map((property: Property) => {
                     return (
-                        <Flex
+                        <PropertyListing
                             key={property.pk}
-                            border={'1px solid'}
-                            borderColor={'monotone.500'}
-                            borderRadius={'md'}
-                            p={4}
-                            direction={'column'}
-                            gap={2}
-                        >
-                            <Text>{property.name}</Text>
-                            <Text>${property.price}</Text>
-                            <Text>Property Type: {property.property_type || 'undefined'}</Text>
-                            <Text>Wislisted: {`${property.wishlisted}`}</Text>
-
-                            {!userIsOnOwnPropertyListing ? (
-                                <PrimaryOutlineButton
-                                    onClick={() => {
-                                        handleWishlistProperty(property.pk);
-                                    }}
-                                >
-                                    Wishlist Property
-                                </PrimaryOutlineButton>
-                            ) : null}
-
-                            <PrimaryButton
-                                onClick={() => {
-                                    router.push('/property/' + property.pk);
-                                }}
-                            >
-                                View Property
-                            </PrimaryButton>
-                            {userIsOnOwnPropertyListing ? (
-                                <PrimaryButton
-                                    colorScheme={'red'}
-                                    onClick={() => {
-                                        handleDeleteProperty(property.pk);
-                                    }}
-                                >
-                                    Delete Property
-                                </PrimaryButton>
-                            ) : null}
-                        </Flex>
+                            property={property}
+                            userIsOnOwnPropertyListing={userIsOnOwnPropertyListing}
+                            handleWishlistProperty={handleWishlistPropertyCallback}
+                            handleDeleteProperty={handleDeletePropertyCallback}
+                        />
                     );
                 })
             )}

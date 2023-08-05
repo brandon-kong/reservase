@@ -11,6 +11,7 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { Session } from 'next-auth';
 import { signOut, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type AccountNavProps = {
     isAuthenticated: boolean;
@@ -54,7 +55,9 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                 <MenuList zIndex={1}>
                     <MenuItem onClick={toProfile}>Profile</MenuItem>
                     <MenuItem>My reservations</MenuItem>
-                    <MenuItem>Wishlist</MenuItem>
+                    <MenuItem as={Link} href={`/wishlist`}>
+                        Wishlist
+                    </MenuItem>
                     <MenuDivider />
                     <MenuItem>Settings</MenuItem>
                     <MenuItem

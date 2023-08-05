@@ -21,6 +21,14 @@ export type Property = {
     updated_at: string;
     wishlisted: boolean;
     pk: number;
+
+    user: {
+        pk: number;
+        first_name: string;
+        last_name: string;
+    };
+
+    reviews: Review[];
 };
 
 export type CreatePropertyParams = {

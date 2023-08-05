@@ -165,3 +165,29 @@ export async function editProperty(pk: number, property: CreatePropertyParams) {
         return null;
     }
 }
+
+type HandlePropertyProps = {
+    user: any;
+    propertyId: number;
+    mutate: () => void;
+};
+
+export const handleDeleteProperty = async ({ user, propertyId, mutate }: HandlePropertyProps) => {
+    const deleted = await deleteProperty(propertyId);
+    if (deleted) {
+        mutate();
+    }
+
+    // TODO: Add error handling
+
+    return;
+};
+
+export const handleWishlistProperty = async ({ user, propertyId, mutate }: HandlePropertyProps) => {
+    const successfullyWishlisted = await wishlistProperty(propertyId);
+    if (successfullyWishlisted) {
+        mutate();
+    }
+
+    // TODO: Add error handling
+};

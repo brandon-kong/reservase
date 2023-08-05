@@ -44,7 +44,7 @@ export async function refreshToken(token: TokenTypes): Promise<TokenTypes | null
     } catch (error: any) {
         return {
             ...token,
-            error: error.response.data,
+            error: error,
         };
     }
 

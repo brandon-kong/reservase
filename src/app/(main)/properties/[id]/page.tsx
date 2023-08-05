@@ -12,8 +12,8 @@ type UserPropertiesViewProps = {
 };
 
 export default async function UserPropertiesView({ params }: UserPropertiesViewProps) {
-    const user = await getCurrentUser();
     const id = Number(params.id);
+    const user = await getCurrentUser();
 
-    return <UserPropertyList user={user} id={id} />;
+    return <UserPropertyList id={id} user={user} />;
 }

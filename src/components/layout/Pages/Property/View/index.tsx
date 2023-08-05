@@ -22,18 +22,22 @@ import { EditIcon } from '@chakra-ui/icons';
 import { Link } from '@chakra-ui/next-js';
 import Input, { NumberInput, Textarea } from '@/components/Input';
 import ReviewCard from '@/components/ReviewCard';
+import { useSession } from 'next-auth/react';
 
-export default function UserPropertyList({ user, id }: PropertyViewListProps) {
+export default function UserPropertyList({ id }: PropertyViewListProps) {
     const router = useRouter();
 
     const [editing, setEditing] = useState<boolean>(false);
+    const { data: session } = useSession() as any;
+
+    const user = session?.user as SessionUser;
 
     const {
         data: propertyData,
         error: error,
         isLoading,
         mutate,
-    } = useSWR([`/properties/${id}/`, user?.access], fetcherGet);
+    } = useSWR([`/properties/${id}/`, session?.access], fetcherGet);
     const { user: propertyHost } = propertyData || { user: null };
 
     if (!propertyData && error) return notFound();
@@ -44,7 +48,7 @@ export default function UserPropertyList({ user, id }: PropertyViewListProps) {
     const handleDeleteProperty = async (propertyId: number) => {
         const deleted = await deleteProperty(propertyId);
         if (deleted) {
-            mutate();
+            router.push('/properties');
         }
 
         // TODO: Add error handling
