@@ -191,29 +191,3 @@ export const handleWishlistProperty = async ({ user, propertyId, mutate }: Handl
 
     // TODO: Add error handling
 };
-
-export const reserveProperty = async (pk: number, reservation: any) => {
-    const session = await getSession();
-
-    const user = session?.user as any;
-
-    if (!user) {
-        throw new Error('User not found');
-    }
-
-    try {
-        const { data, status } = await clientApi.post(`/properties/reserve/${pk}/`, reservation, {
-            headers: {
-                Authorization: `Bearer ${user.access}`,
-            },
-        });
-
-        if (status !== 200) {
-            return null;
-        } else {
-            return true;
-        }
-    } catch (error) {
-        return null;
-    }
-};

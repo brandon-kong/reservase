@@ -34,8 +34,8 @@ export default function UserPropertyList({ id }: UserPropertyListProps) {
         error: error,
         isLoading,
         mutate,
-    } = useSWR([`http://127.0.0.1:8000/properties/user/${id}/`, user?.access], fetcherGet);
-    const { user: propertyHost, properties } = propertiesData || { user: null, properties: [] };
+    } = useSWR(`http://127.0.0.1:8000/properties/user/${id}/`, fetcherGet);
+    const { host: propertyHost, properties } = propertiesData || { host: null, properties: [] };
 
     if (!propertiesData && error) return notFound();
     if (!propertiesData && isLoading) return <div>loading...</div>;

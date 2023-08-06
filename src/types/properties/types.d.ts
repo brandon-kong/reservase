@@ -22,7 +22,7 @@ export type Property = {
     wishlisted: boolean;
     pk: number;
 
-    user: {
+    host: {
         pk: number;
         first_name: string;
         last_name: string;
@@ -48,7 +48,7 @@ export type CreatePropertyParams = {
 
 export type GetUserPropertiesReturn = {
     properties: Property[];
-    user: {
+    host: {
         pk: number;
         first_name: string;
         last_name: string;

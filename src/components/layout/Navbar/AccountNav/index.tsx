@@ -54,7 +54,9 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
             {isAuthenticated ? (
                 <MenuList zIndex={1}>
                     <MenuItem onClick={toProfile}>Profile</MenuItem>
-                    <MenuItem>My reservations</MenuItem>
+                    <MenuItem as={Link} href={`/account/reservations`}>
+                        My reservations
+                    </MenuItem>
                     <MenuItem as={Link} href={`/wishlist`}>
                         Wishlist
                     </MenuItem>

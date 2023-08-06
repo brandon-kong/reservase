@@ -14,7 +14,7 @@ export const clientApi = axios.create({
 
 type FetcherProps = [string, string];
 
-export const fetcherGet = async ([url, token]: FetcherProps) => {
+export const fetcherGet = async (url: string) => {
     const session = await getSession();
 
     const user = session?.user as any;

@@ -16,10 +16,12 @@ type WishlistProps = {
 export default function WishlistPropertiesView({ user }: WishlistProps) {
     const router = useRouter();
 
+    const id = user.pk;
+
     const { data: propertiesData, error: error, isLoading, mutate } = useSWR(`/properties/wishlist/`, fetcherGet);
 
     //alert(JSON.stringify(propertiesData))
-    const { wishlist } = propertiesData || { wishlist: [] };
+    const { user: propertyHost, wishlist } = propertiesData || { user: null, wishlist: [] };
 
     if (!propertiesData && error) return notFound();
     if (!propertiesData && isLoading) return <div>loading...</div>;

@@ -32,13 +32,8 @@ export default function UserPropertyList({ id }: PropertyViewListProps) {
 
     const user = session?.user as SessionUser;
 
-    const {
-        data: propertyData,
-        error: error,
-        isLoading,
-        mutate,
-    } = useSWR([`/properties/${id}/`, session?.access], fetcherGet);
-    const { user: propertyHost } = propertyData || { user: null };
+    const { data: propertyData, error: error, isLoading, mutate } = useSWR(`/properties/${id}/`, fetcherGet);
+    const { host: propertyHost, property } = propertyData || { host: null };
 
     if (!propertyData && error) return notFound();
     if (!propertyData && isLoading) return <div>loading...</div>;
@@ -161,32 +156,32 @@ export default function UserPropertyList({ id }: PropertyViewListProps) {
                 direction={'column'}
                 gap={2}
             >
-                <Text>{propertyData.name}</Text>
+                <Text>{property.name}</Text>
                 <Text>
                     Host:{' '}
                     <Link href={`/account/profile/${propertyHost.pk}`}>
                         {propertyHost.first_name + ' ' + propertyHost.last_name}
                     </Link>
                 </Text>
-                <Text>${propertyData.price}</Text>
-                <Text>Property Type: {propertyData.property_type || 'undefined'}</Text>
-                <Text>Wislisted: {`${propertyData.wishlisted}`}</Text>
-                <Text>Address: {propertyData.address}</Text>
-                <Text>City: {propertyData.city}</Text>
-                <Text>State: {propertyData.state}</Text>
-                <Text>Zipcode: {propertyData.zipcode}</Text>
-                <Text>Bedrooms: {propertyData.bedrooms}</Text>
-                <Text>Bathrooms: {propertyData.bathrooms}</Text>
-                <Text>Description: {propertyData.description}</Text>
-                <Text>Created: {propertyData.created_at}</Text>
-                <Text>Type: {propertyData.property_type}</Text>
+                <Text>${property.price}</Text>
+                <Text>Property Type: {property.property_type || 'undefined'}</Text>
+                <Text>Wislisted: {`${property.wishlisted}`}</Text>
+                <Text>Address: {property.address}</Text>
+                <Text>City: {property.city}</Text>
+                <Text>State: {property.state}</Text>
+                <Text>Zipcode: {property.zipcode}</Text>
+                <Text>Bedrooms: {property.bedrooms}</Text>
+                <Text>Bathrooms: {property.bathrooms}</Text>
+                <Text>Description: {property.description}</Text>
+                <Text>Created: {property.created_at}</Text>
+                <Text>Type: {property.property_type}</Text>
                 {!userIsOnOwnPropertyListing ? (
                     <PrimaryOutlineButton
                         onClick={() => {
-                            handleWishlistProperty(propertyData.pk);
+                            handleWishlistProperty(property.pk);
                         }}
                     >
-                        {propertyData.wishlisted ? 'Unwishlist Property' : 'Wishlist Property'}
+                        {property.wishlisted ? 'Unwishlist Property' : 'Wishlist Property'}
                     </PrimaryOutlineButton>
                 ) : null}
 
@@ -198,7 +193,7 @@ export default function UserPropertyList({ id }: PropertyViewListProps) {
                     <PrimaryButton
                         colorScheme={'red'}
                         onClick={() => {
-                            handleDeleteProperty(propertyData.pk);
+                            handleDeleteProperty(property.pk);
                         }}
                     >
                         Delete Property
@@ -217,7 +212,7 @@ export default function UserPropertyList({ id }: PropertyViewListProps) {
                 <Flex direction={'column'} gap={4}>
                     <Text>Reviews:</Text>
                     <Flex direction={'column'} gap={4}>
-                        {propertyData.reviews.map((review: Review) => {
+                        {property.reviews.map((review: Review) => {
                             return <ReviewCard key={review.pk} review={review} />;
                         })}
                     </Flex>
@@ -237,67 +232,67 @@ export default function UserPropertyList({ id }: PropertyViewListProps) {
             >
                 <Flex direction={'column'}>
                     <Text>Property Name</Text>
-                    <Input name={'name'} defaultValue={propertyData.name} />
+                    <Input name={'name'} defaultValue={property.name} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Description</Text>
-                    <Input name={'description'} defaultValue={propertyData.description} />
+                    <Input name={'description'} defaultValue={property.description} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Address</Text>
-                    <Input name={'address'} defaultValue={propertyData.address} />
+                    <Input name={'address'} defaultValue={property.address} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property City</Text>
-                    <Input name={'city'} defaultValue={propertyData.city} />
+                    <Input name={'city'} defaultValue={property.city} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property State</Text>
-                    <Input name={'state'} defaultValue={propertyData.state} />
+                    <Input name={'state'} defaultValue={property.state} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Zipcode</Text>
-                    <Input name={'zipcode'} defaultValue={propertyData.zipcode} />
+                    <Input name={'zipcode'} defaultValue={property.zipcode} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Country</Text>
-                    <Input name={'country'} defaultValue={propertyData.country} />
+                    <Input name={'country'} defaultValue={property.country} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Bedrooms</Text>
-                    <NumberInput name={'bedrooms'} defaultValue={propertyData.bedrooms} />
+                    <NumberInput name={'bedrooms'} defaultValue={property.bedrooms} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Bathrooms</Text>
-                    <NumberInput name={'bathrooms'} defaultValue={propertyData.bathrooms} />
+                    <NumberInput name={'bathrooms'} defaultValue={property.bathrooms} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Guests</Text>
-                    <NumberInput name={'guests'} defaultValue={propertyData.guests || 1} />
+                    <NumberInput name={'guests'} defaultValue={property.guests || 1} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Garages</Text>
-                    <NumberInput name={'garages'} defaultValue={propertyData.garages || 0} />
+                    <NumberInput name={'garages'} defaultValue={property.garages || 0} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Price</Text>
-                    <NumberInput name={'price'} defaultValue={propertyData.price} />
+                    <NumberInput name={'price'} defaultValue={property.price} />
                 </Flex>
 
                 <Flex direction={'column'}>
                     <Text>Property Type</Text>
-                    <Select name={'property_type'} defaultValue={propertyData.property_type}>
+                    <Select name={'property_type'} defaultValue={property.property_type}>
                         {PROPERTY_TYPES.map((type: { name: string; value: string }) => {
                             return (
                                 <option key={type.name} value={type.value}>
