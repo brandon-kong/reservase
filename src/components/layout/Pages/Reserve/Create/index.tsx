@@ -22,8 +22,9 @@ export default function MakeReservationView({ id }: MakeReservationViewProps) {
     const [checkIn, setCheckIn] = useState<string>('');
     const [checkOut, setCheckOut] = useState<string>('');
 
-    const { data: propertyData, error: propertyError, isLoading } = useSWR(`/properties/${id}`, fetcherGet);
+    const { data, error: propertyError, isLoading } = useSWR(`/properties/${id}`, fetcherGet);
 
+    const { property: propertyData } = data || {};
     if (isLoading) {
         return (
             <Flex direction={'column'} gap={4}>
@@ -76,7 +77,7 @@ export default function MakeReservationView({ id }: MakeReservationViewProps) {
             <Text>Make Reservation</Text>
             <Text>Property Name: {propertyData.name}</Text>
             <Text>Property Price: ${propertyData.price}/night</Text>
-            <Text>Property Host: {propertyData.user.first_name + ' ' + propertyData.user.last_name}</Text>
+            <Text>Property Host: {propertyData.host.first_name + ' ' + propertyData.host.last_name}</Text>
             <Text>Property Address: {propertyData.address}</Text>
             <Text>Property Description: {propertyData.description}</Text>
             <Text>Property ID: {id}</Text>
@@ -106,7 +107,7 @@ export default function MakeReservationView({ id }: MakeReservationViewProps) {
 
                 <Flex direction={'column'} gap={2}>
                     <Text>Guests</Text>
-                    <NumberInput name={'guests'} defaultValue={1} />
+                    <NumberInput name={'guests'} defaultValue={0} max={propertyData.guests} min={0} />
                 </Flex>
 
                 <Text>Estimated Total: ${calculateTotal()}</Text>

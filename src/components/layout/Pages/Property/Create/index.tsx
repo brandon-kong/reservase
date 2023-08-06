@@ -23,6 +23,7 @@ export default function PropertyCreate() {
             country: data.get('country') as string,
             price: data.get('price') as unknown as number,
             property_type: data.get('type') as string,
+            guests: data.get('guests') as unknown as number,
             bedrooms: data.get('bedrooms') as unknown as number,
             bathrooms: data.get('bathrooms') as unknown as number,
             garages: data.get('garages') as string,
@@ -89,6 +90,10 @@ export default function PropertyCreate() {
                 <Flex direction={'column'} gap={2}>
                     <FormLabel>Property Bedrooms</FormLabel>
                     <NumberInput name={'bedrooms'} placeholder={'Property Bedrooms'} defaultValue={0} min={0} />
+                </Flex>
+                <Flex direction={'column'} gap={2}>
+                    <FormLabel>Property Guests</FormLabel>
+                    <NumberInput name={'guests'} placeholder={'Property Guests'} defaultValue={3} min={0} />
                 </Flex>
                 <Flex direction={'column'} gap={2}>
                     <FormLabel>Property Bathrooms</FormLabel>

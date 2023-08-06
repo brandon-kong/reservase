@@ -42,8 +42,8 @@ export default function ReservationList() {
                         const { property } = reservation;
                         return (
                             <Tr key={reservation.pk}>
-                                <Td h={'full'} bg={'transparent'} as={Link} href={`/property/${property.pk}`}>
-                                    {property.name}
+                                <Td>
+                                    <Link href={`/property/${property.pk}`}>{property.name}</Link>
                                 </Td>
                                 <Td>{reservation.check_in}</Td>
                                 <Td>{reservation.check_out}</Td>

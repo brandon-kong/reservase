@@ -44,6 +44,7 @@ export type CreatePropertyParams = {
     bedrooms: number;
     bathrooms: number;
     garages: string;
+    guests: number;
 };
 
 export type GetUserPropertiesReturn = {
