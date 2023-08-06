@@ -22,12 +22,9 @@ type NavbarProps = {
 
 import { fetcherGet } from '@/lib/axios';
 
-export default function Navbar({ isAuthenticated }: NavbarProps = { isAuthenticated: false, user: null }) {
+export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuthenticated: false, user: null }) {
     const router = useRouter();
 
-    const { data: session, update, status } = useSession();
-
-    const { user } = session || { user: null };
     const { data: hostData, error: hostError } = useSWR(['/users/is/host/', user?.access], fetcherGet);
 
     const { is_host } = hostData || { is_host: false };
