@@ -53,7 +53,6 @@ export default function PropertyListing({
                     Make reservation
                 </PrimaryOutlineButton>
             ) : null}
-
             <PrimaryButton
                 onClick={() => {
                     router.push('/property/' + property.pk);
