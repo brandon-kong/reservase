@@ -6,6 +6,7 @@ import { PrimaryButton, PrimaryOutlineButton } from '@/components/Buttons';
 import { Flex, Text } from '@chakra-ui/react';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type PropertyListingProps = {
     property: Property;
@@ -43,13 +44,12 @@ export default function PropertyListing({
                         handleWishlistProperty(property.pk);
                     }}
                 >
-                    Wishlist Property
+                    {property.wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
                 </PrimaryOutlineButton>
             ) : null}
 
             {!userIsOnOwnPropertyListing ? (
-                <PrimaryOutlineButton
-                >
+                <PrimaryOutlineButton as={Link} href={`/reserve/${property.pk}`}>
                     Make reservation
                 </PrimaryOutlineButton>
             ) : null}

@@ -191,11 +191,7 @@ export default function UserPropertyList({ id }: PropertyViewListProps) {
                 ) : null}
 
                 {!userIsOnOwnPropertyListing ? (
-                    <PrimaryButton
-                        colorScheme={'blue'}
-                    >
-                        Make a Reservation
-                    </PrimaryButton>
+                    <PrimaryButton colorScheme={'blue'}>Make a Reservation</PrimaryButton>
                 ) : null}
 
                 {userIsOnOwnPropertyListing ? (
