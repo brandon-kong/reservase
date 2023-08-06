@@ -9,7 +9,7 @@ import { ProfileData } from '@/types/types';
 export default async function UserProfile() {
     const user = await getCurrentUser();
     if (!user) {
-        //notFound();
+        return notFound();
     }
 
     const userProfile: ProfileData = await getProfileData(user.pk);

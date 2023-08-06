@@ -1,73 +1,59 @@
 'use client';
 
-import { handleDeleteProperty, handleWishlistProperty } from '@/lib/property';
 import { useRouter, notFound } from 'next/navigation';
 
-import { Flex } from '@chakra-ui/react';
+import { Flex, TableContainer, Table, Thead, Tbody, Tr, Th, Td, TableCaption } from '@chakra-ui/react';
+
 import { SessionUser } from '@/types/types';
 import useSWR from 'swr';
 import { fetcherGet } from '@/lib/axios';
-import PropertyListing from '@/components/PropertyListing';
+import { Link } from '@chakra-ui/next-js';
 
 type WishlistProps = {
     user: SessionUser;
 };
 
-export default function WishlistPropertiesView({ user }: WishlistProps) {
+export default function ReservationList() {
     const router = useRouter();
 
-    const id = user.pk;
-
-    const { data: propertiesData, error: error, isLoading, mutate } = useSWR(`/properties/wishlist/`, fetcherGet);
+    const { data, error: error, isLoading, mutate } = useSWR(`/properties/user/reservations/`, fetcherGet);
 
     //alert(JSON.stringify(propertiesData))
-    const { user: propertyHost, wishlist } = propertiesData || { user: null, wishlist: [] };
+    const { reservations } = data || { reservations: [] };
 
-    if (!propertiesData && error) return notFound();
-    if (!propertiesData && isLoading) return <div>loading...</div>;
-
-    const handleDeletePropertyCallback = async (propertyId: number) => {
-        if (!user) {
-            return router.push('/account/login');
-        }
-
-        handleDeleteProperty({
-            propertyId,
-            mutate,
-            user,
-        });
-
-        // TODO: Add error handling
-
-        return;
-    };
-
-    const handleWishlistPropertyCallback = async (propertyId: number) => {
-        if (!user) {
-            return router.push('/account/login');
-        }
-
-        handleWishlistProperty({
-            propertyId,
-            mutate,
-            user,
-        });
-    };
+    if (!data && error) return notFound();
+    if (!data && isLoading) return <div>loading...</div>;
 
     return (
-        <Flex direction={'column'} gap={4} p={20}>
-            {wishlist.map((propertyGroup: any) => {
-                const { property } = propertyGroup;
-                return (
-                    <PropertyListing
-                        key={property.pk}
-                        property={property}
-                        userIsOnOwnPropertyListing={property.host.pk === user.pk}
-                        handleWishlistProperty={handleWishlistPropertyCallback}
-                        handleDeleteProperty={handleDeletePropertyCallback}
-                    />
-                );
-            })}
-        </Flex>
+        <TableContainer>
+            <Table size="md" variant="striped" colorScheme="blackAlpha">
+                <TableCaption>Your reservation table</TableCaption>
+                <Thead>
+                    <Tr>
+                        <Th>Property</Th>
+                        <Th>Check In</Th>
+                        <Th>Check Out</Th>
+                        <Th>Guests</Th>
+                        <Th>Status</Th>
+                    </Tr>
+                </Thead>
+                <Tbody>
+                    {reservations.map((reservation: any) => {
+                        const { property } = reservation;
+                        return (
+                            <Tr key={reservation.pk}>
+                                <Td h={'full'} bg={'transparent'} as={Link} href={`/property/${property.pk}`}>
+                                    {property.name}
+                                </Td>
+                                <Td>{reservation.check_in}</Td>
+                                <Td>{reservation.check_out}</Td>
+                                <Td>{reservation.guests}</Td>
+                                <Td>{reservation.status}</Td>
+                            </Tr>
+                        );
+                    })}
+                </Tbody>
+            </Table>
+        </TableContainer>
     );
 }
