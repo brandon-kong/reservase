@@ -7,6 +7,8 @@ import { Flex, Text, Table, Thead, Tbody, Tr, Th, Td, TableCaption } from '@chak
 
 import { Link } from '@chakra-ui/next-js';
 
+import { acceptReservation, declineReservation } from '@/lib/reservation';
+
 import { useRouter } from 'next/navigation';
 
 type PropertyListingProps = {
@@ -14,6 +16,7 @@ type PropertyListingProps = {
     userIsOnOwnPropertyListing: boolean;
     handleWishlistProperty: (id: number) => void;
     handleDeleteProperty: (id: number) => void;
+    mutate: any;
 };
 
 export default function PropertyListing({
@@ -21,8 +24,25 @@ export default function PropertyListing({
     userIsOnOwnPropertyListing,
     handleWishlistProperty,
     handleDeleteProperty,
+    mutate,
 }: PropertyListingProps) {
     const router = useRouter();
+
+    const handleAcceptReservation = async (id: string) => {
+        const reservation = await acceptReservation(id);
+        if (reservation) {
+            mutate();
+            //router.push(`/reservations/${reservation.pk}`);
+        }
+    };
+
+    const handleDeclineReservation = async (id: string) => {
+        const reservation = await declineReservation(id);
+        if (reservation) {
+            mutate();
+            //router.push(`/reservations/${reservation.pk}`);
+        }
+    };
 
     return (
         <Flex
@@ -97,17 +117,31 @@ export default function PropertyListing({
                                     <Td>{reservation.check_out}</Td>
                                     <Td>{reservation.guests}</Td>
                                     <Td>
-                                        <Flex>
+                                        <Flex direction={'column'} gap={2}>
                                             <PrimaryButton
-                                                size={'sm'}
+                                                colorScheme={'blue'}
                                                 as={Link}
                                                 href={`/reservations/${reservation.pk}`}
                                             >
                                                 View Reservation
                                             </PrimaryButton>
-                                            <PrimaryButton size={'sm'} colorScheme={'red'}>
-                                                Approve Reservation
-                                            </PrimaryButton>
+                                            {reservation.status === 'pending' ? (
+                                                <PrimaryButton
+                                                    colorScheme={'primary'}
+                                                    onClick={() => handleAcceptReservation(reservation.pk)}
+                                                >
+                                                    Approve Reservation
+                                                </PrimaryButton>
+                                            ) : null}
+
+                                            {reservation.status === 'pending' ? (
+                                                <PrimaryButton
+                                                    colorScheme={'red'}
+                                                    onClick={() => handleDeclineReservation(reservation.pk)}
+                                                >
+                                                    Decline Reservation
+                                                </PrimaryButton>
+                                            ) : null}
                                         </Flex>
                                     </Td>
                                 </Tr>

@@ -56,3 +56,67 @@ export const cancelReservation = async (pk: string) => {
         return null;
     }
 };
+
+export const acceptReservation = async (pk: string) => {
+    const session = await getSession();
+
+    const user = session?.user as any;
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    try {
+        const { data, status } = await clientApi.post(
+            `/properties/reservation/${pk}/status/`,
+            {
+                status: 'accepted',
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${user.access}`,
+                },
+            },
+        );
+
+        if (status !== 200) {
+            return null;
+        } else {
+            return true;
+        }
+    } catch (error) {
+        return null;
+    }
+};
+
+export const declineReservation = async (pk: string) => {
+    const session = await getSession();
+
+    const user = session?.user as any;
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    try {
+        const { data, status } = await clientApi.post(
+            `/properties/reservation/${pk}/status/`,
+            {
+                status: 'declined',
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${user.access}`,
+                },
+            },
+        );
+
+        if (status !== 200) {
+            return null;
+        } else {
+            return true;
+        }
+    } catch (error) {
+        return null;
+    }
+};

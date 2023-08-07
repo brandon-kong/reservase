@@ -104,6 +104,7 @@ export default function UserPropertyList({ id }: UserPropertyListProps) {
                             userIsOnOwnPropertyListing={userIsOnOwnPropertyListing}
                             handleWishlistProperty={handleWishlistPropertyCallback}
                             handleDeleteProperty={handleDeletePropertyCallback}
+                            mutate={mutate}
                         />
                     );
                 })
