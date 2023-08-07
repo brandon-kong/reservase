@@ -7,7 +7,7 @@ import { ProfileData } from '@/types/types';
 
 type ProfileViewProps = {
     params: {
-        id: number;
+        id: string;
     };
 };
 
@@ -16,11 +16,5 @@ export default async function ProfileView({ params }: ProfileViewProps) {
 
     const user = await getCurrentUser();
 
-    const userProfile: ProfileData = await getProfileData(id);
-
-    if (!userProfile) {
-        notFound();
-    }
-
-    return <ProfileContent user={user} profileData={userProfile} />;
+    return <ProfileContent user={user} id={id} />;
 }

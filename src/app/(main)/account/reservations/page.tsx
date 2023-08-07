@@ -1,15 +1,14 @@
+import ViewReservationView from '@/components/layout/Pages/Reserve/View';
 import ReservationList from '@/components/layout/Pages/Reservations';
-import { getCurrentUser } from '@/lib/session';
 
-import { getSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
+type ReservationViewPageProps = {
+    params: {
+        id: string;
+    };
+};
 
-export default async function ReservationViewPage() {
-    const user = await getCurrentUser();
-
-    if (!user) {
-        return redirect('/account/login');
-    }
+export default function ReservationViewPage({ params }: ReservationViewPageProps) {
+    const { id } = params;
 
     return <ReservationList />;
 }

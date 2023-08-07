@@ -9,6 +9,7 @@ import useSWR from 'swr';
 
 type ViewReservationViewProps = {
     id: string;
+    user?: any;
 };
 
 import { notFound, useRouter } from 'next/navigation';
@@ -66,6 +67,8 @@ export default function ViewReservationView({ id }: ViewReservationViewProps) {
             <Text>Check Out: {data.check_out}</Text>
 
             <Text>Status: {data.status}</Text>
+
+            {}
             <PrimaryButton isDisabled={data.status === 'cancelled'} onClick={handleCancel}>
                 {data.status === 'cancelled' ? 'Cancelled' : 'Cancel Reservation'}
             </PrimaryButton>

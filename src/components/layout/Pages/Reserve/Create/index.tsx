@@ -64,11 +64,9 @@ export default function MakeReservationView({ id }: MakeReservationViewProps) {
             guests: formData.get('guests'),
         };
 
-        const reserveSuccessful = await reserveProperty(id, reservationData);
-        if (reserveSuccessful) {
-            alert('Reservation successful!');
-
-            router.push(`/account/reservations/${reserveSuccessful.pk}`);
+        const reservation = await reserveProperty(id, reservationData);
+        if (reservation) {
+            router.push(`/reservations/${reservation.pk}`);
         }
     };
 

@@ -1,7 +1,7 @@
 'use client';
 
 type ProfileContentProps = {
-    profileData: ProfileData;
+    id: string;
     user?: any;
 };
 
@@ -13,11 +13,30 @@ import { PrimaryButton, PrimaryOutlineButton, TransparentButton } from '@/compon
 import { ProfileData } from '@/types/types';
 import EditProfileView from '@/components/EditProfileView';
 
-export default function ProfileContent({ user, profileData }: ProfileContentProps) {
+import useSWR from 'swr';
+import { fetcherGet } from '@/lib/axios';
+
+import { notFound } from 'next/navigation';
+
+export default function ProfileContent({ user, id }: ProfileContentProps) {
     const [editing, setEditing] = useState<boolean>(false);
     const [imageChanged, setImageChanged] = useState<boolean>(false);
 
-    const userIsOnOwnProfile = user && user.pk === profileData.pk;
+    const { data: profile, error: profileError, isLoading, mutate } = useSWR(`/users/profile/${id}`, fetcherGet);
+
+    if (isLoading) {
+        return (
+            <Flex direction={'column'} gap={4}>
+                <Text>Loading...</Text>
+            </Flex>
+        );
+    }
+
+    if (profileError) {
+        return notFound();
+    }
+
+    const userIsOnOwnProfile = user && user.pk === profile.pk;
 
     return (
         <Flex
@@ -78,7 +97,7 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
 
                 <Flex w={'full'} direction={'column'} gap={2}>
                     <Heading w={'full'} size={'md'}>
-                        {profileData.first_name + ' ' + profileData.last_name}
+                        {profile.first_name + ' ' + profile.last_name}
                     </Heading>
                     <List spacing={1} color={'monotone.700'}>
                         <ListItem>
@@ -102,10 +121,10 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                     <Flex direction={'column'} gap={2}>
                         <Heading size={'lg'}>
                             {userIsOnOwnProfile
-                                ? 'Welcome back, ' + profileData.first_name
-                                : profileData.first_name + ' ' + profileData.last_name}
+                                ? 'Welcome back, ' + profile.first_name
+                                : profile.first_name + ' ' + profile.last_name}
                         </Heading>
-                        <Text color={'monotone.600'}>Joined on {profileData.join_date}</Text>
+                        <Text color={'monotone.600'}>Joined on {profile.join_date}</Text>
                     </Flex>
                 </Flex>
 
@@ -120,7 +139,7 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                         <Icon fontSize={'lg'} as={StarIcon} />
 
                         <Text fontSize={'md'} fontWeight={'semibold'}>
-                            {profileData.review_count} review{profileData.review_count !== 1 ? 's' : ''}
+                            {profile.review_count} review{profile.review_count !== 1 ? 's' : ''}
                         </Text>
                     </Flex>
 
@@ -129,20 +148,22 @@ export default function ProfileContent({ user, profileData }: ProfileContentProp
                             <Text fontWeight={'bold'} fontSize={'md'}>
                                 About me
                             </Text>
-                            <Text color={'monotone.600'}>{profileData.about_me}</Text>
+                            <Text color={'monotone.600'}>{profile.about_me}</Text>
                         </Flex>
                         <Flex direction={'column'} gap={2}>
                             <Text fontWeight={'bold'} fontSize={'md'}>
                                 Occupation
                             </Text>
-                            <Text color={'monotone.600'}>{profileData.occupation}</Text>
+                            <Text color={'monotone.600'}>{profile.occupation}</Text>
                         </Flex>
                     </Flex>
 
                     <Divider />
                 </Flex>
 
-                {!editing ? null : <EditProfileView profileData={profileData} setEditing={setEditing} user={user} />}
+                {!editing ? null : (
+                    <EditProfileView profileData={profile} setEditing={setEditing} mutate={mutate} user={user} />
+                )}
             </Flex>
         </Flex>
     );

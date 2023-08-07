@@ -1,9 +1,5 @@
 import UserPropertyList from '@/components/layout/Pages/Properties';
-import { getUserProperties } from '@/lib/property';
-import { getCurrentUser, getSession } from '@/lib/session';
-import { Property } from '@/types/properties/types';
-
-import { redirect, notFound } from 'next/navigation';
+import { getCurrentUser } from '@/lib/session';
 
 type UserPropertiesViewProps = {
     params: {

@@ -18,5 +18,5 @@ export default async function UserProfile() {
         //notFound();
     }
 
-    return <ProfileContent user={user} profileData={userProfile} />;
+    return <ProfileContent user={user} id={user.pk} />;
 }

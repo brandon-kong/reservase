@@ -57,7 +57,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                     <MenuItem as={Link} href={`/account/reservations`}>
                         My reservations
                     </MenuItem>
-                    <MenuItem as={Link} href={`/wishlist`}>
+                    <MenuItem as={Link} href={`/account/wishlist`}>
                         Wishlist
                     </MenuItem>
                     <MenuDivider />

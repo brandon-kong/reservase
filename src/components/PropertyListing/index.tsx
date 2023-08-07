@@ -3,10 +3,11 @@
 import { Property } from '@/types/properties/types';
 import { PrimaryButton, PrimaryOutlineButton } from '@/components/Buttons';
 
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Text, Table, Thead, Tbody, Tr, Th, Td, TableCaption } from '@chakra-ui/react';
+
+import { Link } from '@chakra-ui/next-js';
 
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 type PropertyListingProps = {
     property: Property;
@@ -69,6 +70,51 @@ export default function PropertyListing({
                 >
                     Delete Property
                 </PrimaryButton>
+            ) : null}
+
+            {userIsOnOwnPropertyListing ? (
+                <Table variant="striped" colorScheme="teal">
+                    <TableCaption>Property Reservations</TableCaption>
+                    <Thead>
+                        <Tr>
+                            <Th>User</Th>
+                            <Th>Check In</Th>
+                            <Th>Check Out</Th>
+                            <Th>Guests</Th>
+                            <Th>Actions</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {property.reservations?.map((reservation: any) => {
+                            return (
+                                <Tr key={reservation.pk}>
+                                    <Td>
+                                        <Link href={`/account/profile/${reservation.user.pk}`}>
+                                            {reservation.user.first_name} {reservation.user.last_name}
+                                        </Link>
+                                    </Td>
+                                    <Td>{reservation.check_in}</Td>
+                                    <Td>{reservation.check_out}</Td>
+                                    <Td>{reservation.guests}</Td>
+                                    <Td>
+                                        <Flex>
+                                            <PrimaryButton
+                                                size={'sm'}
+                                                as={Link}
+                                                href={`/reservations/${reservation.pk}`}
+                                            >
+                                                View Reservation
+                                            </PrimaryButton>
+                                            <PrimaryButton size={'sm'} colorScheme={'red'}>
+                                                Approve Reservation
+                                            </PrimaryButton>
+                                        </Flex>
+                                    </Td>
+                                </Tr>
+                            );
+                        })}
+                    </Tbody>
+                </Table>
             ) : null}
         </Flex>
     );

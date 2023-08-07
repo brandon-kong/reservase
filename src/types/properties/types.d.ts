@@ -1,3 +1,5 @@
+import { Reservation } from '@/types/reservation/types';
+
 export type Property = {
     name: string;
     description: string;
@@ -27,6 +29,8 @@ export type Property = {
         first_name: string;
         last_name: string;
     };
+
+    reservations?: Reservation[];
 
     reviews: Review[];
 };

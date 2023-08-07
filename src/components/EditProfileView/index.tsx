@@ -2,6 +2,7 @@ type EditProfileViewProps = {
     user: any;
     profileData: any;
     setEditing: (editing: boolean) => void;
+    mutate: any;
 };
 
 import { useRouter } from 'next/navigation';
@@ -14,7 +15,7 @@ import { Flex, InputGroup, Spinner, Text } from '@chakra-ui/react';
 import Input, { Textarea } from '../Input';
 import { PrimaryButton, PrimaryOutlineButton, TransparentButton } from '../Buttons';
 
-export default function EditProfileView({ user, setEditing, profileData }: EditProfileViewProps) {
+export default function EditProfileView({ user, setEditing, profileData, mutate }: EditProfileViewProps) {
     const router = useRouter();
 
     const [loading, setLoading] = useState<boolean>(false);
@@ -41,6 +42,8 @@ export default function EditProfileView({ user, setEditing, profileData }: EditP
         } else {
             setLoading(false);
             setEditing(false);
+
+            mutate();
             router.refresh();
         }
     };

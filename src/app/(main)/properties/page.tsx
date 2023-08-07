@@ -1,17 +1,15 @@
 import UserPropertyList from '@/components/layout/Pages/Properties';
-import { getUserProperties } from '@/lib/property';
-import { getSession } from '@/lib/session';
-
+import { getCurrentUser } from '@/lib/session';
 import { redirect } from 'next/navigation';
 
+type UserPropertiesViewProps = {
+    params: {
+        id: number;
+    };
+};
+
 export default async function UserPropertiesView() {
-    const session = await getSession();
-
-    if (!session) {
-        return redirect('/account/login');
-    }
-
-    const user = session.user;
+    const user = await getCurrentUser();
 
     if (!user) {
         return redirect('/account/login');
