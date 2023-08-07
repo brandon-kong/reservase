@@ -12,4 +12,6 @@ export type Reservation = {
     guests: number;
     total: number;
     status: ReservationStatus;
+
+    user: User;
 };

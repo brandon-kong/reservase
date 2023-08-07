@@ -18,7 +18,7 @@ import { PrimaryButton } from '@/components/Buttons';
 import { reserveProperty, cancelReservation } from '@/lib/reservation';
 import { Reservation } from '@/types/reservation/types';
 
-export default function ViewReservationView({ id }: ViewReservationViewProps) {
+export default function ViewReservationView({ id, user }: ViewReservationViewProps) {
     const router = useRouter();
 
     const {
@@ -51,9 +51,10 @@ export default function ViewReservationView({ id }: ViewReservationViewProps) {
         const cancelSuccessful = await cancelReservation(id);
         if (cancelSuccessful) {
             mutate();
-            //router.push(`/account/reservations`);
         }
     };
+
+    const userIsOnOwnReservation = user && user.pk === data.user.pk;
 
     return (
         <Flex p={20} direction={'column'} gap={4}>
@@ -68,10 +69,11 @@ export default function ViewReservationView({ id }: ViewReservationViewProps) {
 
             <Text>Status: {data.status}</Text>
 
-            {}
-            <PrimaryButton isDisabled={data.status === 'cancelled'} onClick={handleCancel}>
-                {data.status === 'cancelled' ? 'Cancelled' : 'Cancel Reservation'}
-            </PrimaryButton>
+            {userIsOnOwnReservation ? (
+                <PrimaryButton isDisabled={data.status === 'cancelled'} onClick={handleCancel}>
+                    {data.status === 'cancelled' ? 'Cancelled' : 'Cancel Reservation'}
+                </PrimaryButton>
+            ) : null}
         </Flex>
     );
 }

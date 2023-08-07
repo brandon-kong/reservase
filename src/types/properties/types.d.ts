@@ -24,11 +24,7 @@ export type Property = {
     wishlisted: boolean;
     pk: number;
 
-    host: {
-        pk: number;
-        first_name: string;
-        last_name: string;
-    };
+    host: User;
 
     reservations?: Reservation[];
 
@@ -53,11 +49,7 @@ export type CreatePropertyParams = {
 
 export type GetUserPropertiesReturn = {
     properties: Property[];
-    host: {
-        pk: number;
-        first_name: string;
-        last_name: string;
-    };
+    host: User;
 };
 
 export type ReviewCreate = {
@@ -73,9 +65,11 @@ export type Review = {
     rating: number;
     created_at: string;
     updated_at: string;
-    user: {
-        pk: number;
-        first_name: string;
-        last_name: string;
-    };
+    user: User;
+};
+
+export type User = {
+    pk: number;
+    first_name: string;
+    last_name: string;
 };
