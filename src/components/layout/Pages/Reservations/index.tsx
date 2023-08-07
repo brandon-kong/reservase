@@ -49,10 +49,6 @@ export default function ReservationList() {
                 <Tab>All</Tab>
             </TabList>
 
-            {/* TODO: put each panel in reusable component to 
-            make code more readable
-            */}
-
             <TabPanels>
                 {/* Past */}
                 <TabPanel>
