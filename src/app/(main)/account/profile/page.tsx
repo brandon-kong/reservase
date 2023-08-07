@@ -12,11 +12,5 @@ export default async function UserProfile() {
         return notFound();
     }
 
-    const userProfile: ProfileData = await getProfileData(user.pk);
-
-    if (!userProfile) {
-        //notFound();
-    }
-
     return <ProfileContent user={user} id={user.pk} />;
 }

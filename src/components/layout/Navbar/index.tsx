@@ -82,7 +82,7 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                                 <TransparentButton>Blog</TransparentButton>
 
                                 {is_host ? (
-                                    <TransparentButton as={Link} href={'/properties'}>
+                                    <TransparentButton as={Link} href={'/account/properties'}>
                                         Properties
                                     </TransparentButton>
                                 ) : (
