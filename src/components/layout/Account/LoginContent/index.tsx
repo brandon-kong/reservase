@@ -10,6 +10,8 @@ import { Container, Text, Flex, Heading, Divider, useToast, Spinner } from '@cha
 import Image from '@/components/Image';
 import { Link } from '@chakra-ui/next-js';
 
+import { LoginModal } from '@/components/Modal';
+
 export default function LoginContent() {
     const toast = useToast();
     const router = useRouter();
@@ -116,7 +118,6 @@ export default function LoginContent() {
             direction={'column'}
             align={'center'}
             justify={'center'}
-            h={'100vh'}
             maxW={'400px'}
             gap={4}
             opacity={loading ? 0.5 : 1}

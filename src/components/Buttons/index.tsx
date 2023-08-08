@@ -84,31 +84,55 @@ export function PrimaryButton(props: any) {
     );
 }
 
-export function GoogleSocialButton(props: any) {
+export function SocialButton(props: any) {
+    const { src, children, ...rest } = props;
+
     return (
         <PrimaryButton
             display={'flex'}
             bg={'white'}
             border={'1px solid'}
-            borderColor={'monotone_light.300'}
+            borderColor={'monotone_light.800'}
             color={'black'}
             _hover={{
                 bg: 'monotone_light.200',
-                borderColor: 'monotone_light.500',
             }}
             _active={{
                 bg: 'monotone_light.300',
-                borderColor: 'monotone_light.800',
             }}
             gap={2}
             cursor={'pointer'}
             {...props}
         >
-            <Image src={'/icons/google.svg'} alt={'social icon'} width={6} height={6} />
-            <Text fontWeight={'500'} color={'monotone_dark.800'}>
-                Sign in with Google
+            <Image position={'absolute'} left={4} src={src} alt={'social icon'} width={6} height={6} />
+            <Text fontWeight={600} color={'monotone_dark.800'}>
+                {children}
             </Text>
         </PrimaryButton>
+    );
+}
+
+export function GoogleSocialButton(props: any) {
+    return (
+        <SocialButton src={'/icons/google.svg'} {...props}>
+            Continue with Google
+        </SocialButton>
+    );
+}
+
+export function PhoneSocialButton(props: any) {
+    return (
+        <SocialButton src={'/icons/phone.svg'} {...props}>
+            Continue with Phone
+        </SocialButton>
+    );
+}
+
+export function EmailSocialButton(props: any) {
+    return (
+        <SocialButton src={'/icons/mail.svg'} {...props}>
+            Continue with Email
+        </SocialButton>
     );
 }
 

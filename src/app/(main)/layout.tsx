@@ -7,6 +7,7 @@ import Padding from '@/components/layout/Padding';
 import { ThemeProvider } from '@/lib/providers/theme';
 import AuthProvider from '@/lib/auth/providers';
 import ScreenContainer from '@/components/Formatting/Container';
+import { LoginProvider } from '@/lib/providers/LoginProvider';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -22,8 +23,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <body className={montserrat.className}>
                 <AuthProvider>
                     <ThemeProvider>
-                        <Navbar isAuthenticated={!!user} user={user} />
-                        <ScreenContainer>{children}</ScreenContainer>
+                        <LoginProvider>
+                            <Navbar isAuthenticated={!!user} user={user} />
+                            <ScreenContainer>{children}</ScreenContainer>
+                        </LoginProvider>
                     </ThemeProvider>
                 </AuthProvider>
             </body>
