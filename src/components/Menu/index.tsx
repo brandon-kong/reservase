@@ -5,6 +5,7 @@ import { MenuItem as ChakraMenuItem, MenuList as ChakraMenuList } from '@chakra-
 export const MenuItem = (props: any) => {
     return (
         <ChakraMenuItem
+            fontWeight={'semibold'}
             _hover={{
                 bg: 'monotone_light.200',
             }}

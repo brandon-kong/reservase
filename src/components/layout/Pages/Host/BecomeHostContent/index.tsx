@@ -5,18 +5,13 @@ type ProfileContentProps = {
     user?: any;
 };
 
-import { useState } from 'react';
-import { Avatar, Flex, Text, Heading, List, ListItem, ListIcon, Icon, Divider, Image } from '@chakra-ui/react';
+import { Avatar, Flex, Text, Heading, Image } from '@chakra-ui/react';
 
-import { CheckIcon, StarIcon } from '@chakra-ui/icons';
-import { PrimaryButton, PrimaryOutlineButton } from '@/components/Buttons';
+import { PrimaryButton } from '@/components/Buttons';
 import { ProfileData } from '@/types/types';
-import EditProfileView from '@/components/EditProfileView';
 import Link from 'next/link';
 
 export default function BecomeHostContent() {
-    const [editing, setEditing] = useState<boolean>(false);
-
     return (
         <Flex fontSize={'sm'} minH={'calc(100vh - 65px)'} align={'flex-start'} direction={'column'} gap={10}>
             <Flex

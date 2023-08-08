@@ -21,10 +21,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <html lang="en">
             <body className={montserrat.className}>
                 <AuthProvider>
-                    <ThemeProvider>
-                        <Navbar isAuthenticated={!!user} user={user} />
-                        <ScreenContainer>{children}</ScreenContainer>
-                    </ThemeProvider>
+                    <ThemeProvider>{children}</ThemeProvider>
                 </AuthProvider>
             </body>
         </html>

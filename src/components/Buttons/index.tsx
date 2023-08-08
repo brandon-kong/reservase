@@ -11,13 +11,12 @@ export function DefaultButton(props: any) {
     return (
         <Button
             color={'text.primary'}
-            fontWeight={'normal'}
             rounded={'full'}
             fontSize={'sm'}
             _hover={{
                 bg: 'monotone_light.200',
             }}
-            h={12}
+            h={10}
             _active={{
                 bg: 'monotone_light.300',
             }}
@@ -44,6 +43,33 @@ export function TransparentIconButton(props: any) {
     return (
         <TransparentButton as={IconButton} rounded={'full'} {...rest}>
             {children}
+        </TransparentButton>
+    );
+}
+
+export function TransparentIconButtonWithText(props: any) {
+    const { children, icon, aria_label, ...rest } = props;
+
+    return (
+        <TransparentButton
+            as={Flex}
+            align={'center'}
+            justify={'center'}
+            rounded={'full'}
+            cursor={'pointer'}
+            pl={0}
+            {...rest}
+        >
+            <TransparentButton
+                px={0}
+                py={0}
+                width={3}
+                as={IconButton}
+                aria-label={aria_label || 'icon button'}
+                icon={icon}
+                rounded={'full'}
+            />
+            <Text>{children}</Text>
         </TransparentButton>
     );
 }

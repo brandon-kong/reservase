@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Box, Menu, MenuButton, MenuDivider, Avatar, Flex } from '@chakra-ui/react';
+import { Box, Menu, MenuButton, MenuDivider, Avatar, Flex, Icon } from '@chakra-ui/react';
 
 import { getSession } from 'next-auth/react';
 
@@ -18,6 +18,8 @@ type AccountNavProps = {
     user: any;
 };
 
+import { AiOutlineUser } from '@react-icons/all-files/ai/AiOutlineUser';
+
 export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
     const router = useRouter();
 
@@ -32,8 +34,9 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                 <Flex
                     display={'flex'}
                     as={Flex}
-                    px={3}
-                    py={2}
+                    px={4}
+                    pr={2}
+                    py={1}
                     rounded={'full'}
                     border={'1px solid'}
                     borderColor={'monotone_dark.300'}
@@ -47,23 +50,45 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                     justify={'center'}
                 >
                     <HamburgerIcon />
-                    <Avatar bg={'monotone_dark.500'} h={6} w={6} />
+                    <Avatar
+                        size={'xs'}
+                        icon={<Icon as={AiOutlineUser} fontSize="1rem" />}
+                        fontSize={'2px'}
+                        name={user?.name.split(' ')[0] || null}
+                        bg={'monotone_dark.900'}
+                        h={7}
+                        w={7}
+                    />
                 </Flex>
             </MenuButton>
 
             {isAuthenticated ? (
                 <MenuList zIndex={1}>
-                    <MenuItem onClick={toProfile}>Profile</MenuItem>
+                    <MenuItem onClick={toProfile}>Messages</MenuItem>
+
+                    <MenuItem onClick={toProfile}>Notifications</MenuItem>
                     <MenuItem as={Link} href={`/account/reservations`}>
-                        My reservations
+                        Trips
                     </MenuItem>
+
                     <MenuItem as={Link} href={`/account/wishlist`}>
                         Wishlist
                     </MenuItem>
+
                     <MenuDivider />
-                    <MenuItem>Settings</MenuItem>
+
+                    <MenuItem fontWeight={'500'} onClick={toProfile}>
+                        Manage listings
+                    </MenuItem>
+
+                    <MenuItem fontWeight={'500'} onClick={toProfile}>
+                        Account
+                    </MenuItem>
+
+                    <MenuDivider />
+                    <MenuItem fontWeight={'500'}>Help center</MenuItem>
                     <MenuItem
-                        fontWeight={'semibold'}
+                        fontWeight={'500'}
                         onClick={() =>
                             signOut({
                                 callbackUrl: 'http://127.0.0.1:3000/account/login',
@@ -78,9 +103,11 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                     <MenuItem fontWeight={'semibold'} onClick={() => router.push('/account/register')}>
                         Sign up
                     </MenuItem>
-                    <MenuItem onClick={() => router.push('/account/login')}>Login</MenuItem>
+                    <MenuItem fontWeight={'500'} onClick={() => router.push('/account/login')}>
+                        Login
+                    </MenuItem>
                     <MenuDivider />
-                    <MenuItem>Help center</MenuItem>
+                    <MenuItem fontWeight={'500'}>Help center</MenuItem>
                 </MenuList>
             )}
         </Menu>

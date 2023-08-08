@@ -2,16 +2,15 @@
 
 import Image from '@/components/Image';
 
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Text, Spinner } from '@chakra-ui/react';
 
-import { TransparentButton, TransparentIconButton } from '@/components/Buttons';
+import { TransparentButton, TransparentIconButton, TransparentIconButtonWithText } from '@/components/Buttons';
 import AccountNav from './AccountNav';
 
 import { FiGlobe } from '@react-icons/all-files/fi/FiGlobe';
 import Link from 'next/link';
 
 import useSWR from 'swr';
-import { useSession } from 'next-auth/react';
 
 import { useRouter } from 'next/navigation';
 
@@ -20,81 +19,69 @@ type NavbarProps = {
     user: any;
 };
 
+import ScreenContainer from '@/components/Formatting/Container';
+
 import { fetcherGet } from '@/lib/axios';
 
 export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuthenticated: false, user: null }) {
     const router = useRouter();
 
-    const { data: hostData, error: hostError } = useSWR('/users/is/host/', fetcherGet);
+    const { data: hostData, error: hostError, isLoading } = useSWR('/users/is/host/', fetcherGet);
 
     const { is_host } = hostData || { is_host: false };
 
     return (
         <>
-            <Flex
-                top={0}
-                bg={'white'}
-                zIndex={1}
-                direction={'column'}
-                w={'full'}
-                h={'65px'}
-                border={'1px solid'}
-                borderColor={'monotone_light.500'}
-                align={'center'}
-                justify={{
-                    base: 'flex-start',
-                    md: 'space-between',
-                }}
-                px={{
-                    base: 4,
-                    md: 8,
-                    lg: 20,
-                }}
-                transition={'all 0.2s ease-in-out'}
-            >
-                <Flex py={5} h={'full'} align={'flex-start'} w={'full'} justify={'space-between'}>
-                    <Flex flex={1} h={'full'} align={'center'} maxH={'80px'} gap={2}>
-                        <Image
-                            src={'/reservine.png'}
-                            alt={'Reservine'}
-                            h={'full'}
-                            maxH={'80px'}
-                            width={55}
-                            height={55}
-                        />
-                        <Text>Reservine</Text>
+            <Flex h={'65px'} w={'full'} bg={'white'} border={'1px solid'} borderColor={'monotone_light.400'}>
+                <Flex w={'full'} justify={'space-between'} as={ScreenContainer}>
+                    <Flex h={'full'} align={'center'} gap={4}>
+                        <Link href={'/'}>
+                            <Image
+                                cursor={'pointer'}
+                                userSelect={'none'}
+                                draggable={false}
+                                src={'/brand/reservine.svg'}
+                                alt={'logo'}
+                                width={12}
+                                height={12}
+                            />
+                        </Link>
                     </Flex>
 
-                    <Flex gap={2} h={'full'} align={'center'} maxH={'80px'}>
-                        <Flex
-                            display={{
-                                base: 'none',
-                                sm: 'flex',
-                            }}
-                        >
-                            <Flex
-                                display={{
-                                    base: 'none',
-                                    md: 'flex',
-                                }}
-                            >
-                                <TransparentButton>Explore</TransparentButton>
-                                <TransparentButton>Blog</TransparentButton>
-
-                                {is_host ? (
-                                    <TransparentButton as={Link} href={'/account/properties'}>
-                                        Properties
-                                    </TransparentButton>
+                    <Flex h={'full'} align={'center'} gap={8}>
+                        <Flex h={'full'} align={'center'}>
+                            <Flex h={'full'} align={'center'}>
+                                {isLoading ? (
+                                    <Spinner mr={2} />
                                 ) : (
-                                    <TransparentButton as={Link} href={'/host'}>
-                                        Become a host
-                                    </TransparentButton>
+                                    <>
+                                        {is_host ? (
+                                            <TransparentButton as={Link} href={'/host'}>
+                                                <Text>Continue hosting</Text>
+                                            </TransparentButton>
+                                        ) : (
+                                            <>
+                                                <TransparentButton as={Link} href={'/places'}>
+                                                    <Text>Places</Text>
+                                                </TransparentButton>
+
+                                                <TransparentButton as={Link} href={'/blog'}>
+                                                    <Text>Blog</Text>
+                                                </TransparentButton>
+
+                                                <TransparentButton as={Link} href={'/host/become'}>
+                                                    <Text>Become a host</Text>
+                                                </TransparentButton>
+                                            </>
+                                        )}
+                                    </>
                                 )}
                             </Flex>
 
-                            <TransparentIconButton icon={<FiGlobe />} w={12} h={12} />
+                            <TransparentIconButtonWithText icon={<FiGlobe />} aria_label={'language'}>
+                                Language
+                            </TransparentIconButtonWithText>
                         </Flex>
-
                         <AccountNav isAuthenticated={isAuthenticated} user={user} />
                     </Flex>
                 </Flex>

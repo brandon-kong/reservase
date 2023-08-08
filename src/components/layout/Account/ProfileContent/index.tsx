@@ -40,10 +40,6 @@ export default function ProfileContent({ user, id }: ProfileContentProps) {
 
     return (
         <Flex
-            px={{
-                base: 8,
-                md: 20,
-            }}
             py={'4rem'}
             fontSize={'sm'}
             minH={'calc(100vh - 65px)'}
@@ -62,7 +58,7 @@ export default function ProfileContent({ user, id }: ProfileContentProps) {
                 h={'full'}
                 direction={'column'}
                 rounded={'lg'}
-                bg={'monotone.200'}
+                bg={'monotone_light.200'}
                 px={6}
                 py={12}
                 gap={8}
