@@ -17,8 +17,8 @@ export async function POST(req: NextRequest) {
             last_name,
         });
 
-        console.log(data, status)
-        
+        console.log(data, status);
+
         if (!(status === 201)) {
             return NextResponse.json(
                 {

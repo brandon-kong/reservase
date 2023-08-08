@@ -88,7 +88,7 @@ export default function RegisterContent() {
                 signIn('credentials', {
                     email,
                     password,
-                    callbackUrl: `http://localhost:3000/account/profile`,
+                    callbackUrl: `${window.location.origin}/account/profile`,
                 }).catch(err => {
                     setLoading(false);
                 });
@@ -174,6 +174,16 @@ export default function RegisterContent() {
                         });
                     }
                 }
+                toast({
+                    id: 'error',
+                    size: 'sm',
+                    title: JSON.stringify(errors),
+                    variant: 'left-accent',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                    position: 'bottom-right',
+                });
             });
     };
 
