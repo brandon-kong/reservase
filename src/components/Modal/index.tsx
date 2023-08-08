@@ -67,8 +67,20 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
     const [phoneFormatted, setPhoneFormatted] = useState<string>('');
     const [country, setCountry] = useState<CountryCode>('US');
 
-    const formatPhone = (phone: string) => {
-        const formatted = new AsYouType(country).input(`${phone}`);
+    const formatPhone = (value: string) => {
+        if (!value) {
+            setPhoneFormatted('');
+            return '';
+        }
+        value = value.toString();
+        if (value.includes('(') && !value.includes(')')) {
+            const b = value.replace('(', '');
+
+            setPhoneFormatted(b);
+            return;
+        }
+
+        const formatted = new AsYouType(country).input(value);
         setPhoneFormatted(formatted);
     };
 
