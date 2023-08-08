@@ -77,6 +77,7 @@ export default function ProfileContent({ user, id }: ProfileContentProps) {
                 justify={'center'}
             >
                 {/* Left side */}
+                {/* TODO: Put copy/pasted code into components to reduce redundancy */}
                 <Flex px={8} py={8} rounded={'lg'} bg={'monotone_light.200'} justify={'center'} w={'full'} gap={12}>
                     <Flex direction={'column'} align={'center'} flex={1} justify={'center'} gap={2}>
                         <Avatar
@@ -155,55 +156,6 @@ export default function ProfileContent({ user, id }: ProfileContentProps) {
                         </List>
                     </Flex>
                 </Flex>
-
-                {/*<Flex w={'full'} align={'center'} direction={'column'} gap={4}>
-                    <Avatar bg={'monotone_dark.300'} size={'2xl'} />
-                    {userIsOnOwnProfile ? (
-                        <PrimaryOutlineButton w={'full'} onClick={() => setImageChanged(true)}>
-                            Edit profile picture
-                        </PrimaryOutlineButton>
-                    ) : null}
-
-                    {imageChanged ? (
-                        <Flex w={'full'} direction={'row'} gap={4}>
-                            <PrimaryOutlineButton w={'full'} onClick={() => setImageChanged(false)}>
-                                Cancel
-                            </PrimaryOutlineButton>
-                            <PrimaryButton w={'full'}>Save</PrimaryButton>
-                        </Flex>
-                    ) : null}
-                </Flex>
-
-                <Flex w={'full'} direction={'column'} gap={2}>
-                    <Heading w={'full'} size={'md'}>
-                        Identity Verification
-                    </Heading>
-                    <Text color={'monotone.700'}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec purus feugiat.
-                    </Text>
-                </Flex>
-
-                <Flex w={'full'} direction={'column'} gap={2}>
-                    <Heading w={'full'} size={'md'}>
-                        {profile.first_name + ' ' + profile.last_name}
-                    </Heading>
-                    <List spacing={1} color={'monotone.700'}>
-                        <ListItem>
-                            <ListIcon as={CheckIcon} color={'primary.400'} />
-                            Email confirmed
-                        </ListItem>
-                        <ListItem>
-                            <ListIcon as={CheckIcon} color={'primary.400'} />
-                            Phone number confirmed
-                        </ListItem>
-                        <ListItem>
-                            <ListIcon as={CheckIcon} color={'primary.400'} />
-                            Identity verified
-                        </ListItem>
-                    </List>
-                </Flex>
-
-                    */}
             </Flex>
 
             <Flex w={'full'} flex={1} h={'full'} direction={'column'} gap={8}>
