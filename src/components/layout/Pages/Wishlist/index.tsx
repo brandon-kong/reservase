@@ -58,6 +58,7 @@ export default function WishlistPropertiesView({ user }: WishlistProps) {
                 const { property } = propertyGroup;
                 return (
                     <PropertyListing
+                        mutate={mutate}
                         key={property.pk}
                         property={property}
                         userIsOnOwnPropertyListing={property.host.pk === user.pk}

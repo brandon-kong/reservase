@@ -157,3 +157,5 @@ const spacing = {
     149: '596px',
     150: '600px',
 };
+
+export default spacing;
