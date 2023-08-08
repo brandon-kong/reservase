@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { AsYouType } from 'libphonenumber-js';
+
+import { countryCodes, getCountryCodes } from '@/lib/phone/countryCodes';
 
 import {
     Modal,
@@ -17,6 +20,9 @@ import {
     useToast,
     Divider,
     CloseButton,
+    InputGroup,
+    InputLeftElement,
+    InputLeftAddon,
 } from '@chakra-ui/react';
 
 import { signUp } from '@/lib/session';
@@ -31,11 +37,14 @@ import {
     PrimaryButton,
     TransparentButton,
 } from '@/components/Buttons';
-import Input from '@/components/Input';
+import Input, { Select } from '@/components/Input';
+
+import type { CountryCode } from 'libphonenumber-js/min';
 
 import Image from '@/components/Image';
 
 import { useSearchParams, useRouter } from 'next/navigation';
+import { format } from 'path';
 
 type LoginModalProps = {
     isOpen: boolean;
@@ -52,6 +61,16 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [countryCode, setCountryCode] = useState<string>('+1');
+    const [countryValue, setCountryValue] = useState<string>('United States +1');
+    const [phone, setPhone] = useState<string>('');
+    const [phoneFormatted, setPhoneFormatted] = useState<string>('');
+    const [country, setCountry] = useState<CountryCode>('US');
+
+    const formatPhone = (phone: string) => {
+        const formatted = new AsYouType(country).input(`${phone}`);
+        setPhoneFormatted(formatted);
+    };
 
     if (searchParams?.has('error')) {
         const error = searchParams.get('error');
@@ -175,6 +194,17 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                             attemptLoginWithGoogle={attemptLoginWithGoogle}
                             formAuthType={formAuthType}
                             setformAuthType={setformAuthType}
+                            countryCode={countryCode}
+                            setCountryCode={setCountryCode}
+                            countryValue={countryValue}
+                            setCountryValue={setCountryValue}
+                            phoneFormatted={phoneFormatted}
+                            setPhoneFormatted={setPhoneFormatted}
+                            phone={phone}
+                            setPhone={setPhone}
+                            formatPhone={formatPhone}
+                            country={country}
+                            setCountry={setCountry}
                         />
                     </ModalBody>
                 </ModalContent>
@@ -193,6 +223,17 @@ const LoginView = ({
     attemptLoginWithGoogle,
     formAuthType,
     setformAuthType,
+    countryCode,
+    setCountryCode,
+    countryValue,
+    setCountryValue,
+    phoneFormatted,
+    setPhoneFormatted,
+    phone,
+    setPhone,
+    formatPhone,
+    country,
+    setCountry,
 }: any) => {
     return (
         <Container
@@ -221,9 +262,56 @@ const LoginView = ({
                 <Flex w={'full'} direction={'column'} gap={4}>
                     {formAuthType == 'phone' ? (
                         <Flex w={'full'} direction={'column'} gap={2}>
-                            <Input w={'full'} placeholder={'Phone number'} name={'phone'} />
+                            <Flex w={'full'} direction={'column'}>
+                                <Select
+                                    defaultValue={countryValue}
+                                    value={countryValue}
+                                    onChange={(e: any) => {
+                                        const code = e.target.value.split(':')[1];
+                                        const country = e.target.value.split(':')[2];
+
+                                        setCountry(country);
+                                        setCountryValue(e.target.value);
+                                        setCountryCode(`+${code}`);
+
+                                        formatPhone(phone);
+                                    }}
+                                    borderBottomRadius={'none'}
+                                    w={'full'}
+                                    placeholder={'Country'}
+                                    name={'country'}
+                                    options={getCountryCodes()}
+                                />
+                                <InputGroup>
+                                    <InputLeftAddon
+                                        h={'12'}
+                                        borderRightWidth={0}
+                                        bg={'monotone_light.200'}
+                                        borderTopLeftRadius={'none'}
+                                        pointerEvents="none"
+                                        color="monotone_dark.500"
+                                        fontSize="sm"
+                                    >
+                                        {countryCode}
+                                    </InputLeftAddon>
+                                    <Input
+                                        value={phoneFormatted}
+                                        onChange={(e: any) => {
+                                            setPhone(e.target.value);
+                                            formatPhone(e.target.value);
+                                        }}
+                                        zIndex={2}
+                                        pl={'4'}
+                                        borderBottomLeftRadius={'none'}
+                                        borderTopRadius={'none'}
+                                        w={'full'}
+                                        placeholder={'Phone number'}
+                                        name={'phone'}
+                                    />
+                                </InputGroup>
+                            </Flex>
                             <Text fontWeight={'500'} fontSize={'sm'}>
-                                We'll send you a one time SMS message. Message and data rates may apply. See our{' '}
+                                We&apos;ll send you a one time SMS message. Message and data rates may apply. See our{' '}
                                 <Link href={'/terms'} color={'#783F8E'}>
                                     Terms of Service
                                 </Link>{' '}

@@ -6,6 +6,7 @@ import {
     NumberInputStepper,
     NumberIncrementStepper,
     NumberDecrementStepper,
+    Select as ChakraSelect,
 } from '@chakra-ui/react';
 
 export default function Input(props: any) {
@@ -24,6 +25,27 @@ export default function Input(props: any) {
         >
             {children}
         </ChakraInput>
+    );
+}
+
+export function Select(props: any) {
+    const { options, ...rest } = props;
+    return (
+        <ChakraSelect
+            fontWeight={'normal'}
+            fontSize={'sm'}
+            h={12}
+            rounded={'lg'}
+            colorScheme="monotone_light"
+            focusBorderColor="primary.400"
+            {...rest}
+        >
+            {options.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                    {option.label}
+                </option>
+            ))}
+        </ChakraSelect>
     );
 }
 
