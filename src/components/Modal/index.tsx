@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { AsYouType } from 'libphonenumber-js';
 
 import { getCountryCodes } from '@/lib/phone/countryCodes';
@@ -46,8 +46,9 @@ import type { CountryCode } from 'libphonenumber-js/min';
 import Image from '@/components/Image';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { sendPhoneOTP, userExistsWithPhone, verifyPhoneOTP } from '@/lib/auth';
+import { registerUserWithPhone, sendPhoneOTP, userExistsWithPhone, verifyPhoneOTP } from '@/lib/auth';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
+import { Error } from '@/types/response/types';
 
 type LoginModalProps = {
     isOpen: boolean;
@@ -65,11 +66,29 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
+    const [birthday, setBirthday] = useState<Date | null>(new Date());
+
     const [countryCode, setCountryCode] = useState<string>('+1');
     const [countryValue, setCountryValue] = useState<string>('United States:1:US');
     const [phone, setPhone] = useState<string>('');
     const [phoneFormatted, setPhoneFormatted] = useState<string>('');
     const [country, setCountry] = useState<CountryCode>('US');
+
+    const [otp, setOTP] = useState<string>('');
+
+    function getAge(dateString: string) {
+        var today = new Date();
+        var birthDate = new Date(dateString);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
 
     const formatPhone = (value: string) => {
         if (!value) {
@@ -88,6 +107,10 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
         setPhoneFormatted(formatted);
     };
 
+    if (searchParams?.has('open-sign-in')) {
+        onOpen();
+    }
+
     if (searchParams?.has('error')) {
         const error = searchParams.get('error');
 
@@ -101,10 +124,10 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                     status: 'error',
                     duration: 3000,
                     isClosable: true,
-                    position: 'bottom-right',
+                    position: 'top',
                 });
                 break;
-            case 'OAuthSignin':
+            case 'oauth':
                 if (toast.isActive('oauth-signin')) break;
                 toast({
                     id: 'oauth-signin',
@@ -113,7 +136,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                     status: 'error',
                     duration: 3000,
                     isClosable: true,
-                    position: 'bottom-right',
+                    position: 'top',
                 });
                 break;
             case 'AccessDenied':
@@ -125,12 +148,14 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                     status: 'error',
                     duration: 3000,
                     isClosable: true,
-                    position: 'bottom-right',
+                    position: 'top',
                 });
                 break;
             default:
                 break;
         }
+
+        router.push('/', undefined);
     }
 
     const verifyCredentials = async (e: any) => {
@@ -140,19 +165,44 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
         if (formAuthType == 'phone') {
             // verify phone
 
-            const sentOTP = await sendPhoneOTP(phone, countryCode);
+            let sentOTP = await sendPhoneOTP(phone, countryCode);
 
             setLoading(false);
 
             if (sentOTP.status_code === 200) {
                 setView('verify-number');
-            }
-        }
-    };
+            } else {
+                sentOTP = sentOTP as Error;
 
-    const attemptLogin = () => {
-        setLoading(true);
-        if (formAuthType == 'phone') {
+                switch (sentOTP.error_type) {
+                    case 'invalid_request':
+                        if (toast.isActive('otp-send-invalid-request')) break;
+                        toast({
+                            id: 'otp-send-invalid-request',
+                            title: 'Invalid request',
+                            variant: 'left-accent',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                            position: 'top',
+                        });
+
+                        break;
+                    case 'invalid_phone_number':
+                        if (toast.isActive('otp-send-invalid-phone')) break;
+                        toast({
+                            id: 'otp-send-invalid-phone',
+                            title: 'Invalid phone number',
+                            variant: 'left-accent',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: true,
+                            position: 'top',
+                        });
+
+                        break;
+                }
+            }
         }
     };
 
@@ -167,7 +217,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
     const attemptPhoneOTPVerify = async (otp: string) => {
         setLoading(true);
 
-        const verifiedOTP = await verifyPhoneOTP({ phone, countryCode, otp });
+        let verifiedOTP = await verifyPhoneOTP({ phone, countryCode, otp });
 
         if (verifiedOTP.status_code === 200) {
             // Check if user exists
@@ -204,7 +254,105 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
             }
             setView('registration');
         } else {
-            alert(JSON.stringify(verifiedOTP));
+            verifiedOTP = verifiedOTP as Error;
+
+            switch (verifiedOTP.error_type) {
+                case 'invalid_request':
+                    if (toast.isActive('otp-verify-invalid-request')) break;
+                    toast({
+                        id: 'otp-verify-invalid-request',
+                        title: 'Invalid request',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+
+                    break;
+                case 'invalid_phone_number':
+                    if (toast.isActive('otp-verify-invalid-phone')) break;
+                    toast({
+                        id: 'otp-verify-invalid-phone',
+                        title: 'Invalid phone number',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+
+                    break;
+
+                case 'invalid_token':
+                    if (toast.isActive('otp-verify-invalid-token')) break;
+                    toast({
+                        id: 'otp-verify-invalid-token',
+                        title: 'Token is invalid or expired',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+
+                    break;
+
+                case 'token_attempts_exceeded':
+                    if (toast.isActive('otp-verify-token-attempts-exceeded')) break;
+                    toast({
+                        id: 'otp-verify-token-attempts-exceeded',
+                        title: 'Too many attempts',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+
+                    setView('login');
+                    break;
+            }
+        }
+
+        setLoading(false);
+    };
+
+    const attemptPhoneRegistration = async (e: any) => {
+        e.preventDefault();
+
+        setLoading(true);
+        const registeredUser = await registerUserWithPhone({
+            phone,
+            countryCode,
+            email,
+            firstName,
+            lastName,
+            birthday: birthday?.toISOString().split('T')[0],
+            otp: otp,
+        });
+
+        if (registeredUser.status_code === 200) {
+            const signedIn = await signIn('phone-otp', {
+                phone: phoneFormatted,
+                country_code: countryCode,
+                token: otp,
+                redirect: false,
+                callbackUrl: `${window.location.origin}/`,
+            });
+
+            if (!signedIn) {
+                setLoading(false);
+                return;
+            }
+
+            if (signedIn.ok) {
+                onClose();
+                router.push('/account/profile');
+                return;
+            }
+        } else {
+            alert(JSON.stringify(registeredUser));
         }
 
         setLoading(false);
@@ -215,6 +363,17 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
             <Modal size={'lg'} motionPreset="slideInBottom" isCentered isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay bg={'rgba(0,0,0,0.55)'} />
                 <ModalContent rounded={'xl'}>
+                    <Spinner
+                        zIndex={2}
+                        position={'absolute'}
+                        top={'50%'}
+                        left={0}
+                        right={0}
+                        marginLeft={'auto'}
+                        marginRight={'auto'}
+                        transform={'translate(-50%, -50%)'}
+                        display={loading ? 'block' : 'none'}
+                    />
                     <ModalHeader
                         as={Flex}
                         position={'relative'}
@@ -267,7 +426,6 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 password={password}
                                 setEmail={setEmail}
                                 setPassword={setPassword}
-                                attemptLogin={attemptLogin}
                                 attemptLoginWithGoogle={attemptLoginWithGoogle}
                                 formAuthType={formAuthType}
                                 setformAuthType={setformAuthType}
@@ -290,6 +448,8 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 setLoading={setLoading}
                                 phoneFormatted={phoneFormatted}
                                 attemptPhoneOTPVerify={attemptPhoneOTPVerify}
+                                otp={otp}
+                                setOTP={setOTP}
                             />
                         ) : (
                             // registration
@@ -300,7 +460,6 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 password={password}
                                 setEmail={setEmail}
                                 setPassword={setPassword}
-                                attemptLogin={attemptLogin}
                                 attemptLoginWithGoogle={attemptLoginWithGoogle}
                                 formAuthType={formAuthType}
                                 setformAuthType={setformAuthType}
@@ -316,6 +475,14 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 country={country}
                                 setCountry={setCountry}
                                 verifyCredentials={verifyCredentials}
+                                attemptPhoneRegistration={attemptPhoneRegistration}
+                                firstName={firstName}
+                                setFirstName={setFirstName}
+                                lastName={lastName}
+                                setLastName={setLastName}
+                                birthday={birthday}
+                                setBirthday={setBirthday}
+                                getAge={getAge}
                             />
                         )}
                     </ModalBody>
@@ -340,7 +507,6 @@ const LoginView = ({
     phone,
     setPhone,
     formatPhone,
-    country,
     setCountry,
     verifyCredentials,
 }: any) => {
@@ -356,14 +522,6 @@ const LoginView = ({
             filter={loading ? 'blur(2px)' : 'none'}
             pointerEvents={loading ? 'none' : 'auto'}
         >
-            <Spinner
-                zIndex={2}
-                position={'absolute'}
-                top={'50%'}
-                left={'50%'}
-                transform={'translate(-50%, -50%)'}
-                display={loading ? 'block' : 'none'}
-            />
             <Flex w={'full'} direction={'column'} align={'flex-start'} gap={8}>
                 <Heading fontSize={'2xl'} fontWeight={'600'} textAlign={'left'}>
                     Welcome to Reservine!
@@ -386,7 +544,7 @@ const LoginView = ({
 
                                         formatPhone(phone);
                                     }}
-                                    borderBottomWidth={'.5px'}
+                                    borderBottomWidth={'0'}
                                     borderBottomRadius={'none'}
                                     w={'full'}
                                     placeholder={'Country'}
@@ -406,6 +564,7 @@ const LoginView = ({
                                         {countryCode}
                                     </InputLeftAddon>
                                     <Input
+                                        autoFocus
                                         value={phoneFormatted}
                                         onChange={(e: any) => {
                                             setPhone(e.target.value);
@@ -422,7 +581,7 @@ const LoginView = ({
                                     />
                                 </InputGroup>
                             </Flex>
-                            <Text fontWeight={'500'} fontSize={'sm'}>
+                            <Text fontWeight={'500'} fontSize={'xs'}>
                                 We&apos;ll send you a one time SMS message. Message and data rates may apply. See our{' '}
                                 <Link href={'/terms'} color={'#783F8E'}>
                                     Terms of Service
@@ -437,6 +596,7 @@ const LoginView = ({
                         </Flex>
                     ) : (
                         <Input
+                            autoFocus
                             w={'full'}
                             placeholder={'Email'}
                             name={'email'}
@@ -468,7 +628,7 @@ const LoginView = ({
     );
 };
 
-const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify }: any) => {
+const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify, otp, setOTP }: any) => {
     return (
         <Container
             as={Flex}
@@ -481,14 +641,6 @@ const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify
             filter={loading ? 'blur(2px)' : 'none'}
             pointerEvents={loading ? 'none' : 'auto'}
         >
-            <Spinner
-                zIndex={2}
-                position={'absolute'}
-                top={'50%'}
-                left={'50%'}
-                transform={'translate(-50%, -50%)'}
-                display={loading ? 'block' : 'none'}
-            />
             <Flex w={'full'} direction={'column'} align={'flex-start'} gap={2}>
                 <Heading fontSize={'2xl'} fontWeight={'600'} textAlign={'left'}>
                     Verify your phone number
@@ -511,6 +663,9 @@ const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify
                             onComplete={(value: any) => {
                                 attemptPhoneOTPVerify(value);
                             }}
+                            onChange={(value: string) => {
+                                setOTP(value);
+                            }}
                         >
                             <PinInputField />
                             <PinInputField />
@@ -526,7 +681,23 @@ const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify
     );
 };
 
-const RegisterView = ({ loading, email, setEmail, verifyCredentials }: any) => {
+const RegisterView = ({
+    loading,
+    email,
+    setEmail,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    birthday,
+    setBirthday,
+    attemptPhoneRegistration,
+    getAge,
+}: any) => {
+    function isValidDate(d: Date) {
+        return d instanceof Date && !isNaN(d as any);
+    }
+
     return (
         <Container
             as={Flex}
@@ -539,39 +710,39 @@ const RegisterView = ({ loading, email, setEmail, verifyCredentials }: any) => {
             filter={loading ? 'blur(2px)' : 'none'}
             pointerEvents={loading ? 'none' : 'auto'}
         >
-            <Spinner
-                zIndex={2}
-                position={'absolute'}
-                top={'50%'}
-                left={'50%'}
-                transform={'translate(-50%, -50%)'}
-                display={loading ? 'block' : 'none'}
-            />
             <Flex w={'full'} direction={'column'} align={'flex-start'} gap={8}>
                 <Heading fontSize={'2xl'} fontWeight={'600'} textAlign={'left'}>
                     Just a few more steps!
                 </Heading>
 
-                <Flex onSubmit={verifyCredentials} w={'full'} direction={'column'} gap={5} as={'form'}>
+                <Flex onSubmit={attemptPhoneRegistration} w={'full'} direction={'column'} gap={5} as={'form'}>
                     <Flex direction={'column'}>
                         <Input
-                            borderBottomWidth={'.5px'}
+                            transition={'border-bottom-width 0s ease-in-out'}
+                            _focus={{
+                                borderBottomWidth: '1px',
+                            }}
+                            borderBottomWidth={'0px'}
                             borderBottomRadius={'none'}
                             w={'full'}
                             placeholder={'First name'}
                             name={'first_name'}
-                            value={email}
-                            onChange={(e: any) => setEmail(e.target.value)}
+                            value={firstName}
+                            onChange={(e: any) => setFirstName(e.target.value)}
                         />
-
+                        <Divider borderColor={'monotone_light.500'} />
                         <Input
-                            borderTopWidth={'.5px'}
+                            transition={'border-top-width 0s ease-in-out'}
+                            _focus={{
+                                borderTopWidth: '1px',
+                            }}
+                            borderTopWidth={'0px'}
                             borderTopRadius={'none'}
                             w={'full'}
                             placeholder={'Last name'}
                             name={'last_name'}
-                            value={email}
-                            onChange={(e: any) => setEmail(e.target.value)}
+                            value={lastName}
+                            onChange={(e: any) => setLastName(e.target.value)}
                         />
                         <Text mt={2} fontSize={'xs'} color={'monotone_light.800'} fontWeight={'400'}>
                             Enter your first and last name as it appears on your government issued ID.
@@ -579,7 +750,20 @@ const RegisterView = ({ loading, email, setEmail, verifyCredentials }: any) => {
                     </Flex>
 
                     <Flex direction={'column'}>
-                        <Input type={'date'} />
+                        <Input
+                            type={'date'}
+                            isInvalid={
+                                birthday === null ||
+                                // check if birthday is below 18
+                                getAge(birthday?.toISOString().split('T')[0]) < 18
+                            }
+                            value={birthday?.toISOString().split('T')[0]}
+                            onChange={(e: any) => {
+                                const date = new Date(e.target.value);
+                                if (!date || !isValidDate(date)) return;
+                                setBirthday(new Date(e.target.value));
+                            }}
+                        />
 
                         <Text mt={2} fontSize={'xs'} color={'monotone_light.800'} fontWeight={'400'}>
                             In order to book/host reservations, you must be at least 18 years old. We will not share
@@ -604,9 +788,22 @@ const RegisterView = ({ loading, email, setEmail, verifyCredentials }: any) => {
                         </Text>
                     </Flex>
 
-                    <PrimaryButton w={'full'} type={'submit'}>
-                        Finish registration
-                    </PrimaryButton>
+                    <Stack spacing={2}>
+                        <Text mt={2} fontSize={'xs'} color={'monotone_light.800'} fontWeight={'400'}>
+                            By continuing, you agree to Reservine&apos;s{' '}
+                            <Link href={'/terms'} color={'#783F8E'}>
+                                Terms of Service
+                            </Link>{' '}
+                            and
+                            <Link href={'/privacy'} color={'#783F8E'}>
+                                {' '}
+                                Privacy Policy
+                            </Link>
+                        </Text>
+                        <PrimaryButton w={'full'} type={'submit'}>
+                            Finish registration
+                        </PrimaryButton>
+                    </Stack>
                 </Flex>
             </Flex>
         </Container>

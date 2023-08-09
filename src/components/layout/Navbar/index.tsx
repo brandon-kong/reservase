@@ -26,9 +26,10 @@ import { fetcherGet } from '@/lib/axios';
 export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuthenticated: false, user: null }) {
     const router = useRouter();
 
-    const { data: hostData, error: hostError, isLoading } = useSWR('/users/is/host/', fetcherGet);
+    const isLoading = false;
+    //const { data: hostData, error: hostError, isLoading } = useSWR('/users/is/host/', fetcherGet);
 
-    const { is_host } = hostData || { is_host: false };
+    const is_host = false;
 
     return (
         <>

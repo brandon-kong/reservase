@@ -189,9 +189,9 @@ const authOptions: NextAuthOptions = {
                         return true;
                     }
 
-                    return false;
+                    return '/?open-sign-in=true&error=oauth';
                 } catch (error: any) {
-                    return false;
+                    return '/?open-sign-in=true&error=oauth';
                 }
             }
 

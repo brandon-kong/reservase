@@ -109,3 +109,42 @@ export async function userExistsWithPhone(phone: string, countryCode: string): P
         return response;
     }
 }
+
+type RegisterUserWithPhoneProps = {
+    phone: string;
+    countryCode: string;
+    otp: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    birthday?: string;
+};
+
+export async function registerUserWithPhone({
+    phone,
+    countryCode,
+    otp,
+    firstName,
+    lastName,
+    email,
+    birthday,
+}: RegisterUserWithPhoneProps) {
+    const phoneWithCountryCode = countryCode + phone;
+
+    try {
+        const { data } = await axios.post('/users/register/phone/', {
+            phone: phoneWithCountryCode,
+            token: otp,
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            birthday,
+        });
+
+        const response: Success | Error = data;
+        return response;
+    } catch (error: any) {
+        const response: Error = error.response.data;
+        return response;
+    }
+}
