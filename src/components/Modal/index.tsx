@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { AsYouType } from 'libphonenumber-js';
 
-import { countryCodes, getCountryCodes } from '@/lib/phone/countryCodes';
+import { getCountryCodes } from '@/lib/phone/countryCodes';
 
 import {
     Modal,
@@ -14,14 +14,12 @@ import {
     Heading,
     Text,
     Container,
-    useDisclosure,
     Flex,
     Spinner,
     useToast,
     Divider,
     CloseButton,
     InputGroup,
-    InputLeftElement,
     InputLeftAddon,
     Stack,
     HStack,
@@ -31,9 +29,7 @@ import {
     Icon,
 } from '@chakra-ui/react';
 
-import { signUp } from '@/lib/session';
 import { signIn } from 'next-auth/react';
-
 import { Link } from '@chakra-ui/next-js';
 
 import {
@@ -50,9 +46,8 @@ import type { CountryCode } from 'libphonenumber-js/min';
 import Image from '@/components/Image';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { format } from 'path';
 import { sendPhoneOTP, userExistsWithPhone, verifyPhoneOTP } from '@/lib/auth';
-import { ChevronLeftIcon, CloseIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { ChevronLeftIcon } from '@chakra-ui/icons';
 
 type LoginModalProps = {
     isOpen: boolean;
@@ -333,10 +328,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
 const LoginView = ({
     loading,
     email,
-    password,
     setEmail,
-    setPassword,
-    attemptLogin,
     attemptLoginWithGoogle,
     formAuthType,
     setformAuthType,
@@ -345,7 +337,6 @@ const LoginView = ({
     countryValue,
     setCountryValue,
     phoneFormatted,
-    setPhoneFormatted,
     phone,
     setPhone,
     formatPhone,
@@ -535,29 +526,7 @@ const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify
     );
 };
 
-const RegisterView = ({
-    loading,
-    email,
-    password,
-    setEmail,
-    setPassword,
-    attemptLogin,
-    attemptLoginWithGoogle,
-    formAuthType,
-    setformAuthType,
-    countryCode,
-    setCountryCode,
-    countryValue,
-    setCountryValue,
-    phoneFormatted,
-    setPhoneFormatted,
-    phone,
-    setPhone,
-    formatPhone,
-    country,
-    setCountry,
-    verifyCredentials,
-}: any) => {
+const RegisterView = ({ loading, email, setEmail, verifyCredentials }: any) => {
     return (
         <Container
             as={Flex}
