@@ -11,6 +11,7 @@ export function DefaultButton(props: any) {
     return (
         <Button
             color={'text.primary'}
+            fontWeight={500}
             rounded={'full'}
             fontSize={'sm'}
             _hover={{

@@ -139,6 +139,7 @@ export async function registerUserWithPhone({
             last_name: lastName,
             email,
             birthday,
+            country_code: countryCode,
         });
 
         const response: Success | Error = data;

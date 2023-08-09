@@ -7,7 +7,7 @@ import { Error } from '@/types/response/types';
 export async function POST(request: NextRequest) {
     const data = await request.json();
 
-    const { phone, email, first_name, last_name, birthday, token } = data;
+    const { phone, email, first_name, last_name, birthday, token, country_code } = data;
 
     if (!phone) {
         return NextResponse.json(
@@ -64,6 +64,28 @@ export async function POST(request: NextRequest) {
         );
     }
 
+    if (!token) {
+        return NextResponse.json(
+            {
+                error: 'Token is required',
+            },
+            {
+                status: 400,
+            },
+        );
+    }
+
+    if (!country_code) {
+        return NextResponse.json(
+            {
+                error: 'Country code is required',
+            },
+            {
+                status: 400,
+            },
+        );
+    }
+
     try {
         const { data, status } = await api.post('/users/register/phone/', {
             phone,
@@ -72,6 +94,7 @@ export async function POST(request: NextRequest) {
             last_name,
             birthday,
             token,
+            country_code,
         });
 
         return NextResponse.json(data || {}, {
