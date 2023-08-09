@@ -61,7 +61,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                             size={'xs'}
                             icon={<Icon as={AiOutlineUser} fontSize="1rem" />}
                             fontSize={'2px'}
-                            name={user?.name.split(' ')[0] || null}
+                            name={user?.first_name || null}
                             bg={'monotone_dark.900'}
                             h={7}
                             w={7}

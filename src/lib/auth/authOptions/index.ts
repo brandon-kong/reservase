@@ -8,6 +8,7 @@ import { api } from '@/lib/axios';
 import { refreshToken } from '@/lib/auth';
 
 import jwtDecode from 'jwt-decode';
+import { Success, Error } from '@/types/response/types';
 
 const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET as string,
@@ -58,6 +59,55 @@ const authOptions: NextAuthOptions = {
                             access: data.access,
                             refresh: data.refresh,
                             ...data.user,
+                        };
+                    }
+
+                    return null;
+                } catch (error: any) {
+                    return null;
+                }
+            },
+        }),
+
+        CredentialProvider({
+            id: 'phone-otp',
+            name: 'Phone OTP',
+            credentials: {
+                phone: {
+                    label: 'Phone',
+                    type: 'text',
+                    placeholder: 'Phone',
+                },
+                token: {
+                    label: 'Token',
+                    type: 'text',
+                    placeholder: 'Token',
+                },
+                country_code: {
+                    label: 'Country Code',
+                    type: 'text',
+                    placeholder: 'Country Code',
+                },
+            },
+
+            async authorize(credentials: any, req: any): Promise<any> {
+                const { phone, token, country_code } = credentials;
+
+                const phoneWithCountryCode = country_code + phone;
+
+                try {
+                    const { data, status } = await api.post('/users/login/otp/phone/', {
+                        phone: phoneWithCountryCode,
+                        token,
+                    });
+
+                    const detail = data.detail as { [key: string]: any };
+
+                    if (status === 200) {
+                        return {
+                            access: detail.access,
+                            refresh: detail.refresh,
+                            ...detail.user,
                         };
                     }
 
@@ -126,7 +176,7 @@ const authOptions: NextAuthOptions = {
             if (account) {
                 const { access_token, id_token, provider } = account;
                 try {
-                    const response = await api.post('/users/oauth/google/', {
+                    const response = await api.post('/users/token/oauth/google/', {
                         access_token: id_token,
                     });
 
