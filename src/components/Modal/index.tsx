@@ -1127,6 +1127,7 @@ const EmailRegistrationView = ({
                             Password
                         </InputLabel>
                         <Input
+                            type={'password'}
                             placeholder={'Password'}
                             name={'password'}
                             value={password}
@@ -1201,6 +1202,7 @@ const EmailVerifyView = ({ loading, email, setEmail, password, setPassword, atte
                             placeholder={'Password'}
                             name={'password'}
                             value={password}
+                            type={'password'}
                             onChange={(e: any) => setPassword(e.target.value)}
                         />
                     </Flex>

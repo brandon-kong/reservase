@@ -1,15 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Box, Menu, MenuButton, MenuDivider, Avatar, Flex, Icon, useDisclosure } from '@chakra-ui/react';
-
-import { getSession } from 'next-auth/react';
 
 import { MenuItem, MenuList } from '@/components/Menu';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Session } from 'next-auth';
-import { signOut, signIn } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -19,8 +14,6 @@ type AccountNavProps = {
     isAuthenticated: boolean;
     user: any;
 };
-
-import { LoginModal } from '@/components/Modal';
 
 import { AiOutlineUser } from '@react-icons/all-files/ai/AiOutlineUser';
 
@@ -58,6 +51,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                     >
                         <HamburgerIcon />
                         <Avatar
+                            color={'monotone_light.500'}
                             size={'xs'}
                             icon={<Icon as={AiOutlineUser} fontSize="1rem" />}
                             fontSize={'2px'}

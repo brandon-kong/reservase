@@ -1,3 +1,5 @@
+import UsersShowView from '@/components/layout/Users/Show';
+
 type Props = {
     params: {
         id: string;
@@ -5,5 +7,5 @@ type Props = {
 };
 
 export default function UserShow({ params }: Props) {
-    return <div>UserShow: {params.id}</div>;
+    return <UsersShowView id={params.id} />;
 }

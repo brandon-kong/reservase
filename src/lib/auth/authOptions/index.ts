@@ -52,7 +52,6 @@ const authOptions: NextAuthOptions = {
 
             async authorize(credentials: any, req: any): Promise<any> {
                 const { email, password } = credentials;
-                console.log(email, password);
                 try {
                     const { data, status } = await api.post('/users/token/email/', {
                         email,
@@ -69,7 +68,6 @@ const authOptions: NextAuthOptions = {
 
                     return null;
                 } catch (error: any) {
-                    console.log(error.response.data);
                     return null;
                 }
             },
@@ -188,6 +186,8 @@ const authOptions: NextAuthOptions = {
 
                     if (response.status === 200) {
                         account.user = response.data.user;
+                        user.first_name = response.data.user.first_name;
+                        user.last_name = response.data.user.last_name;
                         user.pk = response.data.user.pk;
                         user.access = response.data.access;
                         user.refresh = response.data.refresh;
