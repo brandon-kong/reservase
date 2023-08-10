@@ -327,7 +327,6 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
         } else {
             verifiedOTP = verifiedOTP as Error;
 
-            alert(JSON.stringify(verifiedOTP));
             switch (verifiedOTP.error_type) {
                 case 'invalid_request':
                     if (toast.isActive('otp-verify-invalid-request')) break;
