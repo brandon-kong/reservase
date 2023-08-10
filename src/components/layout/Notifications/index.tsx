@@ -5,13 +5,27 @@ import { Box, Center, Container, Heading, List, ListItem, Spinner, VStack } from
 import useSWR from 'swr';
 import { localFetcherGet } from '@/lib/axios';
 
-import NotificationCard, { SkeletonNotificationCard } from './NotificationCard';
+import NotificationCard, { EmptyNotifications } from './NotificationCard';
 import { Notification } from '@/types/account/notification/types';
 
+import { archiveNotification } from '@/lib/account';
+
 export default function NotificationPageView() {
-    const { data, isLoading } = useSWR('/accounts/notifications/show', localFetcherGet);
+    const { data, isLoading, mutate } = useSWR('/accounts/notifications/show', localFetcherGet);
 
     const notifications = data ? data.detail.notifications : [];
+
+    const attemptArchiveNotification = async (id: number) => {
+        await mutate(await archiveNotification(id), {
+            optimisticData: {
+                detail: {
+                    notifications: notifications.filter((notification: Notification) => notification.id !== id),
+                },
+            },
+            rollbackOnError: true,
+            populateCache: true,
+        });
+    };
 
     return (
         <Container maxW={'container.sm'} py={20}>
@@ -27,10 +41,15 @@ export default function NotificationPageView() {
                     ) : (
                         notifications.map((notification: Notification) => (
                             <ListItem key={notification.id}>
-                                <NotificationCard notification={notification} />
+                                <NotificationCard
+                                    attemptArchiveNotification={attemptArchiveNotification}
+                                    notification={notification}
+                                />
                             </ListItem>
                         ))
                     )}
+
+                    {notifications.length === 0 && !isLoading && <EmptyNotifications />}
                 </List>
             </VStack>
         </Container>
