@@ -16,13 +16,15 @@ export default function NotificationPageView() {
     const notifications = data ? data.detail.notifications : [];
 
     const attemptArchiveNotification = async (id: number) => {
-        await mutate(await archiveNotification(id), {
+        const filtered = notifications.filter((notification: Notification) => notification.id !== id);
+
+        await mutate(archiveNotification(id), {
             optimisticData: {
                 detail: {
-                    notifications: notifications.filter((notification: Notification) => notification.id !== id),
+                    notifications: filtered,
                 },
+                status_code: 200,
             },
-            rollbackOnError: true,
             populateCache: true,
         });
     };

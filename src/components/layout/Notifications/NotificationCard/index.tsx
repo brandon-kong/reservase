@@ -68,10 +68,10 @@ export function SkeletonNotificationCard() {
 
 export function EmptyNotifications() {
     return (
-        <Center w={'full'} flexDirection={'column-reverse'} gap={4}>
-            <Heading size={'md'} fontWeight={'500'} color={'monotone_dark.500'}>
+        <Center w={'full'} flexDirection={'column-reverse'} gap={2}>
+            <Text fontSize={'lg'} fontWeight={'400'} color={'monotone_dark.500'}>
                 No notifications (yet)
-            </Heading>
+            </Text>
 
             <Image src={'/gifs/empty-gif.gif'} alt={'logo'} objectFit="contain" width={300} height={300} />
         </Center>

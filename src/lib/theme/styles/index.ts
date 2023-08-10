@@ -1,9 +1,9 @@
 const styles = {
     global: {
-        'body': {
-            'fontFamily': 'inherit'
-        }
-    }
-}
+        body: {
+            fontFamily: 'inherit',
+        },
+    },
+};
 
 export default styles;
