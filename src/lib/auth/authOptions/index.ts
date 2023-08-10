@@ -8,7 +8,6 @@ import { api } from '@/lib/axios';
 import { refreshToken } from '@/lib/auth';
 
 import jwtDecode from 'jwt-decode';
-import { Success, Error } from '@/types/response/types';
 
 const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET as string,
@@ -49,7 +48,7 @@ const authOptions: NextAuthOptions = {
                 const { email, password } = credentials;
 
                 try {
-                    const { data, status } = await api.post('/users/login/', {
+                    const { data, status } = await api.post('/users/token/email/', {
                         email,
                         password,
                     });

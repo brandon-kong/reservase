@@ -46,9 +46,17 @@ import type { CountryCode } from 'libphonenumber-js/min';
 import Image from '@/components/Image';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { registerUserWithPhone, sendPhoneOTP, userExistsWithPhone, verifyPhoneOTP } from '@/lib/auth';
+import {
+    registerUserWithEmail,
+    registerUserWithPhone,
+    sendPhoneOTP,
+    userExistsWithEmail,
+    userExistsWithPhone,
+    verifyPhoneOTP,
+} from '@/lib/auth';
 import { ChevronLeftIcon } from '@chakra-ui/icons';
 import { Error } from '@/types/response/types';
+import InputLabel from '../Typography/InputLabel';
 
 type LoginModalProps = {
     isOpen: boolean;
@@ -61,7 +69,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const [view, setView] = useState<'login' | 'verify-number' | 'registration'>('login');
+    const [view, setView] = useState<'login' | 'verify-number' | 'email-registration' | 'phone-registration'>('login');
     const [formAuthType, setformAuthType] = useState<'phone' | 'email'>('phone');
     const [loading, setLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
@@ -203,7 +211,63 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                         break;
                 }
             }
+        } else {
+            // email
+
+            await verifyEmailCredentials(e);
         }
+    };
+
+    const verifyEmailCredentials = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
+
+        let emailExists = await userExistsWithEmail(email);
+
+        if (emailExists.status_code === 200) {
+            const detail = emailExists.detail as { [key: string]: any };
+            const { exists } = detail;
+
+            if (exists) {
+                // send to email login view
+            } else {
+                // send to email registration view
+                setView('email-registration');
+            }
+        } else {
+            emailExists = emailExists as Error;
+
+            switch (emailExists.error_type) {
+                case 'invalid_request':
+                    if (toast.isActive('email-verify-invalid-request')) break;
+                    toast({
+                        id: 'email-verify-invalid-request',
+                        title: 'Invalid request',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+
+                    break;
+                case 'invalid_email':
+                    if (toast.isActive('email-verify-invalid-email')) break;
+                    toast({
+                        id: 'email-verify-invalid-email',
+                        title: 'Invalid email address',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+
+                    break;
+            }
+        }
+
+        setLoading(false);
     };
 
     const attemptLoginWithGoogle = () => {
@@ -252,7 +316,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                     setLoading(false);
                 }
             }
-            setView('registration');
+            setView('phone-registration');
         } else {
             verifiedOTP = verifiedOTP as Error;
 
@@ -328,7 +392,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
             email,
             firstName,
             lastName,
-            birthday: birthday?.toISOString().split('T')[0],
+            birth_date: birthday?.toISOString().split('T')[0],
             otp: otp,
         });
 
@@ -337,6 +401,44 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                 phone: phoneFormatted,
                 country_code: countryCode,
                 token: otp,
+                redirect: false,
+                callbackUrl: `${window.location.origin}/`,
+            });
+
+            if (!signedIn) {
+                setLoading(false);
+                return;
+            }
+
+            if (signedIn.ok) {
+                onClose();
+                router.push('/account/profile');
+                return;
+            }
+        } else {
+            alert(JSON.stringify(registeredUser));
+        }
+
+        setLoading(false);
+    };
+
+    const attemptEmailRegistration = async (e: any) => {
+        e.preventDefault();
+
+        setLoading(true);
+
+        const registeredUser = await registerUserWithEmail({
+            email,
+            firstName,
+            lastName,
+            birth_date: birthday?.toISOString().split('T')[0],
+            password,
+        });
+
+        if (registeredUser.status_code === 200) {
+            const signedIn = await signIn('credentials', {
+                email,
+                password,
                 redirect: false,
                 callbackUrl: `${window.location.origin}/`,
             });
@@ -441,6 +543,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 country={country}
                                 setCountry={setCountry}
                                 verifyCredentials={verifyCredentials}
+                                verifyEmailCredentials={verifyEmailCredentials}
                             />
                         ) : view == 'verify-number' ? (
                             <VerifyView
@@ -451,10 +554,10 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 otp={otp}
                                 setOTP={setOTP}
                             />
-                        ) : (
+                        ) : view === 'phone-registration' ? (
                             // registration
 
-                            <RegisterView
+                            <PhoneRegistrationView
                                 loading={loading}
                                 email={email}
                                 password={password}
@@ -483,6 +586,37 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 birthday={birthday}
                                 setBirthday={setBirthday}
                                 getAge={getAge}
+                            />
+                        ) : (
+                            <EmailRegistrationView
+                                loading={loading}
+                                email={email}
+                                password={password}
+                                setEmail={setEmail}
+                                setPassword={setPassword}
+                                attemptLoginWithGoogle={attemptLoginWithGoogle}
+                                formAuthType={formAuthType}
+                                setformAuthType={setformAuthType}
+                                countryCode={countryCode}
+                                setCountryCode={setCountryCode}
+                                countryValue={countryValue}
+                                setCountryValue={setCountryValue}
+                                phoneFormatted={phoneFormatted}
+                                setPhoneFormatted={setPhoneFormatted}
+                                phone={phone}
+                                setPhone={setPhone}
+                                formatPhone={formatPhone}
+                                country={country}
+                                setCountry={setCountry}
+                                verifyCredentials={verifyCredentials}
+                                firstName={firstName}
+                                setFirstName={setFirstName}
+                                lastName={lastName}
+                                setLastName={setLastName}
+                                birthday={birthday}
+                                setBirthday={setBirthday}
+                                getAge={getAge}
+                                attemptEmailRegistration={attemptEmailRegistration}
                             />
                         )}
                     </ModalBody>
@@ -551,8 +685,10 @@ const LoginView = ({
                                     name={'country'}
                                     options={getCountryCodes()}
                                 />
+                                <Divider borderColor={'monotone_light.500'} />
                                 <InputGroup>
                                     <InputLeftAddon
+                                        borderTopWidth={0}
                                         h={'12'}
                                         borderRightWidth={0}
                                         bg={'monotone_light.200'}
@@ -570,9 +706,12 @@ const LoginView = ({
                                             setPhone(e.target.value);
                                             formatPhone(e.target.value);
                                         }}
+                                        _focus={{
+                                            borderTopWidth: '1px',
+                                        }}
                                         zIndex={2}
                                         pl={'4'}
-                                        borderTopWidth={'.5px'}
+                                        borderTopWidth={'0px'}
                                         borderBottomLeftRadius={'none'}
                                         borderTopRadius={'none'}
                                         w={'full'}
@@ -611,7 +750,9 @@ const LoginView = ({
 
                     <Flex align={'center'} justify={'center'} gap={4}>
                         <Divider borderColor={'monotone_light.400'} />
-                        <Text color={'monotone.600'}>or</Text>
+                        <Text color={'monotone.600'} fontSize={'xs'} userSelect={'none'}>
+                            or
+                        </Text>
                         <Divider borderColor={'monotone_light.400'} />
                     </Flex>
 
@@ -654,11 +795,11 @@ const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify
 
                     <HStack>
                         <PinInput
+                            autoFocus={true}
                             focusBorderColor="primary.500"
                             size={'lg'}
                             type={'number'}
                             otp
-                            autoFocus
                             placeholder=""
                             onComplete={(value: any) => {
                                 attemptPhoneOTPVerify(value);
@@ -681,7 +822,7 @@ const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify
     );
 };
 
-const RegisterView = ({
+const PhoneRegistrationView = ({
     loading,
     email,
     setEmail,
@@ -717,6 +858,9 @@ const RegisterView = ({
 
                 <Flex onSubmit={attemptPhoneRegistration} w={'full'} direction={'column'} gap={5} as={'form'}>
                     <Flex direction={'column'}>
+                        <InputLabel htmlFor="first_name" mb={1} ml={2}>
+                            Name
+                        </InputLabel>
                         <Input
                             transition={'border-bottom-width 0s ease-in-out'}
                             _focus={{
@@ -750,8 +894,12 @@ const RegisterView = ({
                     </Flex>
 
                     <Flex direction={'column'}>
+                        <InputLabel htmlFor="date" mb={1} ml={2}>
+                            Birth date
+                        </InputLabel>
                         <Input
                             type={'date'}
+                            name={'date'}
                             isInvalid={
                                 birthday === null ||
                                 // check if birthday is below 18
@@ -776,6 +924,9 @@ const RegisterView = ({
                     </Flex>
 
                     <Flex direction={'column'}>
+                        <InputLabel htmlFor="email" mb={1} ml={2}>
+                            Email
+                        </InputLabel>
                         <Input
                             placeholder={'Email'}
                             name={'email'}
@@ -788,9 +939,160 @@ const RegisterView = ({
                         </Text>
                     </Flex>
 
-                    <Stack spacing={2}>
+                    <Stack spacing={4}>
                         <Text mt={2} fontSize={'xs'} color={'monotone_light.800'} fontWeight={'400'}>
                             By continuing, you agree to Reservine&apos;s{' '}
+                            <Link href={'/terms'} color={'#783F8E'}>
+                                Terms of Service
+                            </Link>{' '}
+                            and
+                            <Link href={'/privacy'} color={'#783F8E'}>
+                                Privacy Policy
+                            </Link>
+                        </Text>
+                        <PrimaryButton w={'full'} type={'submit'}>
+                            Finish registration
+                        </PrimaryButton>
+                    </Stack>
+                </Flex>
+            </Flex>
+        </Container>
+    );
+};
+
+const EmailRegistrationView = ({
+    loading,
+    email,
+    setEmail,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    birthday,
+    setBirthday,
+    attemptEmailRegistration,
+    getAge,
+    password,
+    setPassword,
+}: any) => {
+    function isValidDate(d: Date) {
+        return d instanceof Date && !isNaN(d as any);
+    }
+
+    return (
+        <Container
+            as={Flex}
+            direction={'column'}
+            align={'center'}
+            justify={'center'}
+            maxW={'600px'}
+            gap={4}
+            opacity={loading ? 0.5 : 1}
+            filter={loading ? 'blur(2px)' : 'none'}
+            pointerEvents={loading ? 'none' : 'auto'}
+        >
+            <Flex w={'full'} direction={'column'} align={'flex-start'} gap={8}>
+                <Heading fontSize={'2xl'} fontWeight={'600'} textAlign={'left'}>
+                    Just a few more steps!
+                </Heading>
+
+                <Flex onSubmit={attemptEmailRegistration} w={'full'} direction={'column'} gap={5} as={'form'}>
+                    <Flex direction={'column'}>
+                        <InputLabel htmlFor="password" mb={1} ml={2}>
+                            Name
+                        </InputLabel>
+                        <Input
+                            transition={'border-bottom-width 0s ease-in-out'}
+                            _focus={{
+                                borderBottomWidth: '1px',
+                            }}
+                            borderBottomWidth={'0px'}
+                            borderBottomRadius={'none'}
+                            w={'full'}
+                            placeholder={'First name'}
+                            name={'first_name'}
+                            value={firstName}
+                            onChange={(e: any) => setFirstName(e.target.value)}
+                        />
+                        <Divider borderColor={'monotone_light.500'} />
+                        <Input
+                            transition={'border-top-width 0s ease-in-out'}
+                            _focus={{
+                                borderTopWidth: '1px',
+                            }}
+                            borderTopWidth={'0px'}
+                            borderTopRadius={'none'}
+                            w={'full'}
+                            placeholder={'Last name'}
+                            name={'last_name'}
+                            value={lastName}
+                            onChange={(e: any) => setLastName(e.target.value)}
+                        />
+                        <Text mt={2} fontSize={'xs'} color={'monotone_light.800'} fontWeight={'400'}>
+                            Enter your first and last name as it appears on your government issued ID.
+                        </Text>
+                    </Flex>
+
+                    <Flex direction={'column'}>
+                        <InputLabel htmlFor="date" mb={1} ml={2}>
+                            Birth date
+                        </InputLabel>
+                        <Input
+                            type={'date'}
+                            name={'date'}
+                            isInvalid={
+                                birthday === null ||
+                                // check if birthday is below 18
+                                getAge(birthday?.toISOString().split('T')[0]) < 18
+                            }
+                            value={birthday?.toISOString().split('T')[0]}
+                            onChange={(e: any) => {
+                                const date = new Date(e.target.value);
+                                if (!date || !isValidDate(date)) return;
+                                setBirthday(new Date(e.target.value));
+                            }}
+                        />
+
+                        <Text mt={2} fontSize={'xs'} color={'monotone_light.800'} fontWeight={'400'}>
+                            In order to book/host reservations, you must be at least 18 years old. We will not share
+                            your birthday with other users. See our{' '}
+                            <Link href={'/privacy'} color={'#783F8E'}>
+                                Privacy Policy
+                            </Link>
+                            .
+                        </Text>
+                    </Flex>
+
+                    <Flex direction={'column'}>
+                        <InputLabel htmlFor="email" mb={1} ml={2}>
+                            Email
+                        </InputLabel>
+                        <Input
+                            placeholder={'Email'}
+                            name={'email'}
+                            value={email}
+                            onChange={(e: any) => setEmail(e.target.value)}
+                        />
+
+                        <Text mt={2} fontSize={'xs'} color={'monotone_light.800'} fontWeight={'400'}>
+                            We&apos;ll send trip confirmations and receipts to this email address.
+                        </Text>
+                    </Flex>
+                    <Flex direction={'column'}>
+                        <InputLabel htmlFor="password" mb={1} ml={2}>
+                            Password
+                        </InputLabel>
+                        <Input
+                            placeholder={'Password'}
+                            name={'password'}
+                            value={password}
+                            onChange={(e: any) => setPassword(e.target.value)}
+                        />
+                    </Flex>
+
+                    <Stack spacing={4}>
+                        <Text mt={2} fontSize={'xs'} color={'monotone_light.800'} fontWeight={'400'}>
+                            By selecting Finish registration, I agree to Reservine&apos;s{' '}
                             <Link href={'/terms'} color={'#783F8E'}>
                                 Terms of Service
                             </Link>{' '}

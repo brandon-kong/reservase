@@ -4,6 +4,25 @@ import { TokenTypes } from '@/types/types';
 import axios from 'axios';
 
 import { Error, Success } from '@/types/response/types';
+import { emailIsValid } from '../email';
+
+type RegisterUserWithPhoneProps = {
+    phone: string;
+    countryCode: string;
+    otp: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    birth_date?: string;
+};
+
+type RegisterUserWithEmailProps = {
+    email: string;
+    firstName: string;
+    lastName: string;
+    birth_date?: string;
+    password: string;
+};
 
 export async function tokenIsValid(token: string): Promise<boolean> {
     try {
@@ -110,15 +129,30 @@ export async function userExistsWithPhone(phone: string, countryCode: string): P
     }
 }
 
-type RegisterUserWithPhoneProps = {
-    phone: string;
-    countryCode: string;
-    otp: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    birthday?: string;
-};
+export async function userExistsWithEmail(email: string): Promise<Success | Error> {
+    if (!emailIsValid(email)) {
+        const response: Error = {
+            status_code: 400,
+            detail: 'The email provided is not valid',
+            error_type: 'invalid_email',
+            error_message: 'The email provided is not valid',
+        };
+
+        return response;
+    }
+
+    try {
+        const { data } = await axios.post('/users/exists/email/', {
+            email: email,
+        });
+
+        const response: Success | Error = data;
+        return response;
+    } catch (error: any) {
+        const response: Error = error.response.data;
+        return response;
+    }
+}
 
 export async function registerUserWithPhone({
     phone,
@@ -127,7 +161,7 @@ export async function registerUserWithPhone({
     firstName,
     lastName,
     email,
-    birthday,
+    birth_date,
 }: RegisterUserWithPhoneProps) {
     const phoneWithCountryCode = countryCode + phone;
 
@@ -138,8 +172,32 @@ export async function registerUserWithPhone({
             first_name: firstName,
             last_name: lastName,
             email,
-            birthday,
+            birth_date,
             country_code: countryCode,
+        });
+
+        const response: Success | Error = data;
+        return response;
+    } catch (error: any) {
+        const response: Error = error.response.data;
+        return response;
+    }
+}
+
+export async function registerUserWithEmail({
+    firstName,
+    lastName,
+    email,
+    birth_date,
+    password,
+}: RegisterUserWithEmailProps) {
+    try {
+        const { data } = await axios.post('/users/register/email/', {
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            birth_date,
+            password,
         });
 
         const response: Success | Error = data;
