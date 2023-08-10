@@ -73,7 +73,9 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                     <MenuList zIndex={1}>
                         <MenuItem onClick={toProfile}>Messages</MenuItem>
 
-                        <MenuItem onClick={toProfile}>Notifications</MenuItem>
+                        <MenuItem as={Link} href={`/notifications`}>
+                            Notifications
+                        </MenuItem>
                         <MenuItem as={Link} href={`/account/reservations`}>
                             Trips
                         </MenuItem>

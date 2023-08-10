@@ -2,7 +2,7 @@
 
 import Image from '@/components/Image';
 
-import { Flex, Text, Spinner } from '@chakra-ui/react';
+import { Flex, Text, Spinner, Box } from '@chakra-ui/react';
 
 import { TransparentButton, TransparentIconButton, TransparentIconButtonWithText } from '@/components/Buttons';
 import AccountNav from './AccountNav';
@@ -53,9 +53,14 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                         <Flex h={'full'} align={'center'}>
                             <Flex h={'full'} align={'center'}>
                                 {isLoading ? (
-                                    <Spinner mr={2} />
+                                    <Spinner color="primary.500" mr={2} />
                                 ) : (
-                                    <>
+                                    <Box
+                                        display={{
+                                            base: 'none',
+                                            md: 'flex',
+                                        }}
+                                    >
                                         {is_host ? (
                                             <TransparentButton as={Link} href={'/host'}>
                                                 <Text>Continue hosting</Text>
@@ -75,7 +80,7 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                                                 </TransparentButton>
                                             </>
                                         )}
-                                    </>
+                                    </Box>
                                 )}
                             </Flex>
 

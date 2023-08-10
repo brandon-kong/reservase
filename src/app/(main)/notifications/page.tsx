@@ -1,7 +1,5 @@
+import NotificationPageView from '@/components/layout/Notifications';
+
 export default function NotificationsView() {
-    return (
-        <div>
-            <h1>Notifications</h1>
-        </div>
-    );
+    return <NotificationPageView />;
 }

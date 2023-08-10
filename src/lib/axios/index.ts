@@ -29,4 +29,8 @@ export const fetcherGet = async (url: string) => {
         .then(res => res.data);
 };
 
+export const localFetcherGet = async (url: string) => {
+    return axios.get(url).then(res => res.data);
+};
+
 export const fetcherPost = (url: string) => clientApi.post(url).then(res => res.data);

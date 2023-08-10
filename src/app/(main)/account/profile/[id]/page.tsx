@@ -1,9 +1,6 @@
 import { getCurrentUser } from '@/lib/session';
-import { notFound } from 'next/navigation';
-import { getProfileData } from '@/lib/account';
 
 import ProfileContent from '@/components/layout/Account/ProfileContent';
-import { ProfileData } from '@/types/types';
 
 type ProfileViewProps = {
     params: {

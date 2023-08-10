@@ -7,7 +7,6 @@ type EditProfileViewProps = {
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { updateProfileData } from '@/lib/account';
 
 import { getSession } from 'next-auth/react';
 import { Flex, InputGroup, Spinner, Text } from '@chakra-ui/react';
@@ -24,6 +23,10 @@ export default function EditProfileView({ user, setEditing, profileData, mutate 
 
     const [aboutMe, setAboutMe] = useState<string>(profileData.about_me);
     const [occupation, setOccupation] = useState<string>(profileData.occupation);
+
+    const updateProfileData = async (data: any): Promise<boolean> => {
+        return false;
+    };
 
     const tryUpdateProfileData = async () => {
         setLoading(true);

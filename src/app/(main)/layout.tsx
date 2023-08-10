@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import { getCurrentUser } from '@/lib/session';
-import { userIsHost } from '@/lib/account';
 import Navbar from '@/components/layout/Navbar';
-import Padding from '@/components/layout/Padding';
 import { ThemeProvider } from '@/lib/providers/theme';
 import AuthProvider from '@/lib/auth/providers';
 import ScreenContainer from '@/components/Formatting/Container';

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { AsYouType } from 'libphonenumber-js';
 
 import { getCountryCodes } from '@/lib/phone/countryCodes';
@@ -32,20 +32,12 @@ import {
 import { signIn } from 'next-auth/react';
 import { Link } from '@chakra-ui/next-js';
 
-import {
-    EmailSocialButton,
-    GoogleSocialButton,
-    PhoneSocialButton,
-    PrimaryButton,
-    TransparentButton,
-} from '@/components/Buttons';
+import { EmailSocialButton, GoogleSocialButton, PhoneSocialButton, PrimaryButton } from '@/components/Buttons';
 import Input, { Select } from '@/components/Input';
 
 import type { CountryCode } from 'libphonenumber-js/min';
 
-import Image from '@/components/Image';
-
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import {
     registerUserWithEmail,
     registerUserWithPhone,
@@ -68,8 +60,11 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
     const toast = useToast();
     const router = useRouter();
     const searchParams = useSearchParams();
+    const pathname = usePathname();
 
-    const [view, setView] = useState<'login' | 'verify-number' | 'email-registration' | 'phone-registration'>('login');
+    const [view, setView] = useState<
+        'login' | 'verify-number' | 'verify-email' | 'email-registration' | 'phone-registration'
+    >('login');
     const [formAuthType, setformAuthType] = useState<'phone' | 'email'>('phone');
     const [loading, setLoading] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
@@ -115,56 +110,66 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
         setPhoneFormatted(formatted);
     };
 
-    if (searchParams?.has('open-sign-in')) {
-        onOpen();
-    }
+    useEffect(() => {
+        let shouldRefresh = false;
 
-    if (searchParams?.has('error')) {
-        const error = searchParams.get('error');
+        if (searchParams?.has('open-sign-in')) {
+            onOpen();
 
-        switch (error) {
-            case 'CredentialsSignin':
-                if (toast.isActive('credentials-signin')) break;
-                toast({
-                    id: 'credentials-signin',
-                    title: 'Invalid credentials',
-                    variant: 'left-accent',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: true,
-                    position: 'top',
-                });
-                break;
-            case 'oauth':
-                if (toast.isActive('oauth-signin')) break;
-                toast({
-                    id: 'oauth-signin',
-                    title: 'Problem while authenticating with Provider',
-                    variant: 'left-accent',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: true,
-                    position: 'top',
-                });
-                break;
-            case 'AccessDenied':
-                if (toast.isActive('access-denied')) break;
-                toast({
-                    id: 'access-denied',
-                    title: 'User exists with different credentials',
-                    variant: 'left-accent',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: true,
-                    position: 'top',
-                });
-                break;
-            default:
-                break;
+            shouldRefresh = true;
         }
 
-        router.push('/', undefined);
-    }
+        if (searchParams?.has('error')) {
+            const error = searchParams.get('error');
+
+            switch (error) {
+                case 'CredentialsSignin':
+                    if (toast.isActive('credentials-signin')) break;
+                    toast({
+                        id: 'credentials-signin',
+                        title: 'Invalid credentials',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+                    break;
+                case 'oauth':
+                    if (toast.isActive('oauth-signin')) break;
+                    toast({
+                        id: 'oauth-signin',
+                        title: 'Problem while authenticating with Provider',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+                    break;
+                case 'AccessDenied':
+                    if (toast.isActive('access-denied')) break;
+                    toast({
+                        id: 'access-denied',
+                        title: 'User exists with different credentials',
+                        variant: 'left-accent',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: true,
+                        position: 'top',
+                    });
+                    break;
+                default:
+                    break;
+            }
+
+            shouldRefresh = true;
+        }
+
+        if (shouldRefresh) {
+            router.replace(pathname, undefined);
+        }
+    });
 
     const verifyCredentials = async (e: any) => {
         e.preventDefault();
@@ -227,9 +232,9 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
         if (emailExists.status_code === 200) {
             const detail = emailExists.detail as { [key: string]: any };
             const { exists } = detail;
-
             if (exists) {
                 // send to email login view
+                setView('verify-email');
             } else {
                 // send to email registration view
                 setView('email-registration');
@@ -271,6 +276,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
     };
 
     const attemptLoginWithGoogle = () => {
+        if (!window.location) return;
         setLoading(true);
         signIn('google', {
             redirect: false,
@@ -382,6 +388,35 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
         setLoading(false);
     };
 
+    const attemptEmailVerify = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
+
+        const signedUp = await signIn('email-password', {
+            email,
+            password,
+            token: otp,
+            redirect: false,
+            callbackUrl: `${window.location.origin}/`,
+        });
+
+        if (!signedUp) {
+            setLoading(false);
+            return;
+        }
+
+        if (!signedUp.error) {
+            onClose();
+            router.push('/');
+            setView('login');
+        } else {
+            alert(JSON.stringify(signedUp));
+        }
+
+        // TODO: Handle error
+        setLoading(false);
+    };
+
     const attemptPhoneRegistration = async (e: any) => {
         e.preventDefault();
 
@@ -436,7 +471,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
         });
 
         if (registeredUser.status_code === 200) {
-            const signedIn = await signIn('credentials', {
+            const signedIn = await signIn('email-password', {
                 email,
                 password,
                 redirect: false,
@@ -546,7 +581,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 verifyEmailCredentials={verifyEmailCredentials}
                             />
                         ) : view == 'verify-number' ? (
-                            <VerifyView
+                            <PhoneVerifyView
                                 loading={loading}
                                 setLoading={setLoading}
                                 phoneFormatted={phoneFormatted}
@@ -587,7 +622,7 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 setBirthday={setBirthday}
                                 getAge={getAge}
                             />
-                        ) : (
+                        ) : view === 'email-registration' ? (
                             <EmailRegistrationView
                                 loading={loading}
                                 email={email}
@@ -617,6 +652,15 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                                 setBirthday={setBirthday}
                                 getAge={getAge}
                                 attemptEmailRegistration={attemptEmailRegistration}
+                            />
+                        ) : (
+                            <EmailVerifyView
+                                loading={loading}
+                                email={email}
+                                setEmail={setEmail}
+                                password={password}
+                                setPassword={setPassword}
+                                attemptEmailVerify={attemptEmailVerify}
                             />
                         )}
                     </ModalBody>
@@ -769,7 +813,7 @@ const LoginView = ({
     );
 };
 
-const VerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify, otp, setOTP }: any) => {
+const PhoneVerifyView = ({ loading, setLoading, phoneFormatted, attemptPhoneOTPVerify, otp, setOTP }: any) => {
     return (
         <Container
             as={Flex}
@@ -1106,6 +1150,64 @@ const EmailRegistrationView = ({
                             Finish registration
                         </PrimaryButton>
                     </Stack>
+                </Flex>
+            </Flex>
+        </Container>
+    );
+};
+
+const EmailVerifyView = ({ loading, email, setEmail, password, setPassword, attemptEmailVerify }: any) => {
+    return (
+        <Container
+            as={Flex}
+            direction={'column'}
+            align={'center'}
+            justify={'center'}
+            maxW={'600px'}
+            gap={4}
+            opacity={loading ? 0.5 : 1}
+            filter={loading ? 'blur(2px)' : 'none'}
+            pointerEvents={loading ? 'none' : 'auto'}
+        >
+            <Flex w={'full'} direction={'column'} align={'flex-start'} gap={8}>
+                <Heading fontSize={'2xl'} fontWeight={'600'} textAlign={'left'}>
+                    Log in to Reservine
+                </Heading>
+
+                <Flex onSubmit={attemptEmailVerify} w={'full'} direction={'column'} gap={5} as={'form'}>
+                    <Flex direction={'column'}>
+                        <InputLabel htmlFor="email" mb={1} ml={2}>
+                            Email
+                        </InputLabel>
+
+                        <Input
+                            isDisabled={true}
+                            bg={'monotone_light.400'}
+                            w={'full'}
+                            placeholder={'Email'}
+                            name={'email'}
+                            value={email}
+                            onChange={(e: any) => setEmail(e.target.value)}
+                        />
+                    </Flex>
+
+                    <Flex direction={'column'}>
+                        <InputLabel htmlFor="password" mb={1} ml={2}>
+                            Password
+                        </InputLabel>
+
+                        <Input
+                            w={'full'}
+                            placeholder={'Password'}
+                            name={'password'}
+                            value={password}
+                            onChange={(e: any) => setPassword(e.target.value)}
+                        />
+                    </Flex>
+
+                    <PrimaryButton w={'full'} type={'submit'}>
+                        Log in
+                    </PrimaryButton>
                 </Flex>
             </Flex>
         </Container>

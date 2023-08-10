@@ -15,6 +15,11 @@ const authOptions: NextAuthOptions = {
         strategy: 'jwt',
     },
 
+    pages: {
+        signIn: '/?open-sign-in=true',
+        signOut: '/?open-sign-in=true',
+    },
+
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -30,6 +35,7 @@ const authOptions: NextAuthOptions = {
         }),
 
         CredentialProvider({
+            id: 'email-password',
             name: 'Credentials',
             credentials: {
                 email: {
@@ -46,7 +52,7 @@ const authOptions: NextAuthOptions = {
 
             async authorize(credentials: any, req: any): Promise<any> {
                 const { email, password } = credentials;
-
+                console.log(email, password);
                 try {
                     const { data, status } = await api.post('/users/token/email/', {
                         email,
@@ -63,6 +69,7 @@ const authOptions: NextAuthOptions = {
 
                     return null;
                 } catch (error: any) {
+                    console.log(error.response.data);
                     return null;
                 }
             },
