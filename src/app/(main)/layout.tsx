@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/lib/providers/theme';
 import AuthProvider from '@/lib/auth/providers';
 import ScreenContainer from '@/components/Formatting/Container';
 import { LoginProvider } from '@/lib/providers/LoginProvider';
+import { Analytics } from '@vercel/analytics/react';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -19,6 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     return (
         <html lang="en">
             <body className={montserrat.className}>
+                <Analytics />
                 <AuthProvider>
                     <ThemeProvider>
                         <LoginProvider>

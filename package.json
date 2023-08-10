@@ -26,6 +26,7 @@
     "@types/node": "20.4.5",
     "@types/react": "18.2.17",
     "@types/react-dom": "18.2.7",
+    "@vercel/analytics": "^1.0.2",
     "axios": "^1.4.0",
     "countries-list": "^2.6.1",
     "country-calling-code": "^0.0.3",
