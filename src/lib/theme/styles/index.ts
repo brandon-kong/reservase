@@ -1,8 +1,6 @@
 const styles = {
     global: {
-        body: {
-            fontFamily: 'inherit',
-        },
+        body: {},
     },
 };
 

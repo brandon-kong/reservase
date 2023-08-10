@@ -26,19 +26,21 @@ export default function NotificationPageView() {
                 status_code: 200,
             },
             populateCache: true,
+            rollbackOnError: true,
+            revalidate: false,
         });
     };
 
     return (
         <Container maxW={'container.sm'} py={20}>
             <VStack w={'full'}>
-                <Heading w={'full'} textAlign={'left'} size={'lg'} fontWeight={'500'}>
+                <Heading w={'full'} textAlign={'left'} size={'lg'}>
                     Notifications
                 </Heading>
                 <List w={'full'} spacing={4} mt={10}>
                     {isLoading ? (
                         <Center w={'full'}>
-                            <Spinner size={'lg'} color={'primary.500'} />
+                            <Spinner size={'lg'} />
                         </Center>
                     ) : (
                         notifications.map((notification: Notification) => (

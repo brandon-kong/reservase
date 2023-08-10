@@ -29,7 +29,7 @@ export default function NotificationCard({ notification, attemptArchiveNotificat
             <Flex w={'full'} justify={'space-between'} align={'center'} gap={4}>
                 <Image src={image} alt={'logo'} objectFit="contain" width={50} height={50} />
                 <Flex h={'full'} w={'full'} direction={'column'} gap={1}>
-                    <Heading size={'sm'} fontWeight={'500'}>
+                    <Heading size={'xs'} fontWeight={'600'}>
                         {notification.body}
                     </Heading>
                     <Text fontWeight={500} fontSize={'sm'} color={'monotone_dark.500'}>
@@ -73,7 +73,7 @@ export function EmptyNotifications() {
                 No notifications (yet)
             </Text>
 
-            <Image src={'/gifs/empty-gif.gif'} alt={'logo'} objectFit="contain" width={300} height={300} />
+            <Image src={'/gifs/empty-gif.gif'} quality={75} alt={'logo'} objectFit="contain" width={300} height={300} />
         </Center>
     );
 }
