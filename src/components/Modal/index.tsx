@@ -321,11 +321,13 @@ export const LoginModal = ({ isOpen, onClose, onOpen }: LoginModalProps) => {
                     // TODO: Handle error
                     setLoading(false);
                 }
+
+                setView('phone-registration');
             }
-            setView('phone-registration');
         } else {
             verifiedOTP = verifiedOTP as Error;
 
+            alert(JSON.stringify(verifiedOTP));
             switch (verifiedOTP.error_type) {
                 case 'invalid_request':
                     if (toast.isActive('otp-verify-invalid-request')) break;
