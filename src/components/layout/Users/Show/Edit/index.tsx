@@ -1,10 +1,24 @@
 'use client';
 
 import { createRef } from 'react';
-import { Avatar, Container, HStack, Heading, VStack, Text, Flex, Icon, Divider, SimpleGrid } from '@chakra-ui/react';
+import {
+    Avatar,
+    Container,
+    HStack,
+    Heading,
+    VStack,
+    Text,
+    Flex,
+    Icon,
+    Divider,
+    SimpleGrid,
+    Card,
+    Grid,
+    GridItem,
+} from '@chakra-ui/react';
 
 import { StarIcon } from '@chakra-ui/icons';
-import { PrimaryOutlineButton } from '@/components/Buttons';
+import { PrimaryButton, PrimaryOutlineButton, TransparentButton } from '@/components/Buttons';
 
 import { BiSolidPlaneAlt } from 'react-icons/bi';
 import { GiChefToque } from 'react-icons/gi';
@@ -44,27 +58,30 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
         const form = new FormData();
         form.append('image', file);
 
-        const accepted = axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}accounts/image/`, form, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        })
-        .then((res) => {
-            alert(JSON.stringify(res.data))
-        })
-        .catch((err) => {
-            alert(JSON.stringify(err))
-        })
+        const accepted = axios
+            .post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/accounts/image/`, form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then(res => {
+                alert(JSON.stringify(res.data));
+            })
+            .catch(err => {
+                alert(JSON.stringify(err));
+            });
     };
 
     const userIsOwner = true;
 
     return (
-        <Container
-            as={Flex}
-            direction={{
-                base: 'column',
-                md: 'row',
+        <Grid
+            templateAreas={{
+                base: `"left"
+                        "right"
+                        "bottom"`,
+                md: `"left right"
+                     "bottom bottom"`,
             }}
             gap={{
                 base: 8,
@@ -77,6 +94,8 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
             py={20}
         >
             <Flex
+                as={GridItem}
+                area={'left'}
                 flex={1}
                 gap={8}
                 direction={'column'}
@@ -92,10 +111,12 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
             >
                 <Flex px={8} py={8} rounded={'lg'} justify={'center'} w={'full'} gap={12}>
                     <Avatar
-                        w={'14rem'}
-                        h={'14rem'}
+                        minW={'10rem'}
+                        maxW={'14rem'}
+                        w={'full'}
+                        aspectRatio={1 / 1}
                         size={'4xl'}
-                        fontSize={'8rem'}
+                        fontSize={'6xl'}
                         icon={<Icon as={StarIcon} />}
                         name={profile.first_name}
                         bg={'monotone_dark.900'}
@@ -135,48 +156,47 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
                 </Flex>
             </Flex>
 
-            <VStack flex={1.6} h={'full'} align={'flex-start'}>
+            <VStack as={GridItem} area={'right'} flex={1.6} h={'full'} align={'flex-start'}>
                 <VStack w={'full'} spacing={8} h={'full'} align={'flex-start'}>
                     <Heading size={'lg'} fontWeight={'bold'}>
-                        About {profile.first_name}
+                        Your profile
                     </Heading>
 
                     <PrimaryOutlineButton display={'none'} w={'10rem'}>
                         Edit profile
                     </PrimaryOutlineButton>
 
-                    <SimpleGrid w={'full'} columns={2} spacing={4}>
-                        <HStack spacing={4}>
-                            <Icon as={TiGlobeOutline} fontSize={'3xl'} />
-                            <Text fontSize={'md'} color={'monotone_dark.800'} fontWeight={450}>
-                                Lives in Sydney, Australia
-                            </Text>
-                        </HStack>
-
-                        <HStack spacing={4}>
-                            <Icon as={PiBriefcaseLight} fontSize={'3xl'} />
-                            <Text fontSize={'md'} color={'monotone_dark.800'} fontWeight={450}>
-                                My job: Software Engineer
-                            </Text>
-                        </HStack>
-
-                        <HStack spacing={4}>
-                            <Icon as={TbMessageLanguage} fontSize={'3xl'} />
-                            <Text fontSize={'md'} color={'monotone_dark.800'} fontWeight={450}>
-                                Speaks English
-                            </Text>
-                        </HStack>
+                    <SimpleGrid
+                        w={'full'}
+                        columns={{
+                            base: 1,
+                            lg: 2,
+                        }}
+                        spacing={4}
+                    >
+                        <InfoAddCard icon={TiGlobeOutline}>Where you live</InfoAddCard>
+                        <InfoAddCard icon={PiBriefcaseLight}>My work</InfoAddCard>
+                        <InfoAddCard icon={TiGlobeOutline}>Favorite childhood snack</InfoAddCard>
+                        <InfoAddCard icon={TiGlobeOutline}>I&apos;m notorious for</InfoAddCard>
                     </SimpleGrid>
 
-                    <Text fontSize={'md'} color={'monotone_dark.700'} fontWeight={400}>
-                        I&apos;m a software engineer from Sydney, Australia. I love to travel and meet new people.
-                        Additionally, I love to cook and play sports.
-                    </Text>
+                    <Heading size={'lg'} fontWeight={'bold'}>
+                        About you
+                    </Heading>
+
+                    <Card border={'1px dashed'} borderColor={'monotone_light.600'} w={'full'} p={4}>
+                        <Text color={'monotone_dark.600'}>
+                            Write something fun and interesting about yourself here!
+                        </Text>
+                        <TransparentButton w={'9rem'} px={2} mt={4} textDecoration={'underline'}>
+                            Edit About Me
+                        </TransparentButton>
+                    </Card>
 
                     <Divider borderColor={'monotone_light.600'} />
 
                     <Heading size={'md'} fontWeight={'semibold'}>
-                        Ask me about:
+                        What you&apos;re passionate about
                     </Heading>
 
                     <SimpleGrid
@@ -191,10 +211,55 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
                         <AskMeAboutCard icon={GiChefToque}>Cooking</AskMeAboutCard>
                         <AskMeAboutCard icon={MdSportsFootball}>Sports</AskMeAboutCard>
                         <AskMeAboutCard icon={BiSolidPlaneAlt}>Travel</AskMeAboutCard>
+                        <AskMeAboutCard icon={BiSolidPlaneAlt}>Travel</AskMeAboutCard>
+                        <AskMeAboutCard icon={GiChefToque}>Cooking</AskMeAboutCard>
+                        <AskMeAboutCard icon={BiSolidPlaneAlt}>Travel</AskMeAboutCard>
+                        <AskMeAboutCard icon={BiSolidPlaneAlt}>Travel</AskMeAboutCard>
+                        <AskMeAboutCard icon={GiChefToque}>Cooking</AskMeAboutCard>
+                        <AskMeAboutCard icon={MdSportsFootball}>Sports</AskMeAboutCard>
+                        <AskMeAboutCard icon={BiSolidPlaneAlt}>Travel</AskMeAboutCard>
+                        <AskMeAboutCard icon={MdSportsFootball}>Sports</AskMeAboutCard>
+                        <AskMeAboutCard icon={BiSolidPlaneAlt}>Travel</AskMeAboutCard>
+                        <AskMeAboutCard icon={GiChefToque}>Cooking</AskMeAboutCard>
+                        <AskMeAboutCard icon={MdSportsFootball}>Sports</AskMeAboutCard>
+                        <AskMeAboutCard icon={BiSolidPlaneAlt}>Travel</AskMeAboutCard>
                     </SimpleGrid>
                 </VStack>
             </VStack>
-        </Container>
+
+            <Flex
+                as={GridItem}
+                area={'bottom'}
+                mt={10}
+                bg={'white'}
+                position={'sticky'}
+                bottom={0}
+                pb={8}
+                direction={'column'}
+                w={'full'}
+            >
+                <Divider borderColor={'monotone_light.600'} />
+                <PrimaryButton
+                    mr={{
+                        base: '0',
+                        md: 20,
+                    }}
+                    alignSelf={{
+                        base: 'center',
+                        md: 'flex-end',
+                    }}
+                    w={'8rem'}
+                    mt={8}
+                    fontSize={'md'}
+                    fontWeight={'semibold'}
+                    rounded={'full'}
+                    px={8}
+                    py={4}
+                >
+                    Save
+                </PrimaryButton>
+            </Flex>
+        </Grid>
     );
 }
 
@@ -219,5 +284,36 @@ const AskMeAboutCard = ({ icon, children }: any) => {
             <Icon fontSize={'3xl'} as={icon} />
             {children}
         </PrimaryOutlineButton>
+    );
+};
+
+const InfoAddCard = ({ icon, children }: any) => {
+    return (
+        <Card
+            cursor={'pointer'}
+            transition={'all .2s ease-in-out'}
+            _hover={{
+                boxShadow: 'md',
+            }}
+        >
+            <Flex
+                as={HStack}
+                rounded={'lg'}
+                w={'full'}
+                pl={6}
+                pr={8}
+                py={4}
+                bg={'monotone_light.100'}
+                justify={'space-between'}
+                align={'center'}
+            >
+                <HStack spacing={4}>
+                    <Icon fontSize={'3xl'} as={icon} />
+                    <Text fontSize={'md'} color={'monotone_dark.800'} fontWeight={450}>
+                        {children}
+                    </Text>
+                </HStack>
+            </Flex>
+        </Card>
     );
 };

@@ -83,7 +83,7 @@ const Footer = () => {
                 <Divider color={'monotone_dark.900'} />
             </VStack>
             <VStack m={'auto'} maxW={'5xl'} align={'start'} h={'20'} justify={'center'}>
-                <Flex alignItems="center">
+                <Flex alignItems="center" w={'full'}>
                     <Text
                         w={'full'}
                         textAlign={{

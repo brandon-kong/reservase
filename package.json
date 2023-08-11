@@ -14,7 +14,8 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "depcheck": "depcheck",
-    "eslint": "eslint --ext .js,.jsx,.ts,.tsx \"src/\""
+    "eslint": "eslint --ext .js,.jsx,.ts,.tsx \"src/\"",
+    "setup-git": "npm run lint && npm run type-check && npm run format:write"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.0",

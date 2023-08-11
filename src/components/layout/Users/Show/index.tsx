@@ -176,7 +176,14 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                         Edit profile
                     </PrimaryOutlineButton>
 
-                    <SimpleGrid w={'full'} columns={2} spacing={4}>
+                    <SimpleGrid
+                        w={'full'}
+                        columns={{
+                            base: 1,
+                            md: 2,
+                        }}
+                        spacing={4}
+                    >
                         <HStack spacing={4}>
                             <Icon as={TiGlobeOutline} fontSize={'3xl'} />
                             <Text fontSize={'md'} color={'monotone_dark.800'} fontWeight={450}>

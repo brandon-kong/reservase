@@ -33,7 +33,16 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
 
     return (
         <>
-            <Flex h={'65px'} w={'full'} bg={'white'} border={'1px solid'} borderColor={'monotone_light.400'}>
+            <Flex
+                position={'sticky'}
+                top={0}
+                zIndex={100}
+                h={'65px'}
+                w={'full'}
+                bg={'white'}
+                border={'1px solid'}
+                borderColor={'monotone_light.400'}
+            >
                 <Flex w={'full'} justify={'space-between'} as={ScreenContainer}>
                     <Flex h={'full'} align={'center'} gap={4}>
                         <Link href={'/'}>
