@@ -131,7 +131,7 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                 <VStack spacing={1} align={'flex-start'}>
                     <Divider mb={8} borderColor={'monotone_light.600'} />
                     <Heading fontSize={'2xl'} fontWeight={'semibold'}>
-                        {profile.first_name} hasn't set up their profile yet.
+                        {profile.first_name} hasn&apos;t set up their profile yet.
                     </Heading>
 
                     <Text fontSize={'sm'} color={'monotone_dark.600'} fontWeight={400}>
