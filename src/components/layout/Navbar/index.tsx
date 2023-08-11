@@ -43,7 +43,7 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                 border={'1px solid'}
                 borderColor={'monotone_light.400'}
             >
-                <Flex w={'full'} justify={'space-between'} as={ScreenContainer}>
+                <Flex w={'full'} justify={'space-between'} align={'center'} h={'full'} as={ScreenContainer}>
                     <Flex h={'full'} align={'center'} gap={4}>
                         <Link href={'/'}>
                             <Image

@@ -1,6 +1,8 @@
 const styles = {
     global: {
-        body: {},
+        body: {
+            bg: 'monotone_light.100',
+        },
     },
 };
 

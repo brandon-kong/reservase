@@ -74,7 +74,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                             Trips
                         </MenuItem>
 
-                        <MenuItem as={Link} href={`/account/wishlist`}>
+                        <MenuItem as={Link} href={`/wishlist`}>
                             Wishlist
                         </MenuItem>
 
