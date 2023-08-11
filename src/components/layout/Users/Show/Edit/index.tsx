@@ -19,8 +19,6 @@ import {
     Box,
 } from '@chakra-ui/react';
 
-import { useSearchParams } from 'next/navigation';
-
 import { StarIcon, CheckIcon } from '@chakra-ui/icons';
 import { PrimaryOutlineButton } from '@/components/Buttons';
 
@@ -31,25 +29,19 @@ import { TiGlobeOutline } from 'react-icons/ti';
 import { PiBriefcaseLight } from 'react-icons/pi';
 import { TbMessageLanguage } from 'react-icons/tb';
 
-import ShowUserEdit from '@/components/layout/Users/Show/Edit';
+import { FaCamera } from 'react-icons/fa';
 
 type UsersShowViewProps = {
     id: string;
 };
 
-export default function UsersShowView({ id }: UsersShowViewProps) {
-    const searchParams = useSearchParams();
-
+export default function ShowUserEdit({ id }: UsersShowViewProps) {
     const profile = {
         first_name: 'John',
         review_count: 12,
     };
 
     const userIsOwner = true;
-
-    if (searchParams.has('edit')) {
-        return <ShowUserEdit id={id} />;
-    }
 
     return (
         <Container
@@ -82,88 +74,36 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                     md: '60px',
                 }}
             >
-                <Flex
-                    px={8}
-                    py={8}
-                    rounded={'lg'}
-                    bg={'white'}
-                    border={'1px solid'}
-                    borderColor={'monotone_light.600'}
-                    justify={'center'}
-                    w={'full'}
-                    gap={12}
-                >
-                    <Flex direction={'column'} align={'center'} flex={1} justify={'center'} gap={2}>
-                        <Avatar
-                            size={'xl'}
-                            icon={<Icon as={StarIcon} fontSize="1rem" />}
-                            name={profile.first_name}
-                            bg={'monotone_dark.900'}
-                        >
-                            <AvatarBadge
-                                boxSize=".8em"
-                                bg="primary.500"
-                                borderColor={'monotone_light.200'}
-                                borderWidth={'2px'}
-                            />
-                        </Avatar>
-
-                        <Flex direction={'column'} align={'center'}>
-                            <Heading size={'lg'} fontWeight={'semibold'}>
-                                {profile.first_name}
-                            </Heading>
-                            <Text fontSize={'md'} color={'monotone_dark.700'}>
-                                Guest
-                            </Text>
-                        </Flex>
-                    </Flex>
-
-                    <VStack
-                        flex={1}
-                        gap={4}
-                        direction={'column'}
-                        divider={<Divider borderColor={'monotone_light.600'} />}
+                <Flex px={8} py={8} rounded={'lg'} justify={'center'} w={'full'} gap={12}>
+                    <Avatar
+                        w={'14rem'}
+                        h={'14rem'}
+                        size={'4xl'}
+                        fontSize={'8rem'}
+                        icon={<Icon as={StarIcon} />}
+                        name={profile.first_name}
+                        bg={'monotone_dark.900'}
                     >
-                        <Flex w={'full'} direction={'column'}>
-                            <Heading fontWeight={'semibold'} fontSize={'2xl'}>
-                                {profile.review_count}
-                            </Heading>
-                            <Text fontSize={'xs'} color={'monotone_dark.600'} fontWeight={'semibold'}>
-                                {' '}
-                                Reviews
-                            </Text>
+                        <Flex
+                            cursor={'pointer'}
+                            position={'absolute'}
+                            bottom={-5}
+                            gap={3}
+                            align={'center'}
+                            boxShadow={'xl'}
+                            bg={'white'}
+                            rounded={'full'}
+                            fontSize={'md'}
+                            color={'black'}
+                            p={2}
+                            px={4}
+                            textTransform={'none'}
+                        >
+                            <Icon as={FaCamera} fontSize={'1.25rem'} />
+                            Add
                         </Flex>
-                        <Flex w={'full'} direction={'column'}>
-                            <Heading as={Flex} align={'center'} gap={2} fontWeight={'semibold'} fontSize={'2xl'}>
-                                4.88
-                                <Icon fontSize={'md'} as={StarIcon} color={'primary.500'} />
-                            </Heading>
-                            <Text fontSize={'xs'} color={'monotone_dark.600'} fontWeight={'semibold'}>
-                                {' '}
-                                Rating
-                            </Text>
-                        </Flex>
-
-                        <Flex w={'full'} direction={'column'}>
-                            <Heading as={Flex} align={'center'} gap={2} fontWeight={'semibold'} fontSize={'2xl'}>
-                                12
-                            </Heading>
-                            <Text fontSize={'xs'} color={'monotone_dark.600'} fontWeight={'semibold'}>
-                                {' '}
-                                Years hosting
-                            </Text>
-                        </Flex>
-                    </VStack>
+                    </Avatar>
                 </Flex>
-
-                <Box
-                    display={{
-                        base: 'none',
-                        md: 'block',
-                    }}
-                >
-                    <IdentityConfirmCard profile={profile} userIsOwner={userIsOwner} />
-                </Box>
             </Flex>
 
             <VStack flex={1.6} h={'full'} align={'flex-start'}>
@@ -223,25 +163,6 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                         <AskMeAboutCard icon={MdSportsFootball}>Sports</AskMeAboutCard>
                         <AskMeAboutCard icon={BiSolidPlaneAlt}>Travel</AskMeAboutCard>
                     </SimpleGrid>
-
-                    <Heading size={'md'} fontWeight={'semibold'}>
-                        What hosts say about {profile.first_name}
-                    </Heading>
-
-                    <Flex gap={8} w={'full'} direction={'column'}>
-                        <ReviewCard review={profile} />
-                        <ReviewCard review={profile} />
-                        <ReviewCard review={profile} />
-                    </Flex>
-
-                    <Box
-                        display={{
-                            base: 'block',
-                            md: 'none',
-                        }}
-                    >
-                        <IdentityConfirmCard profile={profile} userIsOwner={userIsOwner} />
-                    </Box>
                 </VStack>
             </VStack>
         </Container>

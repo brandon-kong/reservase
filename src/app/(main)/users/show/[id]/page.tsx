@@ -6,6 +6,8 @@ type Props = {
     };
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function UserShow({ params }: Props) {
     return <UsersShowView id={params.id} />;
 }
