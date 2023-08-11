@@ -1,25 +1,9 @@
 'use client';
 
-import {
-    Avatar,
-    Container,
-    HStack,
-    Heading,
-    VStack,
-    Text,
-    Flex,
-    Icon,
-    AvatarBadge,
-    Divider,
-    List,
-    ListItem,
-    ListIcon,
-    SimpleGrid,
-    GridItem,
-    Box,
-} from '@chakra-ui/react';
+import { createRef } from 'react';
+import { Avatar, Container, HStack, Heading, VStack, Text, Flex, Icon, Divider, SimpleGrid } from '@chakra-ui/react';
 
-import { StarIcon, CheckIcon } from '@chakra-ui/icons';
+import { StarIcon } from '@chakra-ui/icons';
 import { PrimaryOutlineButton } from '@/components/Buttons';
 
 import { BiSolidPlaneAlt } from 'react-icons/bi';
@@ -30,15 +14,41 @@ import { PiBriefcaseLight } from 'react-icons/pi';
 import { TbMessageLanguage } from 'react-icons/tb';
 
 import { FaCamera } from 'react-icons/fa';
+import Input from '@/components/Input';
+import axios from 'axios';
 
 type UsersShowViewProps = {
     id: string;
 };
 
 export default function ShowUserEdit({ id }: UsersShowViewProps) {
+    const fileInputRef = createRef<HTMLInputElement>();
+
     const profile = {
         first_name: 'John',
         review_count: 12,
+    };
+
+    const handleProfileImageChange = () => {
+        const current = fileInputRef.current;
+        if (!current) return;
+        current.click();
+    };
+
+    const onProfileImageChange = async () => {
+        const current = fileInputRef.current;
+        if (!current) return;
+        const file = current.files?.[0];
+        if (!file) return;
+
+        const form = new FormData();
+        form.append('image', file);
+
+        const accepted = axios.post('http://localhost:8000/accounts/image/', form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
     };
 
     const userIsOwner = true;
@@ -85,6 +95,11 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
                         bg={'monotone_dark.900'}
                     >
                         <Flex
+                            userSelect={'none'}
+                            transition={'all .2s ease-in-out'}
+                            _active={{
+                                transform: 'scale(0.95)',
+                            }}
                             cursor={'pointer'}
                             position={'absolute'}
                             bottom={-5}
@@ -98,9 +113,17 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
                             p={2}
                             px={4}
                             textTransform={'none'}
+                            onClick={handleProfileImageChange}
                         >
                             <Icon as={FaCamera} fontSize={'1.25rem'} />
                             Add
+                            <input
+                                ref={fileInputRef}
+                                type={'file'}
+                                accept={'image/*'}
+                                hidden
+                                onChange={onProfileImageChange}
+                            />
                         </Flex>
                     </Avatar>
                 </Flex>
@@ -190,130 +213,5 @@ const AskMeAboutCard = ({ icon, children }: any) => {
             <Icon fontSize={'3xl'} as={icon} />
             {children}
         </PrimaryOutlineButton>
-    );
-};
-
-const ReviewCard = ({ review }: any) => {
-    return (
-        <Flex
-            direction={'column'}
-            rounded={'lg'}
-            bg={'white'}
-            border={'1px solid'}
-            borderColor={'monotone_light.600'}
-            p={8}
-            w={'full'}
-        >
-            <Flex direction={'column'} align={'flex-start'}>
-                <Flex align={'center'}>
-                    <Avatar
-                        size={'md'}
-                        icon={<Icon as={StarIcon} fontSize="1rem" />}
-                        name={review.first_name}
-                        bg={'monotone_dark.900'}
-                    >
-                        <AvatarBadge
-                            boxSize=".8em"
-                            bg="primary.500"
-                            borderColor={'monotone_light.200'}
-                            borderWidth={'2px'}
-                        />
-                    </Avatar>
-
-                    <Flex ml={4} direction={'column'}>
-                        <Heading size={'md'} fontWeight={'semibold'}>
-                            {review.first_name}
-                        </Heading>
-                        <Text fontSize={'sm'} color={'monotone_dark.600'} fontWeight={400}>
-                            2 months ago
-                        </Text>
-                    </Flex>
-                </Flex>
-
-                <Flex mt={4} align={'center'}>
-                    {/* show 4.5 stars */}
-                    <Icon fontSize={'md'} as={StarIcon} color={'primary.500'} />
-                    <Icon fontSize={'md'} as={StarIcon} color={'primary.500'} />
-                    <Icon fontSize={'md'} as={StarIcon} color={'primary.500'} />
-                    <Icon fontSize={'md'} as={StarIcon} color={'primary.500'} />
-                    <Icon fontSize={'md'} as={StarIcon} color={'monotone_dark.600'} w={4} />
-                    <Text ml={2} fontSize={'sm'} color={'monotone_dark.600'} fontWeight={400}>
-                        5.0
-                    </Text>
-                </Flex>
-            </Flex>
-
-            <Text mt={4} fontSize={'sm'} color={'monotone_dark.600'} fontWeight={400}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam eu placerat
-            </Text>
-        </Flex>
-    );
-};
-
-const IdentityConfirmCard = ({ profile, userIsOwner }: any) => {
-    return (
-        <Flex
-            px={8}
-            py={8}
-            direction={'column'}
-            rounded={'lg'}
-            bg={'white'}
-            borderWidth={{
-                base: 0,
-                md: 1,
-            }}
-            borderColor={'monotone_light.600'}
-            justify={'center'}
-            w={'full'}
-            gap={10}
-        >
-            <Flex flex={1} gap={4} direction={'column'}>
-                <Heading size={'md'} fontWeight={'semibold'}>
-                    {profile.first_name}&apos;s verified identity
-                </Heading>
-                <List fontWeight={400} spacing={1}>
-                    <ListItem>
-                        <ListIcon as={CheckIcon} color={'monotone_dark.600'} />
-                        Email confirmed
-                    </ListItem>
-                    <ListItem>
-                        <ListIcon as={CheckIcon} color={'monotone_dark.600'} />
-                        Phone number confirmed
-                    </ListItem>
-                    <ListItem>
-                        <ListIcon as={CheckIcon} color={'monotone_dark.600'} />
-                        Identity verified
-                    </ListItem>
-                </List>
-            </Flex>
-
-            {userIsOwner ? (
-                <>
-                    <Divider borderColor={'monotone_light.600'} />
-
-                    <Flex flex={1} gap={4} direction={'column'}>
-                        <Heading size={'md'} fontWeight={'semibold'}>
-                            Verify your identity
-                        </Heading>
-                        <Text fontSize={'sm'} color={'monotone_dark.600'} fontWeight={400}>
-                            Before you take advantage of all of Reservine&apos;s features, we need to verify your
-                            identity.
-                        </Text>
-
-                        <PrimaryOutlineButton
-                            mt={4}
-                            borderColor={'black'}
-                            _active={{
-                                borderColor: 'black',
-                                transform: 'scale(0.95)',
-                            }}
-                            w={'15rem'}
-                        >
-                            Verify your identity
-                        </PrimaryOutlineButton>
-                    </Flex>
-                </>
-            ) : null}
-        </Flex>
     );
 };

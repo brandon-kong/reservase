@@ -44,7 +44,7 @@ const Footer = () => {
             w={'full'}
             bg={'monotone_light.100'}
             p={{ base: 5, md: 10 }}
-            pb={4}
+            pb={'0 !important'}
         >
             <VStack m={'auto'} maxW={'5xl'} spacing={5} alignItems="initial">
                 <Flex
@@ -58,7 +58,7 @@ const Footer = () => {
                     }}
                 >
                     {footerData.map((data, index) => (
-                        <Flex key={index} direction="column" mb="3">
+                        <Flex key={index} direction="column" gap={1}>
                             <Text fontWeight="600" color={'monotone_dark.800'}>
                                 {data.label}
                             </Text>
@@ -67,7 +67,7 @@ const Footer = () => {
                                     <Link
                                         key={index}
                                         padding={1}
-                                        fontSize={{ base: 'sm', sm: 'md' }}
+                                        fontSize={'sm'}
                                         href="#"
                                         mr={{ base: 1, sm: 2, md: 0 }}
                                         color="gray.500"
@@ -81,6 +81,8 @@ const Footer = () => {
                     ))}
                 </Flex>
                 <Divider color={'monotone_dark.900'} />
+            </VStack>
+            <VStack align={'start'} h={'20'} justify={'center'}>
                 <Flex alignItems="center">
                     <Text
                         w={'full'}
@@ -89,7 +91,7 @@ const Footer = () => {
                             md: 'left',
                         }}
                         color="gray.500"
-                        fontSize="0.875rem"
+                        fontSize="sm"
                         pl="0.5rem"
                     >
                         &copy; 2023 Reservine, Inc. All rights reserved.
