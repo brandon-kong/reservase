@@ -79,7 +79,7 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                 }}
                 top={{
                     base: '0',
-                    md: '60px',
+                    md: '100px',
                 }}
             >
                 <Flex

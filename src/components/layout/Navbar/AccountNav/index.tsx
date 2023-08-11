@@ -70,7 +70,7 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
                         <MenuItem as={Link} href={`/notifications`}>
                             Notifications
                         </MenuItem>
-                        <MenuItem as={Link} href={`/account/reservations`}>
+                        <MenuItem as={Link} href={`/trips`}>
                             Trips
                         </MenuItem>
 
