@@ -28,8 +28,26 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
         review_count: 12,
     };
     return (
-        <Container maxW={'container.sm'} py={20}>
-            <VStack>
+        <Container 
+        as={Flex}
+
+        direction={{
+            base: 'column',
+            md: 'row',
+        }}
+        gap={16}
+        maxW={{
+            base: 'container.sm',
+            md: 'container.lg',
+        }} 
+        py={20}>
+            <Flex
+            flex={1}
+            gap={4}
+
+            direction={'column'}
+            
+            >
                 <Flex px={8} py={8} rounded={'lg'} bg={'monotone_light.200'} justify={'center'} w={'full'} gap={12}>
                     <Flex direction={'column'} align={'center'} flex={1} justify={'center'} gap={2}>
                         <Avatar
@@ -47,14 +65,16 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                         </Avatar>
 
                         <Flex direction={'column'} align={'center'}>
-                            <Heading fontWeight={'bold'}>{profile.first_name}</Heading>
+                            <Heading size={'lg'} fontWeight={'semibold'}>{profile.first_name}</Heading>
                             <Text fontSize={'md'} color={'monotone_dark.700'}>
                                 Guest
                             </Text>
                         </Flex>
                     </Flex>
 
-                    <Flex flex={1} gap={4} direction={'column'}>
+                    <VStack flex={1} gap={4} direction={'column'} 
+                    divider={<Divider borderColor={'monotone_light.600'} />}
+                    >
                         <Flex w={'full'} direction={'column'}>
                             <Heading fontWeight={'semibold'} fontSize={'2xl'}>
                                 {profile.review_count}
@@ -64,7 +84,6 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                                 Reviews
                             </Text>
                         </Flex>
-                        <Divider borderColor={'monotone_light.600'} />
                         <Flex w={'full'} direction={'column'}>
                             <Heading as={Flex} align={'center'} gap={2} fontWeight={'semibold'} fontSize={'2xl'}>
                                 4.88
@@ -75,7 +94,6 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                                 Rating
                             </Text>
                         </Flex>
-                        <Divider borderColor={'monotone_light.600'} />
 
                         <Flex w={'full'} direction={'column'}>
                             <Heading as={Flex} align={'center'} gap={2} fontWeight={'semibold'} fontSize={'2xl'}>
@@ -86,13 +104,15 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                                 Years hosting
                             </Text>
                         </Flex>
-                    </Flex>
+                    </VStack>
                 </Flex>
 
                 <Flex px={8} py={8} rounded={'lg'} bg={'monotone_light.200'} justify={'center'} w={'full'} gap={12}>
                     <Flex flex={1} gap={4} direction={'column'}>
                         <Heading fontSize={'2xl'}>{profile.first_name + "'s" + ' identity verification'}</Heading>
-                        <List spacing={1}>
+                        <List 
+                        fontWeight={500}
+                        spacing={1}>
                             <ListItem>
                                 <ListIcon as={CheckIcon} color={'primary.400'} />
                                 Email confirmed
@@ -108,6 +128,40 @@ export default function UsersShowView({ id }: UsersShowViewProps) {
                         </List>
                     </Flex>
                 </Flex>
+            </Flex>
+
+            <VStack
+            flex={1.2}
+            h={'full'}
+            align={'flex-start'}
+            >
+                <VStack
+                spacing={1}
+                align={'flex-start'}
+                >
+                    
+                    <Divider
+                    mb={8}
+                    borderColor={'monotone_light.600'}
+                    />
+                    <Heading
+                    fontSize={'2xl'}
+                    fontWeight={'semibold'}
+                    >
+                        {profile.first_name} hasn't set up their profile yet.
+                    </Heading>
+
+                    <Text
+                    fontSize={'sm'}
+                    color={'monotone_dark.600'}
+                    fontWeight={400}
+
+                    >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, diam eu placerat
+                    </Text>
+                </VStack>
+
+                        
             </VStack>
         </Container>
     );
