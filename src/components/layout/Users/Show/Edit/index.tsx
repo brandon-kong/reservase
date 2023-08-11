@@ -48,9 +48,13 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
-        });
-
-        alert(JSON.stringify(accepted))
+        })
+        .then((res) => {
+            alert(JSON.stringify(res.data))
+        })
+        .catch((err) => {
+            alert(JSON.stringify(err))
+        })
     };
 
     const userIsOwner = true;
