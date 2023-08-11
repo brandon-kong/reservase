@@ -44,7 +44,7 @@ export default function ShowUserEdit({ id }: UsersShowViewProps) {
         const form = new FormData();
         form.append('image', file);
 
-        const accepted = axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/accounts/image/`, form, {
+        const accepted = axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}accounts/image/`, form, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
