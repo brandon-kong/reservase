@@ -3,6 +3,15 @@ const styles = {
         body: {
             bg: 'monotone_light.100',
         },
+        '::-moz-selection': {
+            bg: '#783F8E',
+            color: 'white',
+        },
+
+        '::selection': {
+            bg: '#783F8E',
+            color: 'white',
+        },
     },
 };
 
