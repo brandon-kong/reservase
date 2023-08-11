@@ -163,14 +163,13 @@ export function PrimaryOutlineButton(props: any) {
             display={'flex'}
             bg={'white'}
             border={'1px solid'}
-            borderColor={'monotone_light.500'}
+            borderColor={'black'}
             color={'black'}
             _hover={{
                 bg: 'monotone_light.200',
             }}
             _active={{
-                bg: 'monotone_light.300',
-                borderColor: 'monotone_light.600',
+                transform: 'scale(0.95)',
             }}
             gap={2}
             cursor={'pointer'}

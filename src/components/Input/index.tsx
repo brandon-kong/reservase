@@ -14,6 +14,7 @@ export default function Input(props: any) {
 
     return (
         <ChakraInput
+            autoComplete="off"
             fontWeight={'normal'}
             fontSize={'sm'}
             h={12}

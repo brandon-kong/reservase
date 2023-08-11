@@ -7,6 +7,7 @@ import AuthProvider from '@/lib/auth/providers';
 import ScreenContainer from '@/components/Formatting/Container';
 import { LoginProvider } from '@/lib/providers/LoginProvider';
 import { Analytics } from '@vercel/analytics/react';
+import Footer from '@/components/layout/Footer';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -26,6 +27,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         <LoginProvider>
                             <Navbar isAuthenticated={!!user} user={user} />
                             <ScreenContainer>{children}</ScreenContainer>
+                            <Footer />
                         </LoginProvider>
                     </ThemeProvider>
                 </AuthProvider>
