@@ -9,6 +9,7 @@ import NotificationCard, { EmptyNotifications } from './NotificationCard';
 import { Notification } from '@/types/account/notification/types';
 
 import { archiveNotification } from '@/lib/account';
+import { MainHeading } from '@/components/Typography';
 
 export default function NotificationPageView() {
     const { data, isLoading, mutate } = useSWR('/accounts/notifications/show', localFetcherGet);
@@ -34,9 +35,9 @@ export default function NotificationPageView() {
     return (
         <Container maxW={'container.sm'} py={20}>
             <VStack w={'full'}>
-                <Heading w={'full'} textAlign={'left'} size={'lg'}>
+                <MainHeading w={'full'} textAlign={'left'}>
                     Notifications
-                </Heading>
+                </MainHeading>
                 <List w={'full'} spacing={4} mt={10}>
                     {isLoading ? (
                         <Center w={'full'}>

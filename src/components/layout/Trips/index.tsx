@@ -3,6 +3,7 @@
 import { Box, Center, Container, Heading, List, ListItem, Spinner, VStack } from '@chakra-ui/react';
 
 import { EmptyTrips } from './TripsCard';
+import { MainHeading } from '@/components/Typography';
 
 export default function TripsPageView() {
     const isLoading = false;
@@ -11,9 +12,9 @@ export default function TripsPageView() {
     return (
         <Container maxW={'container.sm'} py={20}>
             <VStack w={'full'}>
-                <Heading w={'full'} textAlign={'left'} size={'lg'}>
+                <MainHeading w={'full'} textAlign={'left'}>
                     Trips
-                </Heading>
+                </MainHeading>
                 <List w={'full'} spacing={4} mt={10}>
                     {isLoading ? (
                         <Center w={'full'}>

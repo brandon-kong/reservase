@@ -52,11 +52,10 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                                 draggable={false}
                                 src={'/brand/reservine.svg'}
                                 alt={'logo'}
-                                width={12}
-                                height={12}
+                                width={10}
+                                height={10}
                             />
                         </Link>
-                        Reservase
                     </Flex>
 
                     <Flex h={'full'} align={'center'} gap={8}>
@@ -72,20 +71,20 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                                         }}
                                     >
                                         {is_host ? (
-                                            <TransparentButton as={Link} href={'/host'}>
+                                            <TransparentButton>
                                                 <Text>Continue hosting</Text>
                                             </TransparentButton>
                                         ) : (
                                             <>
-                                                <TransparentButton as={Link} href={'/places'}>
+                                                <TransparentButton fontWeight={'400'}>
                                                     <Text>Places</Text>
                                                 </TransparentButton>
 
-                                                <TransparentButton as={Link} href={'/blog'}>
+                                                <TransparentButton fontWeight={'400'}>
                                                     <Text>Blog</Text>
                                                 </TransparentButton>
 
-                                                <TransparentButton as={Link} href={'/host/become'}>
+                                                <TransparentButton fontWeight={'400'}>
                                                     <Text>Become a host</Text>
                                                 </TransparentButton>
                                             </>
@@ -94,7 +93,11 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                                 )}
                             </Flex>
 
-                            <TransparentIconButtonWithText icon={<FiGlobe />} aria_label={'language'}>
+                            <TransparentIconButtonWithText
+                                fontWeight={'400'}
+                                icon={<FiGlobe />}
+                                aria_label={'language'}
+                            >
                                 Language
                             </TransparentIconButtonWithText>
                         </Flex>

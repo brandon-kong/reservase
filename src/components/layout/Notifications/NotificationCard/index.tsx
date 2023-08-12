@@ -5,6 +5,7 @@ import { Box, Center, CloseButton, Flex, Heading, Skeleton, SkeletonCircle, Text
 import Image from 'next/image';
 
 import type { Notification } from '@/types/account/notification/types';
+import { BodyTextMd } from '@/components/Typography';
 
 type NotificationCardProps = {
     notification: Notification;
@@ -69,9 +70,9 @@ export function SkeletonNotificationCard() {
 export function EmptyNotifications() {
     return (
         <Center w={'full'} flexDirection={'column-reverse'} gap={2}>
-            <Text fontSize={'lg'} fontWeight={'400'} color={'monotone_dark.500'}>
+            <BodyTextMd fontWeight={'400'} color={'monotone_dark.500'}>
                 No notifications (yet)
-            </Text>
+            </BodyTextMd>
 
             <Image src={'/gifs/empty-gif.gif'} quality={75} alt={'logo'} objectFit="contain" width={300} height={300} />
         </Center>
