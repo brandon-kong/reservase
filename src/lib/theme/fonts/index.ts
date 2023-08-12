@@ -1,12 +1,9 @@
 import { Montserrat } from 'next/font/google';
-
-const montserrat = Montserrat({
-    subsets: ['cyrillic'],
-});
+import { poppins } from '@/lib/fonts';
 
 const fonts = {
-    heading: montserrat.style.fontFamily,
-    body: montserrat.style.fontFamily,
+    heading: poppins.style.fontFamily,
+    body: poppins.style.fontFamily,
 };
 
 export default fonts;

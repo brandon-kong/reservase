@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Montserrat } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import { getCurrentUser } from '@/lib/session';
 import Navbar from '@/components/layout/Navbar';
 import { ThemeProvider } from '@/lib/providers/theme';
@@ -9,7 +9,7 @@ import { LoginProvider } from '@/lib/providers/LoginProvider';
 import { Analytics } from '@vercel/analytics/react';
 import Footer from '@/components/layout/Footer';
 
-const montserrat = Montserrat({ subsets: ['latin'] });
+import { poppins } from '@/lib/fonts';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const user = await getCurrentUser();
     return (
         <html lang="en">
-            <body className={montserrat.className}>
+            <body className={poppins.className}>
                 <Analytics />
                 <AuthProvider>
                     <ThemeProvider>

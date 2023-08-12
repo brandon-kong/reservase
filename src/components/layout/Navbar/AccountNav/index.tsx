@@ -80,18 +80,18 @@ export default function AccountNav({ isAuthenticated, user }: AccountNavProps) {
 
                         <MenuDivider />
 
-                        <MenuItem fontWeight={'500'} onClick={toProfile}>
+                        <MenuItem fontWeight={'400'} onClick={toProfile}>
                             Manage listings
                         </MenuItem>
 
-                        <MenuItem fontWeight={'500'} onClick={toProfile}>
+                        <MenuItem fontWeight={'400'} onClick={toProfile}>
                             Account
                         </MenuItem>
 
                         <MenuDivider />
-                        <MenuItem fontWeight={'500'}>Help center</MenuItem>
+                        <MenuItem fontWeight={'400'}>Help center</MenuItem>
                         <MenuItem
-                            fontWeight={'500'}
+                            fontWeight={'400'}
                             onClick={() =>
                                 signOut({
                                     callbackUrl: 'http://127.0.0.1:3000/account/login',

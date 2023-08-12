@@ -44,7 +44,7 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                 borderColor={'monotone_light.400'}
             >
                 <Flex w={'full'} justify={'space-between'} align={'center'} h={'full'} as={ScreenContainer}>
-                    <Flex h={'full'} align={'center'} gap={4}>
+                    <Flex h={'full'} align={'center'} gap={4} fontWeight={'500'} color={'#355F3D'}>
                         <Link href={'/'}>
                             <Image
                                 cursor={'pointer'}
@@ -56,6 +56,7 @@ export default function Navbar({ isAuthenticated, user }: NavbarProps = { isAuth
                                 height={12}
                             />
                         </Link>
+                        Reservase
                     </Flex>
 
                     <Flex h={'full'} align={'center'} gap={8}>
